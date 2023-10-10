@@ -53,8 +53,8 @@ public class RunCreateDrtMesh {
 		int seats = 4;
 		int size = 1;
 		int count = 0;
-		String xmlFilePath = "examples/scenarios/UrbanLine/3x1km/network.xml";  // adjust path accordingly
-		String outputDirectory = "examples/scenarios/UrbanLine/3x1km/output";
+		String xmlFilePath = "examples/scenarios/UrbanLine/SuburbanCorex5/network.xml";  // adjust path accordingly
+		String outputDirectory = "examples/scenarios/UrbanLine/SuburbanCorex5/output";
 		String drtsFile = outputDirectory + "drts" + count + "S" + seats + ".xml";
 		List<List<String>> records = new ArrayList<List<String>>();
 		try {
