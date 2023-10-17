@@ -1,0 +1,2 @@
+2023-10-12T23:34:16,742  WARN RandomizingTimeDistanceTravelDisutilityFactory:113 There will be no routing randomness. The randomization of the travel disutility requires the monetary distance rate to be different than zero. Continuing anyway.
+2023-10-12T23:34:16,743  WARN RandomizingTimeDistanceTravelDisutilityFactory:118 There will be no routing randomness. The randomization of the travel disutility requires the travel time cost rate to be different than zero. Continuing anyway.
