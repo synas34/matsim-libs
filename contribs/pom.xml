@@ -97,7 +97,8 @@
 		<module>sumo</module>
 		<module>taxi</module>
 		<module>vsp</module>
-    </modules>
+		<module>SyntheticModel</module>
+	</modules>
 
 	<dependencies>
 		<dependency>
