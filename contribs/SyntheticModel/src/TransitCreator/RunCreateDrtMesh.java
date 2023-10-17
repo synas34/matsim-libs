@@ -53,8 +53,8 @@ public class RunCreateDrtMesh {
 		int seats = 4;
 		int size = 1;
 		int count = 0;
-		String xmlFilePath = "examples/scenarios/UrbanLine/SuburbanCorex5/network.xml";  // adjust path accordingly
-		String outputDirectory = "examples/scenarios/UrbanLine/SuburbanCorex5/output";
+		String xmlFilePath = "examples/scenarios/UrbanLine/Lastditch/FMLM4/network.xml";  // adjust path accordingly
+		String outputDirectory = "examples/scenarios/UrbanLine/Lastditch/FMLM4/output";
 		String drtsFile = outputDirectory + "drts" + count + "S" + seats + ".xml";
 		List<List<String>> records = new ArrayList<List<String>>();
 		try {
@@ -79,7 +79,7 @@ public class RunCreateDrtMesh {
 
 		// Shuffle the records randomly and get only the first 10% of the nodes
 		Collections.shuffle(records, new Random());
-		int tenPercentSize = (int) (0.025 * records.size());
+		int tenPercentSize = (int) (0.22 * records.size());
 		records = records.subList(0, tenPercentSize);
 
 		System.out.println(records);

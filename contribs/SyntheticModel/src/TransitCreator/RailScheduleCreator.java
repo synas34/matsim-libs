@@ -19,7 +19,8 @@ import org.matsim.pt.transitSchedule.api.*;
 import org.matsim.vehicles.MatsimVehicleWriter;
 import org.matsim.vehicles.Vehicle;
 import org.matsim.vehicles.VehicleType;
-
+import java.util.ArrayList;
+import java.util.List;
 import java.util.*;
 
 public class RailScheduleCreator {
@@ -46,8 +47,8 @@ public class RailScheduleCreator {
 		List<Id<Link>> linkIds = new ArrayList<>();
 		List<Id<Link>> linkIds_r = new ArrayList<>();
 		Network network = NetworkUtils.readNetwork(scenarioPath + "/network.xml");
-		Coord coordStart = new Coord(100, 500);
-		Coord initialExtraCoord = new Coord(coordStart.getX() - 1, coordStart.getY());
+		Coord coordStart = new Coord(-6100, 500);
+		Coord initialExtraCoord = new Coord(coordStart.getX() - 50, coordStart.getY());
 		// Create the starting node to act as a station for turn around
 		Node InitialStation = network.getFactory().createNode(Id.createNodeId("station" + initialExtraCoord.getX()), initialExtraCoord);
 		network.addNode(InitialStation);  // Add this node to the network
@@ -69,7 +70,7 @@ public class RailScheduleCreator {
         }
 
 		// Create a final extra node to the right of the last coordEnd
-		Coord finalExtraCoord = new Coord(coordStart.getX() + 1, coordStart.getY());
+		Coord finalExtraCoord = new Coord(coordStart.getX() + 50, coordStart.getY());
 		Node finalExtraNode = network.getFactory().createNode(Id.createNodeId("station" + finalExtraCoord.getX()), finalExtraCoord);
 		network.addNode(finalExtraNode);
 		createRailLink(network, previousNode, finalExtraNode, linkIds, linkIds_r);
@@ -84,18 +85,20 @@ public class RailScheduleCreator {
 		TransitScheduleFactory scheduleFactory = scenario.getTransitSchedule().getFactory();
 
 		// Determine the first and last link IDs from the provided lists
+		Collections.reverse(linkIds_r);
 		Id<Link> startLinkId = linkIds.get(0);
 		Id<Link> endLinkId = linkIds.get(linkIds.size() - 1);
 		Id<Link> StartLinkId_r = linkIds_r.get(0);
 		Id<Link> EndLinkId_r = linkIds_r.get(linkIds_r.size() - 1);
 		System.out.println("Total links: " + linkIds.size());
 		System.out.println("Total links: " + linkIds_r.size());
-		List<Id<Link>>  IntlinkIds = linkIds.subList(1, linkIds.size()-1);
-		List<Id<Link>>  IntlinkIds_r = linkIds.subList(1, linkIds.size()-1);
+		// Extracting intermediate links (excluding the first and the last)
+		List<Id<Link>> intermediateLinkIds = linkIds.subList(1, linkIds.size() - 1);
+		List<Id<Link>> intermediateLinkIds_r = linkIds_r.subList(1, linkIds_r.size() - 1);
 
 		// Create a network route from the provided link lists
-		NetworkRoute networkRoute = RouteUtils.createLinkNetworkRouteImpl(startLinkId, linkIds, endLinkId);
-		NetworkRoute networkRoute_r = RouteUtils.createLinkNetworkRouteImpl(StartLinkId_r, linkIds_r, EndLinkId_r);
+		NetworkRoute networkRoute = RouteUtils.createLinkNetworkRouteImpl(startLinkId, intermediateLinkIds, endLinkId);
+		NetworkRoute networkRoute_r = RouteUtils.createLinkNetworkRouteImpl(StartLinkId_r, intermediateLinkIds_r, EndLinkId_r);
 		System.out.println("Total links: " +  scenario.getNetwork().getLinks().get("402623_402624"));
 
 
@@ -114,12 +117,17 @@ public class RailScheduleCreator {
 		TransitRoute transitRoute = scheduleFactory.createTransitRoute(Id.create("Suburbs", TransitRoute.class), networkRoute, transitRouteStops, "pt");
 		TransitRoute transitRoute_r = scheduleFactory.createTransitRoute(Id.create("Centre", TransitRoute.class), networkRoute_r, transitRouteStops_r, "pt");
 
-		// Populate the departures for the created routes
-		DepartureCreator(scheduleFactory, transitRoute, times, vehicleRefIds);
+		int halfIndex = vehicleRefIds.length / 2;
 
-		// Modify vehicle references and then populate departures for the reverse route
-		vehicleRefIds = Arrays.stream(vehicleRefIds).map(s -> s.equals("tr_2") ? "tr_1" : s.equals("tr_1") ? "tr_2" : s).toArray(String[]::new);
-		DepartureCreator(scheduleFactory, transitRoute_r, times, vehicleRefIds);
+		String[] firstHalfVehicleRefIds = Arrays.copyOfRange(vehicleRefIds,0, halfIndex);
+		String[] secondHalfVehicleRefIds = Arrays.copyOfRange(vehicleRefIds, halfIndex, vehicleRefIds.length);
+
+// Populate the departures for the created routes using the first half of vehicleRefIds
+		DepartureCreator(scheduleFactory, transitRoute, times, firstHalfVehicleRefIds);
+
+// Modify vehicle references and then populate departures for the reverse route using the second half
+		DepartureCreator(scheduleFactory, transitRoute_r, times, secondHalfVehicleRefIds);
+
 
 		// Group the routes under a transit line and add them to the scenario
 		TransitLine transitLine = scheduleFactory.createTransitLine(Id.create("Shuttle", TransitLine.class));
@@ -137,16 +145,18 @@ public class RailScheduleCreator {
 		Set<String> allowedModes = new HashSet<>();
 		allowedModes.add("pt");
 		link.setAllowedModes(allowedModes);
-		link.setCapacity(100);
+		link.setCapacity(1000);
 		link.setFreespeed(12);
+		link.setNumberOfLanes(2);
 		network.addLink(link);
 		linkIds.add(link.getId()); // Add the link ID to linkIds list
 
 		// Create the reverse link
 		Link reverseLink = network.getFactory().createLink(Id.createLinkId("link-id_" + fromNode.getId() + "_" + toNode.getId() + "_r"), toNode, fromNode);
 		reverseLink.setAllowedModes(allowedModes);
-		reverseLink.setCapacity(100);
+		reverseLink.setCapacity(1000);
 		reverseLink.setFreespeed(12);
+		reverseLink.setNumberOfLanes(2);
 		network.addLink(reverseLink);
 		linkIds_r.add(reverseLink.getId()); // Add the reverse link ID to linkIds_r list
 
@@ -188,7 +198,7 @@ public class RailScheduleCreator {
 		for (int i = 0; i < times.length; i++) {
 			Id<Departure> departureId = Id.create("d_" + (i + 1), Departure.class);
 			double departureTime = Time.parseTime(times[i]);
-			Id<Vehicle> vehicleId = Id.create(vehicleRefIds[i], Vehicle.class);
+			Id<Vehicle> vehicleId = Id.create(vehicleRefIds[i + 1], Vehicle.class);
 			Departure departure = scheduleFactory.createDeparture(departureId, departureTime);
 			departure.setVehicleId(vehicleId);
 			transitRoute_r.addDeparture(departure);

@@ -17,35 +17,53 @@ public class PlansXMLSynthesizer {
 	public PlansXMLSynthesizer(String outputDirectory) {
 		this.outputDirectory = outputDirectory;
 	}
-	public void synthesize(int numPlans) throws ParserConfigurationException, SAXException, IOException {
+	public void synthesize(int numPlans, int numOfCBDPlans, Coord cbdCoord, double carNeverRatio) throws ParserConfigurationException, SAXException, IOException {
 		List<Coord> householdNodes = extractCoordinates(outputDirectory + "\\households.xml");
 		List<Coord> commercialNodes = extractCoordinates(outputDirectory + "\\commercial.xml");
+
+		int carNeverCount = (int) (numPlans * carNeverRatio); // Calculate the number of persons with car_avail="never" based on the ratio.
 
 		try (BufferedWriter writer = new BufferedWriter(new FileWriter(outputDirectory + "\\plans.xml"))) {
 			writer.write("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n");
 			writer.write("<!DOCTYPE plans SYSTEM \"http://www.matsim.org/files/dtd/plans_v4.dtd\">\n");
 			writer.write("<plans>\n");
 
-			for (int i = 1; i <= numPlans; i++) {
+			// Normal plans
+			for (int i = 1; i <= numPlans - numOfCBDPlans; i++) {
 				Coord home = householdNodes.get(random.nextInt(householdNodes.size()));
 				Coord work = commercialNodes.get(random.nextInt(commercialNodes.size()));
 
+				String carAvailability = (i <= carNeverCount) ? "never" : "always";
+				writePlan(writer, i, home, work, carAvailability);
+			}
 
-				writer.write("\t<person id=\"" + i + "\">\n");
-				writer.write("\t\t<plan>\n");
-				writer.write(String.format("\t\t\t<act type=\"h\" x=\"%.2f\" y=\"%.2f\" end_time=\"%s\" />\n", home.getX(), home.getY(), generateEndTime(7, 30, 15)));
-				writer.write("\t\t\t<leg mode=\"car\"> </leg>\n");
-				writer.write(String.format("\t\t\t<act type=\"w\" x=\"%.2f\" y=\"%.2f\" start_time=\"%s\" end_time=\"%s\" />\n", work.getX(), work.getY(), generateEndTime(8, 30, 15), generateEndTime(17, 15, 60)));
-				writer.write("\t\t\t<leg mode=\"car\"> </leg>\n");
-				writer.write(String.format("\t\t\t<act type=\"h\" x=\"%.2f\" y=\"%.2f\" />\n", home.getX(), home.getY()));
-				writer.write("\t\t</plan>\n");
-				writer.write("\t</person>\n");
-				writer.write("\n");
+			// CBD plans
+			for (int i = numPlans - numOfCBDPlans + 1; i <= numPlans; i++) {
+				Coord home = householdNodes.get(random.nextInt(householdNodes.size()));
+
+				String carAvailability = (i <= carNeverCount) ? "never" : "always";
+				writePlan(writer, i, home, cbdCoord, carAvailability);
 			}
 
 			writer.write("</plans>\n");
 		}
+
 	}
+
+	private void writePlan(BufferedWriter writer, int id, Coord home, Coord work, String carAvailability) throws IOException {
+		writer.write("\t<person id=\"" + id + "\" car_avail=\"" + carAvailability + "\">\n");
+		writer.write("\t\t<plan>\n");
+		writer.write(String.format("\t\t\t<act type=\"h\" x=\"%.2f\" y=\"%.2f\" end_time=\"%s\" />\n", home.getX(), home.getY(), generateEndTime(7, 30, 15)));
+		writer.write("\t\t\t<leg mode=\"pt\"> </leg>\n");
+		writer.write(String.format("\t\t\t<act type=\"w\" x=\"%.2f\" y=\"%.2f\" start_time=\"%s\" end_time=\"%s\" />\n", work.getX(), work.getY(), generateEndTime(8, 30, 15), generateEndTime(17, 15, 60)));
+		writer.write("\t\t\t<leg mode=\"pt\"> </leg>\n");
+		writer.write(String.format("\t\t\t<act type=\"h\" x=\"%.2f\" y=\"%.2f\" />\n", home.getX(), home.getY()));
+		writer.write("\t\t</plan>\n");
+		writer.write("\t</person>\n");
+		writer.write("\n");
+	}
+
+
 
 
 	private List<Coord> extractCoordinates(String filePath) throws ParserConfigurationException, SAXException, IOException {
@@ -86,7 +104,10 @@ public class PlansXMLSynthesizer {
 		String outputDir = "examples/scenarios/UrbanLine/40kmx1km";  // Default directory for this main method
 		PlansXMLSynthesizer synthesizer = new PlansXMLSynthesizer(outputDir);
 		int numberOfPlansToGenerate = 5000; // specify the desired number of plans here
-		synthesizer.synthesize(numberOfPlansToGenerate);
+		int numberOfCBDPlans = 2000; // specify the desired number of plans here
+		Coord start = new Coord(-6100, 500);
+		synthesizer.synthesize(numberOfPlansToGenerate,numberOfCBDPlans, start, 0.3 );
+
 	}
 
 }

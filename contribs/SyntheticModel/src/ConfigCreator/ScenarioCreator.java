@@ -7,6 +7,7 @@ import TransitCreator.RailLinkCreator;
 import TransitCreator.RailScheduleCreator;
 import TransitCreator.VehicleCreator;
 
+import org.matsim.api.core.v01.Coord;
 import org.xml.sax.SAXException;
 
 import javax.xml.parsers.ParserConfigurationException;
@@ -16,7 +17,7 @@ import java.util.List;
 
 public class ScenarioCreator {
 
-	private static final String SCENARIO_PATH = "examples/scenarios/UrbanLine/SuburbanCorex5";
+	private static final String SCENARIO_PATH = "examples/scenarios/UrbanLine/Lastditch/FMLM2";
 
 	public static void main(String[] args) throws Exception {
 
@@ -26,11 +27,12 @@ public class ScenarioCreator {
 		// 2. Create households.xml and commercial.xml
 		createHouseholdsAndCommercialCoordinates();
 
-		// 3. Create plans.xml
+		// 4. Create plans.xml
 		createPlans();
 
-		// 4. Create transitschedule.xml
+		// 3. Create transitschedule.xml
 		createRailSchedule();
+
 
 		// 5. Create transitVehicles.xml
 		createVehicles();
@@ -44,7 +46,7 @@ public class ScenarioCreator {
 //			30, 27, 26, //CBD
 //			24, 23, 21, 20//urban area
 //			18, 16, 15, 14, 13, 12 //suburban transition ~300  (170 - 430)
-			23, 20, 18, 17, 17 //suburban Core ~300  (170 - 430)
+			23, 20, 18, 13, 12 //suburban Core ~300  (170 - 430)
 //			27, 27, 27 //suburb
 		);
 		SyntheticNetworkCreator.main(new String[]{SCENARIO_PATH}, slicesList);
@@ -55,7 +57,7 @@ public class ScenarioCreator {
 //			8000, 10000, 10000, //main core
 //			10000, 9000, 9000, 7000 //urban area
 //			3000, 4000, 3200, 2500, 1800, 3000 //suburban transition ~3200 (1300 - 5900)
-			6000, 5000, 5000, 7000, 4000 //suburban Core ~300  (170 - 430)
+			5000, 4500, 4500, 1000, 800 //suburban Core ~300  (170 - 430)
 //			800, 500, 700 //suburb
 		);
 		List<Double> decayRates = List.of(
@@ -69,7 +71,7 @@ public class ScenarioCreator {
 //			1500, 1500, 1500, //main core
 //			1000, 700, 500, 400 //urban area
 //			250, 200, 130, 150, 100, 90 //suburban transition ~130 (60 - 290)
-			700, 300, 250, 130, 150
+			700, 300, 250, 80, 50
 //			50, 70, 70 //suburb
 		);
 
@@ -83,12 +85,15 @@ public class ScenarioCreator {
 	private static void createPlans() throws ParserConfigurationException, IOException, SAXException {
 		PlansXMLSynthesizer synthesizer = new PlansXMLSynthesizer(SCENARIO_PATH);
 		int numberOfPlansToGenerate = 20000; // specify the desired number of plans here
-		synthesizer.synthesize(numberOfPlansToGenerate);
+		int numberOfCBDPlans = 8000; // specify the desired number of plans here
+		Coord start = new Coord(-6100, 500);
+		synthesizer.synthesize(numberOfPlansToGenerate,numberOfCBDPlans, start, 0.35 );
 	}
 
 	private static void createRailSchedule() throws IOException {
 
 		double[] distances = {
+			6600, //CBD distance
 			// First half: links from 700 to 1500
 //			700.0, 742.0, 868.0, 910.0,
 			952.0, 1036.0, 1246.0, 1414.0,
@@ -97,6 +102,7 @@ public class ScenarioCreator {
 //			1666.0, 1998.0, 2330.0, 2994.0,
 //			//  last bit: 10 links from 2500 to 3500
 //			2765.0, 2895.0
+			4000 //End of Line distance
 		};
 
 		String[] times = {
@@ -133,9 +139,9 @@ public class ScenarioCreator {
 			"22:00:00", "22:15:00", "22:30:00", "22:45:00", "23:00:00", "23:15:00", "23:30:00", "23:45:00",
 		};
 
-		String[] vehicleRefIds = new String[times.length];
-		for (int i = 0; i < times.length; i++) {
-			vehicleRefIds[i] = "tr_" + ((i % 25) + 1);  // rotates between tr_1, tr_2, .... tr_25
+		String[] vehicleRefIds = new String[400];
+		for (int i = 0; i < 400; i++) {
+			vehicleRefIds[i] = "tr_" + i;  // rotates between tr_1, tr_2, .... tr_25
 		}
 
 		RailScheduleCreator scheduleCreator = new RailScheduleCreator();
@@ -146,7 +152,7 @@ public class ScenarioCreator {
 
 	private static void createVehicles(){
 		VehicleCreator vehicleCreator = new VehicleCreator();
-		int veh_no = 25; // specify the desired number of vehicles here
+		int veh_no = 400; // specify the desired number of vehicles here
 		vehicleCreator.createTrain(SCENARIO_PATH, veh_no);
 	}
 
