@@ -17,7 +17,7 @@ import java.util.List;
 
 public class ScenarioCreator {
 //djiajdaojsdao
-	private static final String SCENARIO_PATH = "examples/scenarios/UrbanLine/Lastditch/FMLM2";
+	private static final String SCENARIO_PATH = "examples/scenarios/UrbanLine/UrbanPrototypex3";
 
 	public static void main(String[] args) throws Exception {
 

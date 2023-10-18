@@ -11,6 +11,7 @@ import org.matsim.api.core.v01.network.Node;
 import org.matsim.core.config.Config;
 import org.matsim.core.config.ConfigUtils;
 import org.matsim.core.network.NetworkUtils;
+import org.matsim.core.network.io.MatsimNetworkReader;
 import org.matsim.core.population.routes.NetworkRoute;
 import org.matsim.core.population.routes.RouteUtils;
 import org.matsim.core.scenario.ScenarioUtils;
@@ -19,6 +20,12 @@ import org.matsim.pt.transitSchedule.api.*;
 import org.matsim.vehicles.MatsimVehicleWriter;
 import org.matsim.vehicles.Vehicle;
 import org.matsim.vehicles.VehicleType;
+
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.*;
@@ -139,6 +146,93 @@ public class RailScheduleCreator {
 
 	}
 
+	/**
+	 * Load an existing network file and a CSV file with station names and coordinates,
+	 * then adds nodes to the network corresponding with each row of the CSV and generates links connecting them.
+	 *
+	 * @param networkFilePath Path to the existing network XML file.
+	 * @param csvFilePath     Path to the CSV file with station names and coordinates.
+	 * @throws IOException If there's a problem reading the files.
+	 */
+	public void loadFromCsvAndGenerateLinks(String networkFilePath, String csvFilePath) throws IOException {
+		Network network = NetworkUtils.readNetwork(networkFilePath);
+
+		// Read the CSV file
+		try (BufferedReader br = new BufferedReader(new FileReader(csvFilePath))) {
+			String line;
+			Node previousNode = null;
+
+			while ((line = br.readLine()) != null) {
+				String[] parts = line.split(",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)", -1); // Splits on commas outside of quotes
+				if (parts.length != 4) {
+					System.out.println("Unexpected format in line: " + line);
+					continue; // Skip processing this line and move to the next
+				}
+				String stationName = parts[0].replace("\"", "").trim();
+				String[] coordinates = parts[1].replace("\"", "").split(",");
+				double linkLength = 1.0; // Default value
+
+				if (coordinates.length != 2) {
+					System.out.println("Unexpected coordinates format in line: " + line);
+					continue; // Skip processing this line and move to the next
+				}
+
+				double latitude = Double.parseDouble(coordinates[0].trim());
+				double longitude = Double.parseDouble(coordinates[1].trim());
+
+				// Create node for the current station
+				Coord coord = new Coord(longitude, latitude);
+				Node currentNode = network.getFactory().createNode(Id.createNodeId(stationName), coord);
+				network.addNode(currentNode);
+
+				// Create a link from the current node to itself with length 1
+				createLinkWithLength(network, currentNode, currentNode, 1.0);
+
+				// If there's a previous node, create links between the two nodes
+				if (previousNode != null) {
+					if (!parts[3].trim().isEmpty() && !parts[3].trim().equals("-")) {
+						linkLength = Double.parseDouble(parts[3].trim()) * 1000; // Convert km to meters
+					} else {
+						// Handle the case when the distance is "-" or empty
+						System.out.println("Invalid or missing link length for stations: " + stationName);
+						continue; // Or set a default linkLength value if you prefer
+					}
+					createLinkWithLength(network, previousNode, currentNode, linkLength); // Original direction link
+					createLinkWithLength(network, currentNode, previousNode, linkLength); // Reverse direction link
+				}
+				previousNode = currentNode;
+			}
+		}
+
+		// Write the modified network back to the XML file
+		new NetworkWriter(network).write(networkFilePath);
+	}
+
+	// The function to create a link with specified length
+	private void createLinkWithLength(Network network, Node fromNode, Node toNode, double length) {
+		Link link = network.getFactory().createLink(Id.createLinkId(fromNode.getId() + "_" + toNode.getId()), fromNode, toNode);
+		link.setLength(length);
+
+		// Setting specified attributes for the link
+		link.setCapacity(9999);
+		link.setFreespeed(20.0 / 3.6); // Convert km/h to m/s
+		Set<String> modes = new HashSet<>();
+		modes.add("pt");
+		link.setAllowedModes(modes);
+
+		network.addLink(link);
+	}
+	private void createOneRailLink(Network network, Node fromNode, Node toNode) {
+		// Create forward link
+		Id<Link> linkIdForward = Id.createLinkId(fromNode.getId() + "_" + toNode.getId());
+		Link linkForward = network.getFactory().createLink(linkIdForward, fromNode, toNode);
+		network.addLink(linkForward);
+
+		// Create reverse link
+		Id<Link> linkIdReverse = Id.createLinkId(toNode.getId() + "_" + fromNode.getId());
+		Link linkReverse = network.getFactory().createLink(linkIdReverse, toNode, fromNode);
+		network.addLink(linkReverse);
+	}
 	public void createRailLink(Network network, Node fromNode, Node toNode, List<Id<Link>> linkIds, List<Id<Link>> linkIds_r) {
 		// Create the original link
 		Link link = network.getFactory().createLink(Id.createLinkId("link-id_" + fromNode.getId() + "_" + toNode.getId()), fromNode, toNode);
@@ -163,7 +257,7 @@ public class RailScheduleCreator {
 		System.out.println("Created Link: " + link.getId());
 	}
 
-	public  List<TransitStopFacility> StopfacilityCreator(Scenario scenario, TransitScheduleFactory scheduleFactory, List<Id<Link>> linkIds) {
+	public static List<TransitStopFacility> StopfacilityCreator(Scenario scenario, TransitScheduleFactory scheduleFactory, List<Id<Link>> linkIds) {
 		List<TransitStopFacility> createdStopFacilities = new ArrayList<>();
 
 		for (Id<Link> linkId : linkIds) {
@@ -182,7 +276,7 @@ public class RailScheduleCreator {
 		return createdStopFacilities;
 	}
 
-	public List<TransitRouteStop> createTransitRouteStopsForFacilities(Scenario scenario, TransitScheduleFactory scheduleFactory, List<TransitStopFacility> stopFacilities) {
+	public static List<TransitRouteStop> createTransitRouteStopsForFacilities(Scenario scenario, TransitScheduleFactory scheduleFactory, List<TransitStopFacility> stopFacilities) {
 		List<TransitRouteStop> transitRouteStops = new ArrayList<>();
 
 		// Assuming a fixed dwell time of 0 seconds at each stop and the same arrival and departure offsets for simplicity
@@ -194,7 +288,7 @@ public class RailScheduleCreator {
 		return transitRouteStops;
 	}
 
-	private void DepartureCreator(TransitScheduleFactory scheduleFactory, TransitRoute transitRoute_r, String[] times, String[] vehicleRefIds) {
+	private static void DepartureCreator(TransitScheduleFactory scheduleFactory, TransitRoute transitRoute_r, String[] times, String[] vehicleRefIds) {
 		for (int i = 0; i < times.length; i++) {
 			Id<Departure> departureId = Id.create("d_" + (i + 1), Departure.class);
 			double departureTime = Time.parseTime(times[i]);
@@ -229,35 +323,130 @@ public class RailScheduleCreator {
 			return timesList.toArray(new String[0]);
 		}
 
+		public static void addTransitLineFromCSV(String networkPath, String csvPath, String transitLineName, String[] times, String[] vehicleRefIds) {
+			Config config = ConfigUtils.createConfig();
+			Scenario scenario = ScenarioUtils.createScenario(config);
 
+			new MatsimNetworkReader(scenario.getNetwork()).readFile(networkPath);
 
-		public static void main(String[] args) {
-			// Initialise scenario
-			String scenarioPath = "examples/scenarios/UrbanLine/20kmx1km";
-			String configFilePath = "examples/scenarios/UrbanLine/20kmx1km/config.xml";
-			Config config = ConfigUtils.loadConfig(configFilePath);
-			Scenario scenario = ScenarioUtils.loadScenario(config);
+			List<Id<Link>> linkIds = new ArrayList<>();
 
-			double[] distances = {
-				// First half: links from 700 to 1500
-				700.0, 742.0, 868.0, 910.0, 952.0,
-				1036.0, 1246.0,
-				1414.0, 1456.0,
-				// Next quarter: links from 1500 to 3000
-				1666.0, 1998.0, 2330.0, 2994.0,
-				//  last bit: 10 links from 2500 to 3500
-				2765.0, 2895.0   };
-
-			String[] times = generateTimes(15, 7, 10);
-
-			String[] vehicleRefIds = new String[times.length];
-			for (int i = 0; i < times.length; i++) {
-				vehicleRefIds[i] = "tr_" + ((i % 25) + 1);  // rotates between tr_1, tr_2, .... tr_25
+			// Reading the CSV file to populate the linkIds list
+			try (BufferedReader br = new BufferedReader(new FileReader(csvPath))) {
+				String line;
+				while ((line = br.readLine()) != null) {
+					String[] values = line.split(",");
+					linkIds.add(Id.createLinkId(values[0]));
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
 			}
 
-			RailScheduleCreator creator = new RailScheduleCreator();
-			creator.generateSchedule(scenarioPath, times, vehicleRefIds, distances);
+			TransitScheduleFactory scheduleFactory = scenario.getTransitSchedule().getFactory();
 
+			// Creating Network Route and Stops
+			Id<Link> startLinkId = linkIds.get(0);
+			Id<Link> endLinkId = linkIds.get(linkIds.size() - 1);
+			List<Id<Link>> intermediateLinkIds = linkIds.subList(1, linkIds.size() - 1);
+			NetworkRoute networkRoute = RouteUtils.createLinkNetworkRouteImpl(startLinkId, intermediateLinkIds, endLinkId);
+
+			List<TransitStopFacility> stopFacilities = createStopFacilities(scenario, scheduleFactory, linkIds);
+			List<TransitRouteStop> transitRouteStops = createTransitRouteStopsForFacilities(scheduleFactory, stopFacilities);
+
+			// Creating Transit Routes
+			TransitRoute transitRoute = scheduleFactory.createTransitRoute(Id.create(transitLineName, TransitRoute.class), networkRoute, transitRouteStops, "pt");
+			int halfIndex = vehicleRefIds.length / 2;
+
+			String[] firstHalfVehicleRefIds = Arrays.copyOfRange(vehicleRefIds,0, halfIndex);
+			String[] secondHalfVehicleRefIds = Arrays.copyOfRange(vehicleRefIds, halfIndex, vehicleRefIds.length);
+
+			// Populate the departures for the created routes using the first half of vehicleRefIds
+			DepartureCreator(scheduleFactory, transitRoute, times, firstHalfVehicleRefIds);
+
+			// Creating Transit Line and adding to the schedule
+			TransitLine transitLine = scheduleFactory.createTransitLine(Id.create(transitLineName, TransitLine.class));
+			transitLine.addRoute(transitRoute);
+			scenario.getTransitSchedule().addTransitLine(transitLine);
+
+			String directory = new File(networkPath).getParent();  // Get directory of network.xml
+			String outputPath = directory + File.separator + "transitschedule.xml";  // Construct path for transitschedule.xml
+
+			new TransitScheduleWriter(scenario.getTransitSchedule()).writeFile(outputPath);
+		}
+
+		private static List<TransitStopFacility> createStopFacilities(Scenario scenario, TransitScheduleFactory scheduleFactory, List<Id<Link>> linkIds) {
+			List<TransitStopFacility> stopFacilities = new ArrayList<>();
+			for (Id<Link> linkId : linkIds) {
+				Link link = scenario.getNetwork().getLinks().get(linkId);
+				TransitStopFacility stopFacility = scheduleFactory.createTransitStopFacility(Id.create(linkId, TransitStopFacility.class), link.getCoord(), false);
+				stopFacility.setLinkId(linkId);
+				scenario.getTransitSchedule().addStopFacility(stopFacility);
+				stopFacilities.add(stopFacility);
+			}
+			return stopFacilities;
+		}
+
+		private static List<TransitRouteStop> createTransitRouteStopsForFacilities(TransitScheduleFactory scheduleFactory, List<TransitStopFacility> stopFacilities) {
+			List<TransitRouteStop> transitRouteStops = new ArrayList<>();
+			for (TransitStopFacility stopFacility : stopFacilities) {
+				TransitRouteStop routeStop = scheduleFactory.createTransitRouteStop(stopFacility, 0, 0); // Assuming 0 dwell time for simplicity
+				transitRouteStops.add(routeStop);
+			}
+			return transitRouteStops;
+		}
+
+
+
+
+		public static void main(String[] args) throws IOException {
+			// Initialise scenario
+			String networkPath = "examples/scenarios/Odakyu1/rrte2.xml";
+			String csvPath = "examples/scenarios/Odakyu1/test/Odakyutest.csv";
+
+			// Provided departure times
+			String[] times = {
+				// 5 AM to 6 AM: Early morning, every 15 minutes
+				"05:00:00", "05:15:00", "05:30:00", "05:45:00",
+				// 6 AM to 7:30 AM: Morning rush, every 5 minutes
+				"06:00:00", "06:05:00", "06:10:00", "06:15:00", "06:20:00", "06:25:00", "06:30:00",
+				"06:35:00", "06:40:00", "06:45:00", "06:50:00", "06:55:00", "07:00:00", "07:05:00",
+				"07:10:00", "07:15:00", "07:20:00", "07:25:00", "07:30:00",
+				// 7:30 AM to 9 AM: Peak rush, every 3-4 minutes
+				"07:33:00", "07:37:00", "07:40:00", "07:44:00", "07:48:00", "07:52:00", "07:56:00",
+				"08:00:00", "08:04:00", "08:08:00", "08:12:00", "08:16:00", "08:20:00", "08:24:00",
+				"08:28:00", "08:32:00", "08:36:00", "08:40:00", "08:44:00", "08:48:00", "08:52:00",
+				"08:56:00",
+				// 9 AM to 4 PM: Off-peak, every 10 minutes
+				"09:00:00", "09:10:00", "09:20:00", "09:30:00", "09:40:00", "09:50:00",
+				"10:00:00", "10:10:00", "10:20:00", "10:30:00", "10:40:00", "10:50:00",
+				"11:00:00", "11:10:00", "11:20:00", "11:30:00", "11:40:00", "11:50:00",
+				"12:00:00", "12:10:00", "12:20:00", "12:30:00", "12:40:00", "12:50:00",
+				"13:00:00", "13:10:00", "13:20:00", "13:30:00", "13:40:00", "13:50:00",
+				"14:00:00", "14:10:00", "14:20:00", "14:30:00", "14:40:00", "14:50:00",
+				"15:00:00", "15:10:00", "15:20:00", "15:30:00", "15:40:00", "15:50:00",
+				// 4 PM to 7 PM: Evening rush, every 5 minutes
+				"16:00:00", "16:05:00", "16:10:00", "16:15:00", "16:20:00", "16:25:00",
+				"16:30:00", "16:35:00", "16:40:00", "16:45:00", "16:50:00", "16:55:00",
+				"17:00:00", "17:05:00", "17:10:00", "17:15:00", "17:20:00", "17:25:00",
+				"17:30:00", "17:35:00", "17:40:00", "17:45:00", "17:50:00", "17:55:00",
+				// 7 PM to 10 PM: Evening, every 10 minutes
+				"18:00:00", "18:10:00", "18:20:00", "18:30:00", "18:40:00", "18:50:00",
+				"19:00:00", "19:10:00", "19:20:00", "19:30:00", "19:40:00", "19:50:00",
+				"20:00:00", "20:10:00", "20:20:00", "20:30:00", "20:40:00", "20:50:00",
+				"21:00:00", "21:10:00", "21:20:00", "21:30:00", "21:40:00", "21:50:00",
+				// 10 PM to 12 AM: Late evening, every 15 minutes
+				"22:00:00", "22:15:00", "22:30:00", "22:45:00", "23:00:00", "23:15:00", "23:30:00", "23:45:00",
+			};
+
+			String[] vehicleRefIds = new String[400];
+			for (int i = 0; i < 400; i++) {
+				vehicleRefIds[i] = "tr_" + i;  // rotates between tr_1, tr_2, .... tr_25
+			}
+			RailScheduleCreator creator = new RailScheduleCreator();
+			//creator.loadFromCsvAndGenerateLinks(networkPath,csvPath);
+
+			// Calling the addTransitLineFromCSV method
+			addTransitLineFromCSV(networkPath, csvPath, "Blue Line", times, vehicleRefIds);
 		}
 	}
 }
