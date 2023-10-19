@@ -35,7 +35,7 @@ import org.matsim.vis.otfvis.OTFVisConfigGroup;
 
 /**
  * Minimal example how to start your matsim run with traffic signals
- * 
+ *
  * @author tthunig
  */
 public class RunSignalSystemsExample {
@@ -44,7 +44,7 @@ public class RunSignalSystemsExample {
 	/**
 	 * @param args the path to your config file
 	 */
-	public static void main(String[] args) {		
+	public static void main(String[] args) {
 		Config config;
 		if (args.length==0 || args.length>1) {
 			// --- create a config for the example scenario
@@ -56,16 +56,16 @@ public class RunSignalSystemsExample {
 			// --- create a config from the arguments you provided
 			config = ConfigUtils.loadConfig(args[0]);
 		}
-			
+
 		run(config, true); // The run method is extracted so that a test can operate on it.
 	}
-	
+
 	public static void run(Config config, boolean visualize) {
 		// adjustments for live visualization
 		OTFVisConfigGroup otfvisConfig = ConfigUtils.addOrGetModule(config, OTFVisConfigGroup.class);
 		otfvisConfig.setDrawTime(true);
 		config.qsim().setSnapshotStyle(QSimConfigGroup.SnapshotStyle.withHoles);
-		
+
 		// --- create the scenario
 		Scenario scenario = ScenarioUtils.loadScenario(config);
 		// load the information about signals data (i.e. fill the SignalsData object) and add it to the scenario as scenario element
@@ -81,7 +81,7 @@ public class RunSignalSystemsExample {
 		if (visualize) {
 			c.addOverridingModule(new OTFVisWithSignalsLiveModule());
 		}
-		
+
 		// --- run the simulation
 		c.run();
 	}

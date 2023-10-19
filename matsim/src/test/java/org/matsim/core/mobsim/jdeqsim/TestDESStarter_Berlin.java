@@ -41,7 +41,7 @@ public class TestDESStarter_Berlin extends AbstractJDEQSimTest {
 		ScenarioUtils.loadScenario(scenario);
 
 		this.runJDEQSim(scenario);
-		
+
 		assertEquals(scenario.getPopulation().getPersons().size(), super.eventsByPerson.size());
 		super.checkAscendingTimeStamps();
 		super.checkEventsCorrespondToPlans(scenario.getPopulation());

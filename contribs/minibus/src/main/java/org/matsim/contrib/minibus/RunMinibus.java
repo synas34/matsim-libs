@@ -31,15 +31,15 @@ import org.matsim.core.scenario.ScenarioUtils;
 
 /**
  * Entry point, registers all necessary hooks
- * 
+ *
  * @author aneumann
  */
 public final class RunMinibus {
 
 	private final static Logger log = LogManager.getLogger(RunMinibus.class);
-	
+
 	private final Config config ;
-	
+
 	public RunMinibus( final String [] args ) {
 		if(args.length == 0){
 			log.info("Arg 1: config.xml is missing.");
@@ -48,17 +48,17 @@ public final class RunMinibus {
 		}
 		config = ConfigUtils.loadConfig( args[0], new PConfigGroup() ) ;
 	}
-	
+
 	public final void run() {
 		Scenario scenario = ScenarioUtils.loadScenario(config);
-		
+
 		Controler controler = new Controler(scenario);
-		
+
 		controler.addOverridingModule(new PModule()) ;
-		
+
 		controler.run();
 	}
-	
+
 	public final Config getConfig() {
 		return this.config ;
 	}

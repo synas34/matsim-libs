@@ -40,10 +40,10 @@ public class TestDESStarter_EquilPopulationPlans1Modified1 extends AbstractJDEQS
 		MatsimRandom.reset(config.global().getRandomSeed());
 		Scenario scenario = ScenarioUtils.createScenario(config);
 		ScenarioUtils.loadScenario(scenario);
-		
+
 		new EquilPopulationPlans1Modified1().modifyPopulation(scenario.getPopulation());
 		this.runJDEQSim(scenario);
-		
+
 		assertEquals(scenario.getPopulation().getPersons().size(), super.eventsByPerson.size());
 		super.checkAscendingTimeStamps();
 		super.checkEventsCorrespondToPlans(scenario.getPopulation());

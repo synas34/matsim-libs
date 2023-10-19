@@ -187,7 +187,7 @@ public final class ParallelEventsManagerImpl implements EventsManager {
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
-		
+
 		// list which threads had which handlers to debug performance issues
 		printEventHandlers();
 
@@ -218,7 +218,7 @@ public final class ParallelEventsManagerImpl implements EventsManager {
 			this.threads[i].setUncaughtExceptionHandler(this.uncaughtExceptionHandler);
 			this.threads[i].start();
 		}
-		
+
 		// (re-)activate parallel mode while the mobsim is running
 		this.parallelMode = true;
 	}

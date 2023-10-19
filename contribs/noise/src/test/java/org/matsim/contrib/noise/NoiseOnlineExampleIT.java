@@ -18,7 +18,7 @@
  * *********************************************************************** */
 
 /**
- * 
+ *
  */
 package org.matsim.contrib.noise;
 
@@ -53,7 +53,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class NoiseOnlineExampleIT {
 	private static final Logger log = LogManager.getLogger( NoiseOnlineExampleIT.class ) ;
-	
+
 	@Rule
 	public MatsimTestUtils testUtils = new MatsimTestUtils();
 

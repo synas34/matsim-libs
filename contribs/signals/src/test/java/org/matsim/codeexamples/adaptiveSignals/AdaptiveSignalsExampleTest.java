@@ -31,11 +31,11 @@ public class AdaptiveSignalsExampleTest {
 
 	@Rule
 	public MatsimTestUtils testUtils = new MatsimTestUtils();
-	
+
 	@Test
 	public void testAdaptiveSignalsExample() {
 		String configFileName = "./examples/tutorial/singleCrossingScenario/config.xml";
 		RunAdaptiveSignalsExample.run(configFileName, testUtils.getOutputDirectory() + "/", false);
 	}
-	
+
 }

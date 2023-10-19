@@ -323,11 +323,13 @@ public class RailScheduleCreator {
 			return timesList.toArray(new String[0]);
 		}
 
-		public static void addTransitLineFromCSV(String networkPath, String csvPath, String transitLineName, String[] times, String[] vehicleRefIds) {
+		public static void addTransitLineFromCSV(String networkPath, String transitSchedulePath, String csvPath, String transitLineName, String[] times, String[] vehicleRefIds) {
 			Config config = ConfigUtils.createConfig();
 			Scenario scenario = ScenarioUtils.createScenario(config);
 
+			// Read the existing network and transit schedule
 			new MatsimNetworkReader(scenario.getNetwork()).readFile(networkPath);
+			new TransitScheduleReader(scenario).readFile(transitSchedulePath);
 
 			List<Id<Link>> linkIds = new ArrayList<>();
 
@@ -358,7 +360,6 @@ public class RailScheduleCreator {
 			int halfIndex = vehicleRefIds.length / 2;
 
 			String[] firstHalfVehicleRefIds = Arrays.copyOfRange(vehicleRefIds,0, halfIndex);
-			String[] secondHalfVehicleRefIds = Arrays.copyOfRange(vehicleRefIds, halfIndex, vehicleRefIds.length);
 
 			// Populate the departures for the created routes using the first half of vehicleRefIds
 			DepartureCreator(scheduleFactory, transitRoute, times, firstHalfVehicleRefIds);
@@ -368,32 +369,40 @@ public class RailScheduleCreator {
 			transitLine.addRoute(transitRoute);
 			scenario.getTransitSchedule().addTransitLine(transitLine);
 
-			String directory = new File(networkPath).getParent();  // Get directory of network.xml
-			String outputPath = directory + File.separator + "transitschedule.xml";  // Construct path for transitschedule.xml
-
-			new TransitScheduleWriter(scenario.getTransitSchedule()).writeFile(outputPath);
+			// Write the updated transit schedule back to the same file
+			new TransitScheduleWriter(scenario.getTransitSchedule()).writeFile(transitSchedulePath);
 		}
+
+
 
 		private static List<TransitStopFacility> createStopFacilities(Scenario scenario, TransitScheduleFactory scheduleFactory, List<Id<Link>> linkIds) {
 			List<TransitStopFacility> stopFacilities = new ArrayList<>();
 			for (Id<Link> linkId : linkIds) {
 				Link link = scenario.getNetwork().getLinks().get(linkId);
+				System.out.println("Extractedlink: " + link);
 				TransitStopFacility stopFacility = scheduleFactory.createTransitStopFacility(Id.create(linkId, TransitStopFacility.class), link.getCoord(), false);
 				stopFacility.setLinkId(linkId);
+				// Check if the stop
+				if (!scenario.getTransitSchedule().getFacilities().containsKey(stopFacility.getId())) {
 				scenario.getTransitSchedule().addStopFacility(stopFacility);
 				stopFacilities.add(stopFacility);
+				} else {
+				// If it already exists, just add it to the list of stop facilities
+				stopFacilities.add(scenario.getTransitSchedule().getFacilities().get(stopFacility.getId()));
+				}
 			}
-			return stopFacilities;
+    			return stopFacilities;
 		}
 
-		private static List<TransitRouteStop> createTransitRouteStopsForFacilities(TransitScheduleFactory scheduleFactory, List<TransitStopFacility> stopFacilities) {
-			List<TransitRouteStop> transitRouteStops = new ArrayList<>();
-			for (TransitStopFacility stopFacility : stopFacilities) {
-				TransitRouteStop routeStop = scheduleFactory.createTransitRouteStop(stopFacility, 0, 0); // Assuming 0 dwell time for simplicity
-				transitRouteStops.add(routeStop);
-			}
-			return transitRouteStops;
+	private static List<TransitRouteStop> createTransitRouteStopsForFacilities(TransitScheduleFactory scheduleFactory, List<TransitStopFacility> stopFacilities) {
+		List<TransitRouteStop> transitRouteStops = new ArrayList<>();
+		for (TransitStopFacility stopFacility : stopFacilities) {
+			TransitRouteStop routeStop = scheduleFactory.createTransitRouteStop(stopFacility, 0, 0); // Assuming 0 dwell time for simplicity
+			transitRouteStops.add(routeStop);
 		}
+		return transitRouteStops;
+	}
+
 
 
 
@@ -402,41 +411,33 @@ public class RailScheduleCreator {
 			// Initialise scenario
 			String networkPath = "examples/scenarios/Odakyu1/rrte2.xml";
 			String csvPath = "examples/scenarios/Odakyu1/test/Odakyutest.csv";
+			String transitSchedulePath = "examples/scenarios/Odakyu1/transitschedule.xml";
 
 			// Provided departure times
 			String[] times = {
 				// 5 AM to 6 AM: Early morning, every 15 minutes
-				"05:00:00", "05:15:00", "05:30:00", "05:45:00",
-				// 6 AM to 7:30 AM: Morning rush, every 5 minutes
-				"06:00:00", "06:05:00", "06:10:00", "06:15:00", "06:20:00", "06:25:00", "06:30:00",
-				"06:35:00", "06:40:00", "06:45:00", "06:50:00", "06:55:00", "07:00:00", "07:05:00",
-				"07:10:00", "07:15:00", "07:20:00", "07:25:00", "07:30:00",
-				// 7:30 AM to 9 AM: Peak rush, every 3-4 minutes
-				"07:33:00", "07:37:00", "07:40:00", "07:44:00", "07:48:00", "07:52:00", "07:56:00",
-				"08:00:00", "08:04:00", "08:08:00", "08:12:00", "08:16:00", "08:20:00", "08:24:00",
-				"08:28:00", "08:32:00", "08:36:00", "08:40:00", "08:44:00", "08:48:00", "08:52:00",
-				"08:56:00",
-				// 9 AM to 4 PM: Off-peak, every 10 minutes
-				"09:00:00", "09:10:00", "09:20:00", "09:30:00", "09:40:00", "09:50:00",
-				"10:00:00", "10:10:00", "10:20:00", "10:30:00", "10:40:00", "10:50:00",
-				"11:00:00", "11:10:00", "11:20:00", "11:30:00", "11:40:00", "11:50:00",
-				"12:00:00", "12:10:00", "12:20:00", "12:30:00", "12:40:00", "12:50:00",
-				"13:00:00", "13:10:00", "13:20:00", "13:30:00", "13:40:00", "13:50:00",
-				"14:00:00", "14:10:00", "14:20:00", "14:30:00", "14:40:00", "14:50:00",
-				"15:00:00", "15:10:00", "15:20:00", "15:30:00", "15:40:00", "15:50:00",
-				// 4 PM to 7 PM: Evening rush, every 5 minutes
-				"16:00:00", "16:05:00", "16:10:00", "16:15:00", "16:20:00", "16:25:00",
-				"16:30:00", "16:35:00", "16:40:00", "16:45:00", "16:50:00", "16:55:00",
-				"17:00:00", "17:05:00", "17:10:00", "17:15:00", "17:20:00", "17:25:00",
-				"17:30:00", "17:35:00", "17:40:00", "17:45:00", "17:50:00", "17:55:00",
-				// 7 PM to 10 PM: Evening, every 10 minutes
-				"18:00:00", "18:10:00", "18:20:00", "18:30:00", "18:40:00", "18:50:00",
-				"19:00:00", "19:10:00", "19:20:00", "19:30:00", "19:40:00", "19:50:00",
-				"20:00:00", "20:10:00", "20:20:00", "20:30:00", "20:40:00", "20:50:00",
-				"21:00:00", "21:10:00", "21:20:00", "21:30:00", "21:40:00", "21:50:00",
-				// 10 PM to 12 AM: Late evening, every 15 minutes
-				"22:00:00", "22:15:00", "22:30:00", "22:45:00", "23:00:00", "23:15:00", "23:30:00", "23:45:00",
+				"05:00:00", "05:16:00", "05:27:00", "05:41:00", "05:45:00", "05:55:00",
+
+				// 6 AM to 7 AM: Morning rush, every few minutes
+				"06:00:00", "06:01:00", "06:02:00", "06:04:00", "06:07:00", "06:09:00", "06:11:00", "06:13:00", "06:15:00",
+				"06:20:00", "06:21:00", "06:23:00", "06:25:00", "06:30:00", "06:31:00", "06:32:00", "06:37:00", "06:38:00",
+				"06:40:00", "06:43:00", "06:47:00", "06:48:00", "06:50:00", "06:53:00", "06:55:00", "06:59:00",
+
+				// 7 AM to 7:30 AM: Continue morning rush
+				"07:00:00", "07:01:00", "07:02:00", "07:04:00", "07:05:00", "07:10:00", "07:12:00", "07:13:00", "07:15:00",
+				"07:19:00", "07:20:00", "07:21:00", "07:23:00", "07:25:00", "07:28:00", "07:30:00",
+
+				// 7:30 AM to 9 AM: Peak rush, every few minutes
+				"07:31:00", "07:32:00", "07:34:00", "07:37:00", "07:38:00", "07:39:00", "07:42:00", "07:46:00", "07:49:00",
+				"07:50:00", "07:53:00", "07:55:00", "08:00:00", "08:01:00", "08:03:00", "08:04:00", "08:08:00", "08:12:00",
+				"08:16:00", "08:20:00", "08:21:00", "08:25:00", "08:28:00", "08:30:00", "08:32:00", "08:35:00", "08:40:00",
+				"08:41:00", "08:45:00", "08:50:00", "08:52:00", "08:55:00",
+
+				// 9 AM: Start off-peak
+				"09:00:00"
 			};
+
+
 
 			String[] vehicleRefIds = new String[400];
 			for (int i = 0; i < 400; i++) {
@@ -446,7 +447,7 @@ public class RailScheduleCreator {
 			//creator.loadFromCsvAndGenerateLinks(networkPath,csvPath);
 
 			// Calling the addTransitLineFromCSV method
-			addTransitLineFromCSV(networkPath, csvPath, "Blue Line", times, vehicleRefIds);
+			addTransitLineFromCSV(networkPath, transitSchedulePath, csvPath, "test Line", times, vehicleRefIds);
 		}
 	}
 }

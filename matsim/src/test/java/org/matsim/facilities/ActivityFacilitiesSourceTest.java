@@ -52,7 +52,7 @@ import java.util.Collection;
 
 @RunWith(Parameterized.class)
 public class ActivityFacilitiesSourceTest {
-	
+
 	@Rule public MatsimTestUtils utils = new MatsimTestUtils() ;
 
 	//    private static final String outDir = "test/output/"+ActivityFacilitiesSourceTest.class.getCanonicalName().replace('.','/')+"/";
@@ -136,13 +136,13 @@ public class ActivityFacilitiesSourceTest {
 		return scenario.getActivityFacilities();
 	}
 
-	
+
 	// create basic scenario
 	private Scenario prepareScenario() {
 		Config config = ConfigUtils.loadConfig(IOUtils.extendUrl(ExamplesUtils.getTestScenarioURL("equil"), "config.xml"));
 		config.plans().setInputFile(null);
 		config.controler().setLastIteration(0);
-		
+
 		switch (facilitiesSource) {
 			case fromFile:
 				break;
@@ -158,11 +158,11 @@ public class ActivityFacilitiesSourceTest {
 //				config.facilities().setAssigningLinksToFacilitiesIfMissing(false);
 				break;
 		}
-		
+
 		config.facilities().setFacilitiesSource(facilitiesSource);
-		
+
 		Scenario scenario = ScenarioUtils.loadScenario(config);
-		
+
 		if (facilitiesSource.equals(FacilitiesConfigGroup.FacilitiesSource.setInScenario)) {
 			ActivityFacilities facilities = scenario.getActivityFacilities();
 			ActivityFacilitiesFactory factory = facilities.getFactory();
@@ -182,7 +182,7 @@ public class ActivityFacilitiesSourceTest {
 						Id.createLinkId("20")));
 			}
 		}
-		
+
 		PopulationFactory populationFactory = scenario.getPopulation().getFactory();
 
 		String mode = TransportMode.car;
@@ -297,7 +297,7 @@ public class ActivityFacilitiesSourceTest {
 		}
 		return scenario;
 	}
-	
+
 	private boolean assignFacilityIdToActivity(FacilitiesConfigGroup.FacilitiesSource facilitiesSource) {
 		return facilitiesSource.equals(FacilitiesConfigGroup.FacilitiesSource.setInScenario) || facilitiesSource.equals(
 				FacilitiesConfigGroup.FacilitiesSource.fromFile);

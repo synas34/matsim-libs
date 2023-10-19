@@ -174,7 +174,7 @@ public class PlansCalcRouteConfigGroupTest {
 	}
 
 	@Test
-	public void testIODifferentVersions() 
+	public void testIODifferentVersions()
 	{
 		final PlansCalcRouteConfigGroup initialGroup = createTestConfigGroup();
 
@@ -210,7 +210,7 @@ public class PlansCalcRouteConfigGroupTest {
 
 		assertIdentical("re-read v2", initialGroup, configV2.plansCalcRoute());
 	}
-	
+
 	@Test( expected=RuntimeException.class )
 	public void testConsistencyCheckIfNoTeleportedSpeed() {
 		final Config config = ConfigUtils.createConfig();
@@ -268,7 +268,7 @@ public class PlansCalcRouteConfigGroupTest {
 			log.info( "add param="+e.getKey() + " with value=" + e.getValue() );
 			module.addParam( e.getKey() , e.getValue() );
 		}
-		
+
 		for ( ModeRoutingParams settings : initialGroup.getModeRoutingParams().values() ) {
 			final String mode = settings.getMode();
 			module.addParam( "teleportedModeSpeed_"+mode , ""+settings.getTeleportedModeSpeed() );
@@ -284,15 +284,15 @@ public class PlansCalcRouteConfigGroupTest {
 			} else if ( !settings.getBeelineDistanceFactor().equals( val ) ) {
 				throw new RuntimeException( "beeline distance factor varies by mode; this cannot be covered by this test" ) ;
 			}
-		}		
+		}
 		module.addParam( "beelineDistanceFactor", ""+val );
-		
+
 		return module;
 	}
 
 	private static PlansCalcRouteConfigGroup createTestConfigGroup() {
-		log.info( "creating test config group ... "); 
-		
+		log.info( "creating test config group ... ");
+
 		final PlansCalcRouteConfigGroup group = new PlansCalcRouteConfigGroup();
 
 		group.setNetworkModes( Arrays.asList( "electricity" , "water_supply" ) );
@@ -300,7 +300,7 @@ public class PlansCalcRouteConfigGroupTest {
 		// two modes with only one speed
 		group.setTeleportedModeFreespeedFactor( "inline skate" , 0.1 );
 //		group.getModeRoutingParams().get("inline skate").setBeelineDistanceFactor( 10000000. );
-		
+
 		group.setTeleportedModeSpeed( "ice skates" , 10 );
 //		group.getModeRoutingParams().get("ice skates").setBeelineDistanceFactor( 10000000. );
 
@@ -311,7 +311,7 @@ public class PlansCalcRouteConfigGroupTest {
 		//group.setTeleportedModeFreespeedFactor( "overboard" , 100 );
 		//group.setTeleportedModeSpeed( "overboard" , 999 );
 
-		log.info( "... done creating test config group."); 
+		log.info( "... done creating test config group.");
 		return group;
 	}
 }

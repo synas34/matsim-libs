@@ -69,7 +69,7 @@ public class MultiModalControlerListenerTest {
 
 	private static final Logger log = LogManager.getLogger(MultiModalControlerListenerTest.class);
 
-	@Rule 
+	@Rule
 	public MatsimTestUtils utils = new MatsimTestUtils();
 
 	@SuppressWarnings("static-method")
@@ -268,16 +268,16 @@ public class MultiModalControlerListenerTest {
 
         LinkModeChecker linkModeChecker = new LinkModeChecker(controler.getScenario().getNetwork());
 		controler.getEvents().addHandler(linkModeChecker);
-		
+
 		controler.run();
-		
-		/* NOTE: When I introduced access/egress legs, nearly everything in the following (besides bikeCount) changed.   
+
+		/* NOTE: When I introduced access/egress legs, nearly everything in the following (besides bikeCount) changed.
 		 * After setting removeStuckVehicles from true to false, the counts were stable.  So with access/egress legs, a
 		 * different number of vehicles got lost ... which makes sense, because they enter/leave the traffic at different times.
-		 *  
+		 *
 		 * Also, after not losing vehicles vehicles any more, the travel times for the uncongested modes bike and walk were stable.
 		 * Predictably, the travel time for the congested mode changes.
-		 * 
+		 *
 		 * kai, feb'16
 		 */
 
@@ -407,7 +407,7 @@ public class MultiModalControlerListenerTest {
 		public void handleEvent(LinkLeaveEvent event) {
 			Link link = this.network.getLinks().get(event.getLinkId());
 			String mode = this.vehModes.get(event.getVehicleId());
-			
+
 			if (!link.getAllowedModes().contains(mode)) {
 				log.error(mode);
 			}

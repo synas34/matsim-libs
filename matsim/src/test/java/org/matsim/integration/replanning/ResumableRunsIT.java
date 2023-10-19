@@ -67,7 +67,7 @@ public class ResumableRunsIT {
 		config.controler().setOutputDirectory(utils.getOutputDirectory() + "/run1/");
 		/*
 		 * The input plans file is not sorted. After switching from TreeMap to LinkedHashMap
-		 * to store the persons in the population, we have to sort the population manually.  
+		 * to store the persons in the population, we have to sort the population manually.
 		 * cdobler, oct'11
 		 */
 		Scenario scenario1 = ScenarioUtils.loadScenario(config);

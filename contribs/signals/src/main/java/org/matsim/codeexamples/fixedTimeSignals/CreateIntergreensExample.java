@@ -43,22 +43,22 @@ import org.matsim.contrib.signals.SignalSystemsConfigGroup;
  * intergreen times of a correct fixed time signal control, i.e. a signal control
  * with realistic intergreen times where no collisions may occur.
  * @link TtCalculateSimplifiedIntergreens for how to extract intergreen times from a fixed time control
- *  
+ *
  * @author dgrether
  */
 public class CreateIntergreensExample {
 
 	private static final Logger log = LogManager.getLogger(CreateIntergreensExample.class);
-	
+
 	private static final String INPUT_DIR = "examples/tutorial/example90TrafficLights/useSignalInput/woLanes/";
 	private static String outputDir = "output/example90TrafficLights/";
-	
+
 	private static void createIntergreens(SignalsData sd){
 		IntergreenTimesData ig = sd.getIntergreenTimesData();
 		IntergreenTimesDataFactory igdf = ig.getFactory();
 		// Create a data object for signal system with id 3
 		IntergreensForSignalSystemData ig3 = igdf.createIntergreensForSignalSystem(Id.create("3", SignalSystem.class));
-		// Request at least 10 seconds red between the end of green of signal group 1 
+		// Request at least 10 seconds red between the end of green of signal group 1
 		// and the beginning of green of signal group 2 (signal system 3)
 		ig3.setIntergreenTime(10, Id.create("1", SignalGroup.class), Id.create("2", SignalGroup.class));
 		// add the data object to the container
@@ -68,7 +68,7 @@ public class CreateIntergreensExample {
 		ig4.setIntergreenTime(10, Id.create("1", SignalGroup.class), Id.create("2", SignalGroup.class));
 		ig.addIntergreensForSignalSystem(ig4);
 	}
-	
+
 	/**
 	 * @param args if not null it gives the output directory for the intergreens file
 	 * @throws IOException
@@ -80,7 +80,7 @@ public class CreateIntergreensExample {
 		}
 		// read in the existing scenario and add the intergreens data
 		Config config = ConfigUtils.loadConfig(INPUT_DIR + "config.xml");
-		SignalSystemsConfigGroup signalSystemsConfigGroup = 
+		SignalSystemsConfigGroup signalSystemsConfigGroup =
 				ConfigUtils.addOrGetModule(config, SignalSystemsConfigGroup.GROUP_NAME, SignalSystemsConfigGroup.class);
 		signalSystemsConfigGroup.setUseIntergreenTimes(true);
 		SignalsDataLoader signalsDataLoader = new SignalsDataLoader(config);

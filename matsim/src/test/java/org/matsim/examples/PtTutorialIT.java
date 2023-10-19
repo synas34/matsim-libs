@@ -51,9 +51,9 @@ import org.matsim.testcases.MatsimTestUtils;
 public class PtTutorialIT {
 
 	private final static Logger log = LogManager.getLogger(PtTutorialIT.class);
-	
+
 	public @Rule MatsimTestUtils utils = new MatsimTestUtils();
-	
+
 	@Test
 	public void ensure_tutorial_runs() throws MalformedURLException {
 		Config config = this.utils.loadConfig(IOUtils.extendUrl(ExamplesUtils.getTestScenarioURL("pt-tutorial"), "0.config.xml"));
@@ -78,7 +78,7 @@ public class PtTutorialIT {
 		final String it1Plans = "ITERS/it.1/1.plans.xml.gz";
 		Assert.assertTrue(new File(config.controler().getOutputDirectory(), it1Plans).exists());
 		Assert.assertTrue(new File(config.controler().getOutputDirectory(), "output_config.xml").exists());
-		
+
 		log.info( Controler.DIVIDER ) ;
 		log.info( Controler.DIVIDER ) ;
 		// try to restart from output:
@@ -89,7 +89,7 @@ public class PtTutorialIT {
 
 		config.controler().setOverwriteFileSetting( OverwriteFileSetting.overwriteExistingFiles );
 		// note: cannot delete directory since some of the input resides there. kai, sep'15
-		
+
 		config.controler().setFirstIteration(10);
 		config.controler().setLastIteration(10);
 
@@ -110,7 +110,7 @@ public class PtTutorialIT {
 			log.error(e.getMessage(), e);
 			Assert.fail("There shouldn't be any exception, but there was ... :-(");
 		}
-		
+
 	}
 
 	private static final class EnterVehicleEventCounter implements PersonEntersVehicleEventHandler {
@@ -154,5 +154,5 @@ public class PtTutorialIT {
 			}
 		}
 	}
-	
+
 }

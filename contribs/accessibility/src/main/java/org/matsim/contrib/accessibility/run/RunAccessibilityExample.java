@@ -54,11 +54,11 @@ final public class RunAccessibilityExample {
 		run(scenario); // The run method is extracted so that a test can operate on it.
 	}
 
-	
+
 	public static void run(final Scenario scenario) {
 		List<String> activityTypes = AccessibilityUtils.collectAllFacilityOptionTypes(scenario);
 		LOG.info("The following activity types were found: " + activityTypes);
-		
+
 		Controler controler = new Controler(scenario);
 		for (final String actType : activityTypes) { // Add an overriding module for each activity type.
 			final AccessibilityModule module = new AccessibilityModule();

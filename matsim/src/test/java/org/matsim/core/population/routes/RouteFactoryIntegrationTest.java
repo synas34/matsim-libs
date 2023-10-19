@@ -78,7 +78,7 @@ public class RouteFactoryIntegrationTest {
 						Leg leg = (Leg) pe;
 						Route route = leg.getRoute();
 						Assert.assertTrue(route instanceof NetworkRoute  || route instanceof GenericRouteImpl ); // that must be different from the class used below
-						// yy I added the "|| route instanceof GenericRouteImpl" to compensate for the added walk legs; a more precise 
+						// yy I added the "|| route instanceof GenericRouteImpl" to compensate for the added walk legs; a more precise
 						// test would be better. kai, feb'16
 					}
 				}
@@ -107,7 +107,7 @@ public class RouteFactoryIntegrationTest {
 						Route route = leg.getRoute();
 						Assert.assertTrue("person: " + person.getId() + "; plan: " + planCounter,
 								route instanceof HeavyCompressedNetworkRoute || route instanceof GenericRouteImpl );
-						// yy I added the "|| route instanceof GenericRouteImpl" to compensate for the added walk legs; a more precise 
+						// yy I added the "|| route instanceof GenericRouteImpl" to compensate for the added walk legs; a more precise
 						// test would be better. kai, feb'16
 					}
 				}

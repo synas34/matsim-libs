@@ -57,16 +57,16 @@ class ConfigWriterHandlerImplV2 extends ConfigWriterHandler {
 	// paths.  If someone feels like doing that, please go ahead.  kai, jun'18
 
 	private String newline = "\n";
-	
+
 	/**
 	 * So we can write only what deviates from the default.
 	 * Implementation of this functionality unfortunately became quite messy.
 	 * kai, may'18
 	 */
 	private final Verbosity verbosity;
-	
+
 	private final Set<String> commentsAlreadyWritten = new HashSet<>() ;
-	
+
 	ConfigWriterHandlerImplV2( Verbosity verbosity ) {
 		this.verbosity = verbosity ;
 	}
@@ -83,10 +83,10 @@ class ConfigWriterHandlerImplV2 extends ConfigWriterHandler {
 		Map<String, String> comments = module.getComments();
 
 		try {
-			
+
 			// first write the regular config entries (key,value pairs)
 			boolean headerHasBeenWritten = writeRegularEntries(writer, indent, moduleTag, moduleNameAtt, moduleName, comparisonModule, params, comments);
-			
+
 			// can't say what this is for:
 			if ( moduleName.equals("thisAintNoFlat") ) {
 				LogManager.getLogger(this.getClass()).warn("here") ;
@@ -94,7 +94,7 @@ class ConfigWriterHandlerImplV2 extends ConfigWriterHandler {
 
 			// then process the parameter sets (which will recursively call the current method again):
 			headerHasBeenWritten = processParameterSets(writer, indent, moduleTag, moduleNameAtt, moduleName, module, comparisonModule, headerHasBeenWritten);
-			
+
 			if ( headerHasBeenWritten ) {
 				writer.write(indent);
 				writer.write("\t</" + moduleTag + ">");
@@ -105,7 +105,7 @@ class ConfigWriterHandlerImplV2 extends ConfigWriterHandler {
 			throw new UncheckedIOException(e);
 		}
 	}
-	
+
 	private Boolean processParameterSets(BufferedWriter writer, String indent, String moduleTag, String moduleNameAtt, String moduleName,
 							 ConfigGroup module, ConfigGroup comparisonModule, Boolean headerHasBeenWritten) throws IOException {
 		for ( Entry<String, ? extends Collection<? extends ConfigGroup>> entry : module.getParameterSets().entrySet() ) {
@@ -157,13 +157,13 @@ class ConfigWriterHandlerImplV2 extends ConfigWriterHandler {
 		}
 		return headerHasBeenWritten;
 	}
-	
+
 	private Boolean writeRegularEntries(BufferedWriter writer, String indent, String moduleTag, String moduleNameAtt,
 							String moduleName, ConfigGroup comparisonModule, Map<String, String> params,
 							Map<String, String> comments) throws IOException {
 		boolean headerHasBeenWritten = false ;
 		for (Entry<String, String> entry : params.entrySet()) {
-			
+
 			final String actual = entry.getValue();
 			if ( verbosity== Verbosity.minimal ) {
 				if ( comparisonModule!=null ) {
@@ -190,7 +190,7 @@ class ConfigWriterHandlerImplV2 extends ConfigWriterHandler {
 //					}
 				}
 			}
-			
+
 			if ( !headerHasBeenWritten ) {
 				headerHasBeenWritten = true ;
 				writeHeader(writer, indent, moduleTag, moduleNameAtt, moduleName, newline);
@@ -217,7 +217,7 @@ class ConfigWriterHandlerImplV2 extends ConfigWriterHandler {
 		}
 		return headerHasBeenWritten;
 	}
-	
+
 	private static void writeHeader(BufferedWriter writer, String indent, String moduleTag, String moduleNameAtt, String moduleName, String newline) throws IOException {
 		//			writer.write( this.newline );
 		writer.write( indent );
@@ -225,7 +225,7 @@ class ConfigWriterHandlerImplV2 extends ConfigWriterHandler {
 		writer.write(" "+moduleNameAtt+"=\"" + moduleName + "\" >");
 		writer.write( newline );
 	}
-	
+
 	private static boolean sameType(ConfigGroup pSet, ConfigGroup cg) {
 		if ( ! ( pSet.getName().equals( cg.getName() ) ) ) {
 			return false;
@@ -255,7 +255,7 @@ class ConfigWriterHandlerImplV2 extends ConfigWriterHandler {
 		}
 		return false ;
 	}
-	
+
 	@Override
 	 void startConfig(
 			final Config config,
@@ -266,7 +266,7 @@ class ConfigWriterHandlerImplV2 extends ConfigWriterHandler {
 		} catch (IOException e) {
 			throw new UncheckedIOException(e);
 		}
-		
+
 	}
 
 	@Override
@@ -278,7 +278,7 @@ class ConfigWriterHandlerImplV2 extends ConfigWriterHandler {
 			out.write( this.newline );
 		} catch (IOException e) {
 			throw new UncheckedIOException(e);
-		}	
+		}
 	}
 
 	@Override
@@ -287,14 +287,14 @@ class ConfigWriterHandlerImplV2 extends ConfigWriterHandler {
 			final BufferedWriter out) {
 		if ( ! (module instanceof ChangeLegModeConfigGroup) ) {
 			// yyyy special case to provide error message; may be removed eventually.  kai, may'16
-			
-			
+
+
 			ConfigGroup comparisonConfig = null ;
 			if ( verbosity==Verbosity.minimal) {
 				comparisonConfig = ConfigUtils.createConfig().getModules().get(module.getName());
 				// preference to generate this here multiple times to avoid having it as a field. kai, may'18
 			}
-			
+
 			writeModule(
 					out,
 					"",

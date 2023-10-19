@@ -110,7 +110,7 @@ public class PlanRouterTest {
             		final Facility toFacility = request.getToFacility();
             		final double departureTime = request.getDepartureTime();
             		final Person person = request.getPerson();
-            		
+
                   List<? extends PlanElement> trip = DefaultRoutingModules.createPureNetworkRouter("car", scenario.getPopulation().getFactory(),
                   		scenario.getNetwork(),
                   		leastCostAlgoFactory.createPathCalculator(scenario.getNetwork(), disutilityFactory.createTravelDisutility(travelTime), travelTime)

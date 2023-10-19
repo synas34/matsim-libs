@@ -31,7 +31,7 @@ import org.matsim.testcases.MatsimTestUtils;
  */
 public class RunParkingChoiceExampleIT {
 	@Rule public MatsimTestUtils utils = new MatsimTestUtils() ;
-	
+
 	/**
 	 * Test method for {@link org.matsim.contrib.parking.parkingchoice.run.RunParkingChoiceExample#run(org.matsim.core.config.Config)}.
 	 */
@@ -41,7 +41,7 @@ public class RunParkingChoiceExampleIT {
 		config.controler().setOutputDirectory( utils.getOutputDirectory() );
 		config.controler().setLastIteration(0);
 		RunParkingChoiceExample.run(config);
-		
+
 	}
 
 }

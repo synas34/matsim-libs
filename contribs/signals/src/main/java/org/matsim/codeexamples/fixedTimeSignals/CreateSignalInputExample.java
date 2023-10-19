@@ -55,27 +55,27 @@ import org.matsim.core.scenario.ScenarioUtils;
 
 /**
  * Example for how to create signal input files from code.
- * 
+ *
  * See also the picture of the scenario in the same package as the input files
  * (examples/tutorial/example90TrafficLights/).
- * 
+ *
  * @link VisualizeSignalScenario for how to visualize this scenario.
- * 
+ *
  * @author dgrether
  */
 public class CreateSignalInputExample {
 
 	private static final Logger log = LogManager.getLogger(CreateSignalInputExample.class);
 	private static final String INPUT_DIR = "./examples/tutorial/example90TrafficLights/createSignalInput/";
-	
+
 	/**
 	 * This method creates the locations of signals, i.e. it specifies signalized intersections.
 	 * Furthermore groups for the signals are created that specify which signals will always have the same control.
-	 * 
+	 *
 	 * @param systems the so far empty object for information about signalized intersections
 	 * @param groups the so far empty object for information about signals that are controlled together as groups
 	 */
-	private void createSignalSystemsAndGroups(SignalSystemsData systems, SignalGroupsData groups){		
+	private void createSignalSystemsAndGroups(SignalSystemsData systems, SignalGroupsData groups){
 		// create signal system 3 (at node 3)
 		SignalSystemData sys = systems.getFactory().createSignalSystemData(Id.create("3", SignalSystem.class));
 		// add signal system 3 to the overall signal systems container
@@ -94,7 +94,7 @@ public class CreateSignalInputExample {
 		signal.setLinkId(Id.create("43", Link.class));
 		// create a single signal group for each signal of system 3, i.e. for signal 1 and 2
 		SignalUtils.createAndAddSignalGroups4Signals(groups, sys);
-		
+
 		// do the same with signal system 4 (node 4)
 		sys = systems.getFactory().createSignalSystemData(Id.create("4", SignalSystem.class));
 		systems.addSignalSystemData(sys);
@@ -116,7 +116,7 @@ public class CreateSignalInputExample {
 		sys.addSignalData(signal);
 		signal.setLinkId(Id.create("87", Link.class));
 		SignalUtils.createAndAddSignalGroups4Signals(groups, sys);
-		
+
 		// signal system 8
 		sys = systems.getFactory().createSignalSystemData(Id.create("8", SignalSystem.class));
 		systems.addSignalSystemData(sys);
@@ -128,23 +128,23 @@ public class CreateSignalInputExample {
 		signal.setLinkId(Id.create("58", Link.class));
 		SignalUtils.createAndAddSignalGroups4Signals(groups, sys);
 	}
-	
+
 	/**
 	 * Create a fixed time traffic signal control for all signal groups in the scenario,
 	 * i.e. specify when their signals show green or red.
-	 * 
+	 *
 	 * Each signal system (signalized intersection) is equipped with a control,
 	 * namely each with the same. The control contains the following information.
 	 * - A cylce time of 120 seconds.
 	 * - An offset (for green waves) of 0 seconds.
 	 * - Each direction gets green for second 0 to 55 within the cycle.
-	 * 
+	 *
 	 * @param control the so far empty object for information about when to show green and red
 	 */
 	private void createSignalControl(SignalControlData control) {
 		// specify overall cycle time
 		int cycle = 120;
-		
+
 		// create signal control for systems 3, 4, 7 and 8
 		List<Id<SignalSystem>> ids = new LinkedList<Id<SignalSystem>>();
 		ids.add(Id.create("3", SignalSystem.class));
@@ -158,8 +158,8 @@ public class CreateSignalInputExample {
 			control.addSignalSystemControllerData(controller);
 			// declare the control as a fixed time control
 			controller.setControllerIdentifier(DefaultPlanbasedSignalSystemController.IDENTIFIER);
-			
-			/* create a first signal plan for the system control (a signal system control (i.e. an intersection) 
+
+			/* create a first signal plan for the system control (a signal system control (i.e. an intersection)
 			 * can have different (non-overlapping) plans for different times of the day) */
 			SignalPlanData plan1 = control.getFactory().createSignalPlanData(Id.create("1", SignalPlan.class));
 			// add the (first) plan to the system control
@@ -178,7 +178,7 @@ public class CreateSignalInputExample {
 			plan1.addSignalGroupSettings(settings2);
 			settings2.setOnset(0);
 			settings2.setDropping(55);
-			
+
 			// create another signal plan for the system control
 			SignalPlanData plan2 = control.getFactory().createSignalPlanData(Id.create("2", SignalPlan.class));
 			controller.addSignalPlanData(plan2);
@@ -199,40 +199,40 @@ public class CreateSignalInputExample {
 			settings2_2.setDropping(25);
 		}
 	}
-	
+
 	/**
-	 * Set up the config and scenario, create signal information 
+	 * Set up the config and scenario, create signal information
 	 * and write them to file as input for further simulations.
-	 * 
+	 *
 	 * @throws IOException
 	 */
 	public void run(String outputDir) throws IOException {
 		// create an empty config
 		Config config = ConfigUtils.createConfig();
-		
+
 		// set network and population files
 		config.network().setInputFile(INPUT_DIR + "network.xml.gz");
 		config.plans().setInputFile(INPUT_DIR + "population.xml.gz");
-		
+
 		// add the signal config group to the config file
-		SignalSystemsConfigGroup signalSystemsConfigGroup = 
+		SignalSystemsConfigGroup signalSystemsConfigGroup =
 				ConfigUtils.addOrGetModule(config, SignalSystemsConfigGroup.GROUP_NAME, SignalSystemsConfigGroup.class);
-		
+
 		/* the following makes the contrib load the signal input files, but not to do anything with them
 		 * (this switch will eventually go away) */
 		signalSystemsConfigGroup.setUseSignalSystems(true);
-		
+
 		// specify some details for the visualization
 		config.qsim().setNodeOffset(20.0);
 		config.qsim().setSnapshotStyle(SnapshotStyle.queue);
-		
+
 		// --- create the scenario
 		Scenario scenario = ScenarioUtils.loadScenario(config);
 		/* create the information about signals data (i.e. create an empty SignalsData object)
 		 * and add it to the scenario as scenario element */
 		SignalsData signalsData = SignalUtils.createSignalsData(signalSystemsConfigGroup);
 		scenario.addScenarioElement(SignalsData.ELEMENT_NAME, signalsData);
-		
+
 		/* fill the SignalsData object with information:
 		 * signal systems - specify signalized intersections
 		 * signal groups - specify signals that always have the same signal control
@@ -240,31 +240,31 @@ public class CreateSignalInputExample {
 		 */
 		this.createSignalSystemsAndGroups(signalsData.getSignalSystemsData(), signalsData.getSignalGroupsData());
 		this.createSignalControl(signalsData.getSignalControlData());
-		
+
 		// create the path to the output directory if it does not exist yet
 		Files.createDirectories(Paths.get(outputDir));
-		
+
 		// set output filenames
 		signalSystemsConfigGroup.setSignalSystemFile(outputDir + "signal_systems.xml");
 		signalSystemsConfigGroup.setSignalGroupsFile(outputDir + "signal_groups.xml");
 		signalSystemsConfigGroup.setSignalControlFile(outputDir + "signal_control.xml");
-		
+
 		//write config to file
 		String configFile = outputDir  + "config.xml";
 		ConfigWriter configWriter = new ConfigWriter(config);
-		configWriter.write(configFile);		
-		
+		configWriter.write(configFile);
+
 		// write signal information to file
 		SignalsScenarioWriter signalsWriter = new SignalsScenarioWriter();
 		signalsWriter.setSignalSystemsOutputFilename(signalSystemsConfigGroup.getSignalSystemFile());
 		signalsWriter.setSignalGroupsOutputFilename(signalSystemsConfigGroup.getSignalGroupsFile());
 		signalsWriter.setSignalControlOutputFilename(signalSystemsConfigGroup.getSignalControlFile());
 		signalsWriter.writeSignalsData(scenario);
-		
+
 		log.info("Config of simple traffic light scenario is written to " + configFile);
 		log.info("Visualize scenario by calling VisSimpleTrafficSignalScenario in the same package.");
 	}
-	
+
 	public static void main(String[] args) throws IOException {
 		new CreateSignalInputExample().run("output/example90TrafficLights/");
 	}

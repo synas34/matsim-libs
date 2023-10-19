@@ -36,7 +36,7 @@ import org.matsim.core.utils.misc.ArgumentParser;
  * An example from the development head can be found <a href="http://ci.matsim.org:8080/job/MATSim_M2/ws/matsim/test/output/org/matsim/run/CreateFullConfigTest/testMain/newConfig.xml">here</a>.
  * <p></p>
  * This class is mentioned in the User Guide.
- * 
+ *
  * @author mrieser / Senozon AG
  *
  */

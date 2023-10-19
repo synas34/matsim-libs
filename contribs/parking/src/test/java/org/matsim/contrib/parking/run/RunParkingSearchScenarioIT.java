@@ -18,7 +18,7 @@
  * *********************************************************************** */
 
 /**
- * 
+ *
  */
 package org.matsim.contrib.parking.run;
 
@@ -47,8 +47,8 @@ public class RunParkingSearchScenarioIT {
 
 		ParkingSearchConfigGroup configGroup = (ParkingSearchConfigGroup) config.getModules().get(ParkingSearchConfigGroup.GROUP_NAME);
 		configGroup.setParkingSearchStrategy(ParkingSearchStrategy.Benenson);
-		
+
 		new RunParkingSearchExample().run(config,false);
-		
+
 	}
 }

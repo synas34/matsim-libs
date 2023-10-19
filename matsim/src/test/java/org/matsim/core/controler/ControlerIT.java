@@ -82,18 +82,18 @@ public class ControlerIT {
 	@Rule public MatsimTestUtils utils = new MatsimTestUtils();
 
 	private final boolean isUsingFastCapacityUpdate;
-	
+
 	public ControlerIT(boolean isUsingFastCapacityUpdate) {
 		this.isUsingFastCapacityUpdate = isUsingFastCapacityUpdate;
 	}
-	
+
 	@Parameters(name = "{index}: isUsingfastCapacityUpdate == {0}")
 	public static Collection<Object> parameterObjects () {
 		Object [] capacityUpdates = new Object [] { false, true };
 				return Arrays.asList(capacityUpdates);
 		// yyyy I am not sure why it is doing this ... it is necessary to do this around the qsim, but why here?  kai, aug'16
 	}
-	
+
 	@Test
 	public void testScenarioLoading() {
 		final Config config = utils.loadConfig(IOUtils.extendUrl(ExamplesUtils.getTestScenarioURL("equil"), "config.xml"));
@@ -159,11 +159,11 @@ public class ControlerIT {
 	public void testTravelTimeCalculation() {
 		Fixture f = new Fixture(ConfigUtils.createConfig());
 		Config config = f.scenario.getConfig();
-		
+
 		/* Create 2 persons driving from link 1 to link 3, both starting at the same time at 7am.  */
 		Population population = f.scenario.getPopulation();
 		PopulationFactory factory = population.getFactory();
-		
+
 		Person person1 = factory.createPerson(Id.create("1", Person.class));
 		Plan plan1 = factory.createPlan();
 		person1.addPlan(plan1);
@@ -193,8 +193,8 @@ public class ControlerIT {
 		route2.setLinkIds(f.link1.getId(), linkIds, f.link3.getId());
 		plan2.addActivity(factory.createActivityFromLinkId("h", f.link3.getId()));
 		population.addPerson(person2);
-		
-		/* the first agent needs 101 seconds (100 seconds free speed + 1s buffer) for link2; 
+
+		/* the first agent needs 101 seconds (100 seconds free speed + 1s buffer) for link2;
 		 * the second agent needs 200 seconds (has to wait for 100 seconds because of flow capacity) */
 		double avgTravelTimeLink2 = 150.5;
 
@@ -202,7 +202,7 @@ public class ControlerIT {
 		config.controler().setOverwriteFileSetting(OutputDirectoryHierarchy.OverwriteFileSetting.overwriteExistingFiles);
 		config.controler().setCreateGraphs(false);
 		config.controler().setWriteEventsInterval(0);
-		config.controler().setDumpDataAtEnd(false);		
+		config.controler().setDumpDataAtEnd(false);
 		// - set scoring parameters
 		ActivityParams actParams = new ActivityParams("h");
 		actParams.setTypicalDuration(8*3600);
@@ -214,7 +214,7 @@ public class ControlerIT {
 		config.global().setNumberOfThreads(0);
 
 		config.qsim().setUsingFastCapacityUpdate(this.isUsingFastCapacityUpdate);
-		
+
 		// Now run the simulation
 		Controler controler = new Controler(f.scenario);
 		controler.run();
@@ -236,7 +236,7 @@ public class ControlerIT {
 		controler = new Controler(f.scenario);
 		controler.run();
 
-		// test that the plans have the correct travel times 
+		// test that the plans have the correct travel times
 		// (travel time of the plan does not contain first and last link)
 		assertEquals("ReRoute seems to have wrong travel times.", avgTravelTimeLink2,
 				((Leg)(person1.getPlans().get(1).getPlanElements().get(1))).getTravelTime().seconds(), MatsimTestUtils.EPSILON);
@@ -254,7 +254,7 @@ public class ControlerIT {
 		config.controler().setLastIteration(0);
 
 		config.qsim().setUsingFastCapacityUpdate( this.isUsingFastCapacityUpdate );
-		
+
 		MutableScenario scenario = (MutableScenario) ScenarioUtils.createScenario(config);
 		// create a very simple network with one link only and an empty population
 		Network network = scenario.getNetwork();
@@ -344,7 +344,7 @@ public class ControlerIT {
 		config.global().setNumberOfThreads(1);
 
 		config.qsim().setUsingFastCapacityUpdate( this.isUsingFastCapacityUpdate );
-		
+
 		// Now run the simulation
 		Controler controler = new Controler(f.scenario);
         controler.getConfig().controler().setCreateGraphs(false);
@@ -442,7 +442,7 @@ public class ControlerIT {
 		config.global().setNumberOfThreads(1);
 
 		config.qsim().setUsingFastCapacityUpdate( this.isUsingFastCapacityUpdate );
-		
+
 		// Now run the simulation
 		Controler controler = new Controler(f.scenario);
         controler.getConfig().controler().setCreateGraphs(false);
@@ -468,7 +468,7 @@ public class ControlerIT {
 		assertEquals(f.link3.getId(), act1b.getLinkId());
 		assertEquals(f.link1.getId(), act2a.getLinkId());
 		assertEquals(f.link3.getId(), act2b.getLinkId());
-		
+
 		int expectedPlanLength = 3 ;
 		if ( !f.scenario.getConfig().plansCalcRoute().getAccessEgressType().equals(PlansCalcRouteConfigGroup.AccessEgressType.none) ) {
 			// now 7 instead of earlier 3: h-wlk-iact-car-iact-walk-h
@@ -817,11 +817,11 @@ public class ControlerIT {
 			controler.getConfig().controler().setDumpDataAtEnd(false);
 			controler.run();
 			Assert.fail("expected exception, got none.");
-			
+
 			// note: I moved loadScenario in the controler from run() into the constructor to mirror the loading sequence one has
-			// when calling new Controler(scenario).  In consequence, it fails already in the constructor; one could stop after that.  
+			// when calling new Controler(scenario).  In consequence, it fails already in the constructor; one could stop after that.
 			// kai, apr'15
-			
+
 		} catch (RuntimeException e) {
 			log.info("catched expected exception.", e);
 		}
@@ -852,11 +852,11 @@ public class ControlerIT {
 			controler.getConfig().controler().setDumpDataAtEnd(false);
 			controler.run();
 			Assert.fail("expected exception, got none.");
-			
+
 			// note: I moved loadScenario in the controler from run() into the constructor to mirror the loading sequence one has
-			// when calling new Controler(scenario).  In consequence, it fails already in the constructor; one could stop after that.  
+			// when calling new Controler(scenario).  In consequence, it fails already in the constructor; one could stop after that.
 			// kai, apr'15
-			
+
 		} catch (RuntimeException e) {
 			log.info("catched expected exception.", e);
 		}
@@ -887,11 +887,11 @@ public class ControlerIT {
 			controler.getConfig().controler().setDumpDataAtEnd(false);
 			controler.run();
 			Assert.fail("expected exception, got none.");
-			
+
 			// note: I moved loadScenario in the controler from run() into the constructor to mirror the loading sequence one has
-			// when calling new Controler(scenario).  In consequence, it fails already in the constructor; one could stop after that.  
+			// when calling new Controler(scenario).  In consequence, it fails already in the constructor; one could stop after that.
 			// kai, apr'15
-			
+
 		} catch (RuntimeException e) {
 			log.info("catched expected exception.", e);
 		}
@@ -942,7 +942,7 @@ public class ControlerIT {
 	 * which itself adds a Guice module... but too late.
 	 *
 	 * @thibautd
-	 * 
+	 *
 	 */
 	@Test( expected = RuntimeException.class )
 	public void testGuiceModulesCannotAddModules() {

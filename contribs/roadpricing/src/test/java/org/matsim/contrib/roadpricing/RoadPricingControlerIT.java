@@ -38,10 +38,10 @@ import org.matsim.testcases.MatsimTestUtils;
  * @author mrieser
  */
 public class RoadPricingControlerIT {
-	
+
 	@Rule
 	public MatsimTestUtils utils = new MatsimTestUtils();
-	
+
 	@Test
 	public void testPaidTollsEndUpInScores() {
 		// first run basecase
@@ -56,7 +56,7 @@ public class RoadPricingControlerIT {
 		controler1.getConfig().controler().setWriteEventsInterval(0);
 		controler1.run();
 		double scoreBasecase = controler1.getScenario().getPopulation().getPersons().get(Id.create("1", Person.class)).getPlans().get(0).getScore();
-		
+
 		// now run toll case
 		//        ConfigUtils.addOrGetModule(config, RoadPricingConfigGroup.GROUP_NAME, RoadPricingConfigGroup.class).setUseRoadpricing(true);
 //		ConfigUtils.addOrGetModule(config, RoadPricingConfigGroup.GROUP_NAME, RoadPricingConfigGroup.class).setTollLinksFile(IOUtils.newUrl(utils.inputResourcePath(), "distanceToll.xml").toString());
@@ -71,9 +71,9 @@ public class RoadPricingControlerIT {
 		controler2.getConfig().controler().setWriteEventsInterval(0);
 		controler2.run();
 		double scoreTollcase = controler2.getScenario().getPopulation().getPersons().get(Id.create("1", Person.class)).getPlans().get(0).getScore();
-		
+
 		// there should be a score difference
 		Assert.assertEquals(3.0, scoreBasecase - scoreTollcase, MatsimTestUtils.EPSILON); // toll amount: 10000*0.00020 + 5000*0.00020
 	}
-	
+
 }

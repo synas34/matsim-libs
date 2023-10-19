@@ -38,7 +38,7 @@ import org.matsim.core.scenario.ScenarioUtils;
  */
 public final class RunRoadPricingExample {
 	// do not change class name: referenced from book.  kai, dec'14
-	
+
 	/**
 	 * Executing the road pricing example.
 	 * @param args optional arguments, the first which must be a <code>config.xml</code>

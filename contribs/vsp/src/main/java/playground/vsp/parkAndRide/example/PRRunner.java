@@ -19,7 +19,7 @@
  * *********************************************************************** */
 
 /**
- * 
+ *
  */
 package playground.vsp.parkAndRide.example;
 
@@ -52,23 +52,23 @@ import playground.vsp.parkAndRide.scoring.PRScoringFunctionFactory;
  *
  */
 public class PRRunner {
-	
+
 	static String configFile;
-		
+
 	public static void main(String[] args) throws IOException {
-		
+
 		configFile = "/path-to/config.xml";
-		
+
 		PRRunner main = new PRRunner();
 		main.run();
 	}
-	
+
 	private void run() {
-		
+
 		Config config = new Config();
 		config.addModule(new PRConfigGroup());
 		ConfigUtils.loadConfig(config, configFile);
-				
+
 		final Controler controler = new Controler(config);
 		controler.getConfig().controler().setOverwriteFileSetting(
 				true ?
@@ -82,7 +82,7 @@ public class PRRunner {
 		controler.getConfig().planCalcScore().addActivityParams(prActivityParams);
 
         controler.setScoringFunctionFactory(new PRScoringFunctionFactory(controler.getScenario(), prSettings.getIntermodalTransferPenalty()));
-		
+
 		PRFileReader prReader = new PRFileReader(prSettings.getInputFile());
 		Map<Id<PRFacility>, PRFacility> id2prFacility = prReader.getId2prFacility();
 		final PRAdaptiveCapacityControl adaptiveControl = new PRAdaptiveCapacityControl(id2prFacility);
@@ -105,8 +105,8 @@ public class PRRunner {
 		});
 
 		controler.run();
-		
+
 	}
 
 }
-	
+

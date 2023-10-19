@@ -77,11 +77,11 @@ public class TravelTimeTest {
 		Assert.assertEquals(1260.0, travelTimes.get(Id.create(22, Link.class)).intValue(), MatsimTestUtils.EPSILON);
 		Assert.assertEquals(360.0, travelTimes.get(Id.create(23, Link.class)).intValue(), MatsimTestUtils.EPSILON);
 	}
-	
+
 	@Test
 	/**
-	 * This test shows that the Netsim always rounds up link travel times. 
-	 * Please note that a computed link travel time of 400.0s is treated the same, 
+	 * This test shows that the Netsim always rounds up link travel times.
+	 * Please note that a computed link travel time of 400.0s is treated the same,
 	 * i.e. it is rounded up to 401s.
 	 */
 	public void testEquilOneAgentTravelTimeRounding() {
@@ -98,7 +98,7 @@ public class TravelTimeTest {
 
 		EventsManager events = EventsUtils.createEventsManager();
 		events.addHandler(new EventTestHandler(agentTravelTimes));
-		
+
 		// Travel time 359.9712023038
 		scenario.getNetwork().getLinks().get(Id.createLinkId("6")).setFreespeed(27.78);
 
@@ -110,7 +110,7 @@ public class TravelTimeTest {
 
 		Map<Id<Link>, Double> travelTimes = agentTravelTimes.get(Id.create("1", Vehicle.class));
 		Assert.assertEquals(360.0, travelTimes.get(Id.create(6, Link.class)).intValue(), MatsimTestUtils.EPSILON);
-		
+
 		// Travel time 359.9712023038
 		scenario.getNetwork().getLinks().get(Id.createLinkId("6")).setFreespeed(27.85);
 
@@ -122,7 +122,7 @@ public class TravelTimeTest {
 
 		travelTimes = agentTravelTimes.get(Id.create("1", Vehicle.class));
 		Assert.assertEquals(360.0, travelTimes.get(Id.create(6, Link.class)).intValue(), MatsimTestUtils.EPSILON);
-		
+
 		// Travel time 359.066427289
 		scenario.getNetwork().getLinks().get(Id.createLinkId("6")).setFreespeed(27.85);
 
@@ -131,10 +131,10 @@ public class TravelTimeTest {
 			.useDefaults() //
 			.build(scenario, events) //
 			.run();
-		
+
 		travelTimes = agentTravelTimes.get(Id.create("1", Vehicle.class));
 		Assert.assertEquals(360.0, travelTimes.get(Id.create(6, Link.class)).intValue(), MatsimTestUtils.EPSILON);
-		
+
 		// Travel time 358.4229390681
 		scenario.getNetwork().getLinks().get(Id.createLinkId("6")).setFreespeed(27.9);
 
@@ -143,10 +143,10 @@ public class TravelTimeTest {
 			.useDefaults() //
 			.build(scenario, events) //
 			.run();
-		
+
 		travelTimes = agentTravelTimes.get(Id.create("1", Vehicle.class));
 		Assert.assertEquals(359.0, travelTimes.get(Id.create(6, Link.class)).intValue(), MatsimTestUtils.EPSILON);
-		
+
 		// Travel time 360.3603603604
 		scenario.getNetwork().getLinks().get(Id.createLinkId("6")).setFreespeed(27.75);
 
@@ -155,10 +155,10 @@ public class TravelTimeTest {
 			.useDefaults() //
 			.build(scenario, events) //
 			.run();
-		
+
 		travelTimes = agentTravelTimes.get(Id.create("1", Vehicle.class));
 		Assert.assertEquals(361.0, travelTimes.get(Id.create(6, Link.class)).intValue(), MatsimTestUtils.EPSILON);
-		
+
 		// Travel time 400.0
 		scenario.getNetwork().getLinks().get(Id.createLinkId("6")).setLength(10000.0);
 		scenario.getNetwork().getLinks().get(Id.createLinkId("6")).setFreespeed(25.0);
@@ -168,7 +168,7 @@ public class TravelTimeTest {
 			.useDefaults() //
 			.build(scenario, events) //
 			.run();
-		
+
 		travelTimes = agentTravelTimes.get(Id.create("1", Vehicle.class));
 		Assert.assertEquals(401.0, travelTimes.get(Id.create(6, Link.class)).intValue(), MatsimTestUtils.EPSILON);
 	}

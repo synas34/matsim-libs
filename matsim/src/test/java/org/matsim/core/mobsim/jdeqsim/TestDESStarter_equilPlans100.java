@@ -38,19 +38,19 @@ public class TestDESStarter_equilPlans100 extends AbstractJDEQSimTest {
 		MatsimRandom.reset(config.global().getRandomSeed());
 		Scenario scenario = ScenarioUtils.createScenario(config);
 		ScenarioUtils.loadScenario(scenario);
-		
+
 		this.runJDEQSim(scenario);
-		
+
 		assertEquals(scenario.getPopulation().getPersons().size(), super.eventsByPerson.size());
 		super.checkAscendingTimeStamps();
 		super.checkEventsCorrespondToPlans(scenario.getPopulation());
 	}
-	
-	/* 
+
+	/*
 	 * This test is turned off, because it cannot pass.
 	 * Reason: Different priorities possible at junctions, which (almost) always result in different event order.
-	 */ 
-	
+	 */
+
 	/*
 	public void test_equilPlans100_DEQSimEventFileComparator() {
 		DEQSimEventFileComparator deqSimComparator = new DEQSimEventFileComparator("test/src/playground/wrashid/input/deqsim/deq_events100.txt");
@@ -59,12 +59,12 @@ public class TestDESStarter_equilPlans100 extends AbstractJDEQSimTest {
 				null);
 	}
 	*/
-	
+
 	/*
 	 * This test was turn off, because java deqsim is based on time specified on the acts (as mobsim)
 	 * and is not based on times specified on the leg as in c++ deqsim
 	 */
-	
+
 	/*
 	public void test_equilPlans100_DEQSimEventFileTravelTimeComparator() {
 		DEQSimEventFileTravelTimeComparator deqSimTravelTimeComparator = new DEQSimEventFileTravelTimeComparator("test/input/org/matsim/mobsim/deqsim/deq_events_100.txt",1);

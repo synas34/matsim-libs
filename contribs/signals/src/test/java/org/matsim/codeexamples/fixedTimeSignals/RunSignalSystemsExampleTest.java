@@ -44,7 +44,7 @@ public class RunSignalSystemsExampleTest {
 			Assert.fail("something went wrong: " + ee.getMessage()) ;
 		}
 	}
-	
+
 	@Test
 	public final void testMinimalExample() {
 		try {
@@ -52,7 +52,7 @@ public class RunSignalSystemsExampleTest {
 			config.controler().setOverwriteFileSetting(OverwriteFileSetting.deleteDirectoryIfExists);
 			config.controler().setLastIteration(0);
 			config.controler().setOutputDirectory(testUtils.getOutputDirectory());
-			
+
 			RunSignalSystemsExample.run(config, false);
 		} catch (Exception ee ) {
 			ee.printStackTrace();
