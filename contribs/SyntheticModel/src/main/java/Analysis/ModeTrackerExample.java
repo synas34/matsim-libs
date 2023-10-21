@@ -18,7 +18,7 @@ import java.util.Set;
 
 public class ModeTrackerExample {
 	public static void main(String[] args) {
-		String pathToEventsFile = "examples/scenarios/UrbanLine/Lastditch/FMLM/output/output_events.xml.gz"; // Replace with your path
+		String pathToEventsFile = "examples/scenarios/Odakyu1/outputOct22/output_events.xml.gz"; // Replace with your path
 
 		// Create event handlers
 		MainModeAnalyzer analyzer = new MainModeAnalyzer();

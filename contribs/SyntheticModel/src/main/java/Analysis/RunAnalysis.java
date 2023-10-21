@@ -13,7 +13,7 @@ import java.util.Set;
 
 public class RunAnalysis {
 	public static void main(String[] args) {
-		String eventsFilePath = "examples/scenarios/UrbanLine/SuburbanCorex5/output/output_events.xml.gz";
+		String eventsFilePath = "examples/scenarios/Odakyu1/outputOct22/output_events.xml.gz";
 
 		Config config = ConfigUtils.createConfig();
 		Scenario scenario = ScenarioUtils.createScenario(config);

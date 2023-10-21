@@ -9,7 +9,7 @@
 	</module>
 
 	<module name="network">
-		<param name="inputNetworkFile" value="rrte.xml" />
+		<param name="inputNetworkFile" value="rrte2.xml" />
 	</module>
 
 	<module name="plans">
@@ -119,15 +119,15 @@
 
 	</module>
 
-<!--	<module name="transit">-->
-<!--		<param name="useTransit" value="true" />-->
-<!--		<param name="transitScheduleFile" value="transitschedule.xml" />-->
-<!--		<param name="vehiclesFile" value="transitVehicles.xml" />-->
-<!--		<param name="transitModes" value="pt" />-->
-<!--	</module>-->
+	<module name="transit">
+		<param name="useTransit" value="true" />
+		<param name="transitScheduleFile" value="transitschedule.xml" />
+		<param name="vehiclesFile" value="transitVehicles.xml" />
+		<param name="transitModes" value="pt" />
+	</module>
 
-<!--	<module name="changeMode">-->
-<!--		<param name="modes" value="car,pt" />-->
-<!--	</module>-->
+	<module name="changeMode">
+		<param name="modes" value="car,pt" />
+	</module>
 
 </config>

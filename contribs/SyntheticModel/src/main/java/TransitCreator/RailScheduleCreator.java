@@ -25,9 +25,6 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
-import java.time.LocalTime;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.*;
 
 public class RailScheduleCreator {
@@ -106,11 +103,6 @@ public class RailScheduleCreator {
 		// Create a network route from the provided link lists
 		NetworkRoute networkRoute = RouteUtils.createLinkNetworkRouteImpl(startLinkId, intermediateLinkIds, endLinkId);
 		NetworkRoute networkRoute_r = RouteUtils.createLinkNetworkRouteImpl(StartLinkId_r, intermediateLinkIds_r, EndLinkId_r);
-		System.out.println("Total links: " +  scenario.getNetwork().getLinks().get("402623_402624"));
-
-
-		System.out.println("Total links: " +  scenario.getNetwork().getLinks().get("402623_402624"));
-
 
 		// Create stop facilities for both forward and reverse routes
 		List<TransitStopFacility> stopFacilities = StopfacilityCreator(scenario,scheduleFactory, linkIds);
@@ -150,66 +142,83 @@ public class RailScheduleCreator {
 	 * Load an existing network file and a CSV file with station names and coordinates,
 	 * then adds nodes to the network corresponding with each row of the CSV and generates links connecting them.
 	 *
-	 * @param networkFilePath Path to the existing network XML file.
+	 * @param networkFilePath  Path to the existing Network file with station names and coordinates.
 	 * @param csvFilePath     Path to the CSV file with station names and coordinates.
 	 * @throws IOException If there's a problem reading the files.
 	 */
-	public void loadFromCsvAndGenerateLinks(String networkFilePath, String csvFilePath) throws IOException {
+	public static List<Id<Link>> loadFromCsvAndGenerateLinks(String networkFilePath,String csvFilePath, boolean skipWriting,boolean existingline) throws IOException {
 		Network network = NetworkUtils.readNetwork(networkFilePath);
+		List<Id<Link>> linkIds = new ArrayList<>();
 
-		// Read the CSV file
 		try (BufferedReader br = new BufferedReader(new FileReader(csvFilePath))) {
 			String line;
 			Node previousNode = null;
 
 			while ((line = br.readLine()) != null) {
-				String[] parts = line.split(",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)", -1); // Splits on commas outside of quotes
-				if (parts.length != 4) {
-					System.out.println("Unexpected format in line: " + line);
-					continue; // Skip processing this line and move to the next
-				}
-				String stationName = parts[0].replace("\"", "").trim();
-				String[] coordinates = parts[1].replace("\"", "").split(",");
-				double linkLength = 1.0; // Default value
+				String[] parts = line.split(",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)", -1);
 
-				if (coordinates.length != 2) {
-					System.out.println("Unexpected coordinates format in line: " + line);
-					continue; // Skip processing this line and move to the next
-				}
+					String stationName = parts[0].replace("\"", "").trim();
 
-				double latitude = Double.parseDouble(coordinates[0].trim());
-				double longitude = Double.parseDouble(coordinates[1].trim());
+				if (!skipWriting) {
+					String[] coordinates = parts[1].replace("\"", "").split(",");
 
-				// Create node for the current station
-				Coord coord = new Coord(longitude, latitude);
-				Node currentNode = network.getFactory().createNode(Id.createNodeId(stationName), coord);
-				network.addNode(currentNode);
+					double latitude = Double.parseDouble(coordinates[0].trim());
+					double longitude = Double.parseDouble(coordinates[1].trim());
 
-				// Create a link from the current node to itself with length 1
-				createLinkWithLength(network, currentNode, currentNode, 1.0);
-
-				// If there's a previous node, create links between the two nodes
-				if (previousNode != null) {
-					if (!parts[3].trim().isEmpty() && !parts[3].trim().equals("-")) {
-						linkLength = Double.parseDouble(parts[3].trim()) * 1000; // Convert km to meters
-					} else {
-						// Handle the case when the distance is "-" or empty
-						System.out.println("Invalid or missing link length for stations: " + stationName);
-						continue; // Or set a default linkLength value if you prefer
+					// Use existing node if it exists, otherwise create a new one
+					Node currentNode = network.getNodes().get(Id.createNodeId(stationName));
+					if (currentNode == null) {
+						Coord coord = new Coord(longitude, latitude);
+						currentNode = network.getFactory().createNode(Id.createNodeId(stationName), coord);
+						network.addNode(currentNode);
 					}
-					createLinkWithLength(network, previousNode, currentNode, linkLength); // Original direction link
-					createLinkWithLength(network, currentNode, previousNode, linkLength); // Reverse direction link
+
+					if (previousNode != null) {
+						double linkLength = 1.0;
+						if (!parts[3].trim().isEmpty() && !parts[3].trim().equals("-")) {
+							linkLength = Double.parseDouble(parts[3].trim()) * 1000;
+						} else {
+							System.out.println("Invalid or missing link length for stations: " + stationName);
+							continue;
+						}
+							Id<Link> linkId = Id.createLinkId(previousNode.getId().toString() + "_" + currentNode.getId().toString());
+							Link currentLink = network.getLinks().get(linkId);
+							linkIds.add(linkId);
+							if (currentLink == null) {
+								createLinkWithLength(network, previousNode, currentNode, linkLength);
+							}
+						if (!existingline) {
+							createLinkWithLength(network, currentNode, currentNode, 1.0);
+							Id<Link> selfLink = Id.createLinkId(currentNode.getId().toString() + "_" + currentNode.getId().toString());
+							linkIds.add(selfLink);
+						}
+					}
+
+					previousNode = currentNode;
+
+				} else {
+					// If skipWriting is true, simply create and store the link IDs without creating nodes and links
+					if (previousNode != null) {
+						Id<Link> linkId = Id.createLinkId(previousNode.getId().toString() + "_" + stationName);
+						linkIds.add(linkId);
+
+						Node currentNode = network.getNodes().get(Id.createNodeId(stationName));
+						Id<Link> selfLink = Id.createLinkId(currentNode.getId().toString() + "_" + currentNode.getId().toString());
+						linkIds.add(selfLink);
+					}
+					previousNode = network.getFactory().createNode(Id.createNodeId(stationName), new Coord(0, 0));  // Dummy node just for ID purpose
 				}
-				previousNode = currentNode;
 			}
 		}
-
-		// Write the modified network back to the XML file
-		new NetworkWriter(network).write(networkFilePath);
+		// Write the modified network back to the XML file only if skipWriting is false
+		if (!skipWriting) {
+			new NetworkWriter(network).write(networkFilePath);
+		}
+		return linkIds;
 	}
 
 	// The function to create a link with specified length
-	private void createLinkWithLength(Network network, Node fromNode, Node toNode, double length) {
+	private static void createLinkWithLength(Network network, Node fromNode, Node toNode, double length) {
 		Link link = network.getFactory().createLink(Id.createLinkId(fromNode.getId() + "_" + toNode.getId()), fromNode, toNode);
 		link.setLength(length);
 
@@ -219,20 +228,10 @@ public class RailScheduleCreator {
 		Set<String> modes = new HashSet<>();
 		modes.add("pt");
 		link.setAllowedModes(modes);
-
 		network.addLink(link);
+		System.out.println("Created Link: " + link.getId());
 	}
-	private void createOneRailLink(Network network, Node fromNode, Node toNode) {
-		// Create forward link
-		Id<Link> linkIdForward = Id.createLinkId(fromNode.getId() + "_" + toNode.getId());
-		Link linkForward = network.getFactory().createLink(linkIdForward, fromNode, toNode);
-		network.addLink(linkForward);
 
-		// Create reverse link
-		Id<Link> linkIdReverse = Id.createLinkId(toNode.getId() + "_" + fromNode.getId());
-		Link linkReverse = network.getFactory().createLink(linkIdReverse, toNode, fromNode);
-		network.addLink(linkReverse);
-	}
 	public void createRailLink(Network network, Node fromNode, Node toNode, List<Id<Link>> linkIds, List<Id<Link>> linkIds_r) {
 		// Create the original link
 		Link link = network.getFactory().createLink(Id.createLinkId("link-id_" + fromNode.getId() + "_" + toNode.getId()), fromNode, toNode);
@@ -292,59 +291,53 @@ public class RailScheduleCreator {
 		for (int i = 0; i < times.length; i++) {
 			Id<Departure> departureId = Id.create("d_" + (i + 1), Departure.class);
 			double departureTime = Time.parseTime(times[i]);
-			Id<Vehicle> vehicleId = Id.create(vehicleRefIds[i + 1], Vehicle.class);
+			Id<Vehicle> vehicleId = Id.create(vehicleRefIds[i], Vehicle.class);
 			Departure departure = scheduleFactory.createDeparture(departureId, departureTime);
 			departure.setVehicleId(vehicleId);
 			transitRoute_r.addDeparture(departure);
+			System.out.println("Created Departure : " + departure);
 		}
 	}
 
-	public static class DepTimeGenerator {
-		public static String[] generateTimes(int normalInterval, int rushHourMorningInterval, int rushHourEveningInterval) {
-			List<String> timesList = new ArrayList<>();
-			// Define the time ranges for rush hours (for simplicity)
-			int rushHourMorningStart = 6; // 6 AM
-			int rushHourMorningEnd = 9;   // 9 AM
-			int rushHourEveningStart = 16; // 4 PM
-			int rushHourEveningEnd = 19;   // 7 PM
-			for (int hour = 5; hour < 24; hour++) {
-				int interval = normalInterval;
-				if (hour >= rushHourMorningStart && hour < rushHourMorningEnd) {
-					interval = rushHourMorningInterval;
-				} else if (hour >= rushHourEveningStart && hour < rushHourEveningEnd) {
-					interval = rushHourEveningInterval;
-				}
 
-				for (int minute = 0; minute < 60; minute += interval) {
-					timesList.add(String.format("%02d:%02d:00", hour, minute));
-				}
-			}
+	public static void addTransitLineFromCSV(String networkPath, String transitSchedulePath, String folderPath) {
+		String csvPath = folderPath + "/Odakyu - Stations - r.csv";
+		String departuresCsvPath = folderPath + "/Odakyu - Departure Times.csv";
+		String transitLineName = new File(folderPath).getName();  // Extracting the folder name
 
-			return timesList.toArray(new String[0]);
+		Config config = ConfigUtils.createConfig();
+		Scenario scenario = ScenarioUtils.createScenario(config);
+
+		// Read the existing network and transit schedule
+		new MatsimNetworkReader(scenario.getNetwork()).readFile(networkPath);
+		new TransitScheduleReader(scenario).readFile(transitSchedulePath);
+
+		// Load linkIds from the CSV file
+		List<Id<Link>> linkIds = new ArrayList<>();
+		try {
+			linkIds = loadFromCsvAndGenerateLinks(networkPath, csvPath, false, true);  // Set to true to skip writing
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
 
-		public static void addTransitLineFromCSV(String networkPath, String transitSchedulePath, String csvPath, String transitLineName, String[] times, String[] vehicleRefIds) {
-			Config config = ConfigUtils.createConfig();
-			Scenario scenario = ScenarioUtils.createScenario(config);
-
-			// Read the existing network and transit schedule
-			new MatsimNetworkReader(scenario.getNetwork()).readFile(networkPath);
-			new TransitScheduleReader(scenario).readFile(transitSchedulePath);
-
-			List<Id<Link>> linkIds = new ArrayList<>();
-
-			// Reading the CSV file to populate the linkIds list
-			try (BufferedReader br = new BufferedReader(new FileReader(csvPath))) {
-				String line;
-				while ((line = br.readLine()) != null) {
-					String[] values = line.split(",");
-					linkIds.add(Id.createLinkId(values[0]));
-				}
-			} catch (Exception e) {
-				e.printStackTrace();
+		// Read departure times from the CSV file
+		List<String> departureTimesList = new ArrayList<>();
+		try (BufferedReader reader = new BufferedReader(new FileReader(departuresCsvPath))) {
+			String line;
+			while ((line = reader.readLine()) != null) {
+				departureTimesList.add(line.trim());
 			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 
-			TransitScheduleFactory scheduleFactory = scenario.getTransitSchedule().getFactory();
+		// Convert departureTimesList to an array
+		String[] departureTimes = departureTimesList.toArray(new String[0]);
+
+		// Generate vehicleRefIds based on the departure times and the transit line name
+		String[] vehicleRefIds = Arrays.stream(departureTimes).map(time -> transitLineName + "_" + time.replace(":", "")).toArray(String[]::new);
+
+		TransitScheduleFactory scheduleFactory = scenario.getTransitSchedule().getFactory();
 
 			// Creating Network Route and Stops
 			Id<Link> startLinkId = linkIds.get(0);
@@ -357,12 +350,10 @@ public class RailScheduleCreator {
 
 			// Creating Transit Routes
 			TransitRoute transitRoute = scheduleFactory.createTransitRoute(Id.create(transitLineName, TransitRoute.class), networkRoute, transitRouteStops, "pt");
-			int halfIndex = vehicleRefIds.length / 2;
 
-			String[] firstHalfVehicleRefIds = Arrays.copyOfRange(vehicleRefIds,0, halfIndex);
 
 			// Populate the departures for the created routes using the first half of vehicleRefIds
-			DepartureCreator(scheduleFactory, transitRoute, times, firstHalfVehicleRefIds);
+			DepartureCreator(scheduleFactory, transitRoute, departureTimes, vehicleRefIds);
 
 			// Creating Transit Line and adding to the schedule
 			TransitLine transitLine = scheduleFactory.createTransitLine(Id.create(transitLineName, TransitLine.class));
@@ -410,44 +401,12 @@ public class RailScheduleCreator {
 		public static void main(String[] args) throws IOException {
 			// Initialise scenario
 			String networkPath = "examples/scenarios/Odakyu1/rrte2.xml";
-			String csvPath = "examples/scenarios/Odakyu1/test/Odakyutest.csv";
 			String transitSchedulePath = "examples/scenarios/Odakyu1/transitschedule.xml";
+			String foldersPath = "examples/scenarios/Odakyu1/OdakyuTransitData/Inbound/Chiyoda Line";
 
-			// Provided departure times
-			String[] times = {
-				// 5 AM to 6 AM: Early morning, every 15 minutes
-				"05:00:00", "05:16:00", "05:27:00", "05:41:00", "05:45:00", "05:55:00",
-
-				// 6 AM to 7 AM: Morning rush, every few minutes
-				"06:00:00", "06:01:00", "06:02:00", "06:04:00", "06:07:00", "06:09:00", "06:11:00", "06:13:00", "06:15:00",
-				"06:20:00", "06:21:00", "06:23:00", "06:25:00", "06:30:00", "06:31:00", "06:32:00", "06:37:00", "06:38:00",
-				"06:40:00", "06:43:00", "06:47:00", "06:48:00", "06:50:00", "06:53:00", "06:55:00", "06:59:00",
-
-				// 7 AM to 7:30 AM: Continue morning rush
-				"07:00:00", "07:01:00", "07:02:00", "07:04:00", "07:05:00", "07:10:00", "07:12:00", "07:13:00", "07:15:00",
-				"07:19:00", "07:20:00", "07:21:00", "07:23:00", "07:25:00", "07:28:00", "07:30:00",
-
-				// 7:30 AM to 9 AM: Peak rush, every few minutes
-				"07:31:00", "07:32:00", "07:34:00", "07:37:00", "07:38:00", "07:39:00", "07:42:00", "07:46:00", "07:49:00",
-				"07:50:00", "07:53:00", "07:55:00", "08:00:00", "08:01:00", "08:03:00", "08:04:00", "08:08:00", "08:12:00",
-				"08:16:00", "08:20:00", "08:21:00", "08:25:00", "08:28:00", "08:30:00", "08:32:00", "08:35:00", "08:40:00",
-				"08:41:00", "08:45:00", "08:50:00", "08:52:00", "08:55:00",
-
-				// 9 AM: Start off-peak
-				"09:00:00"
-			};
-
-
-
-			String[] vehicleRefIds = new String[400];
-			for (int i = 0; i < 400; i++) {
-				vehicleRefIds[i] = "tr_" + i;  // rotates between tr_1, tr_2, .... tr_25
-			}
-			RailScheduleCreator creator = new RailScheduleCreator();
-			//creator.loadFromCsvAndGenerateLinks(networkPath,csvPath);
 
 			// Calling the addTransitLineFromCSV method
-			addTransitLineFromCSV(networkPath, transitSchedulePath, csvPath, "test Line", times, vehicleRefIds);
+			addTransitLineFromCSV(networkPath, transitSchedulePath, foldersPath);
 		}
 	}
-}
+
