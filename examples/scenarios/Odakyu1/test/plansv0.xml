@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plans SYSTEM "http://www.matsim.org/files/dtd/plans_v4.dtd">
+<plans xml:lang="de-CH">
+    	
+    <person id="2035019522">
+        		
+        <plan selected="no">
+            			
+            <act end_time="14:30:00" type="o" x="376093.3665049435" y="3944999.5183953233"/>
+            			
+            <leg mode="pt"/>
+            			
+            <act end_time="16:30:00" type="h" x="428773.92236226203" y="3992200.741064857"/>
+            			
+            <leg mode="pt"/>
+            			
+            <act type="o" x="376093.3665049435" y="3944999.5183953233"/>
+            		
+        </plan>
+        	
+    </person>
+    	
+    <person id="2205001333">
+        		
+        <plan selected="no">
+            			
+            <act end_time="12:30:00" type="o" x="383306.02085405844" y="3946965.139570604"/>
+            			
+            <leg mode="pt"/>
+            			
+            <act end_time="15:30:00" type="o" x="383705.3051540948" y="3947827.895096358"/>
+            			
+            <leg mode="pt"/>
+            			
+            <act type="o" x="383306.02085405844" y="3946965.139570604"/>
+            		
+        </plan>
+        	
+    </person>
+    	
+    <person id="12023025731">
+        		
+        <plan selected="no">
+            			
+            <act end_time="13:19:00" type="o" x="382591.0135354763" y="3949897.0943986415"/>
+            			
+            <leg mode="pt"/>
+            			
+            <act end_time="18:19:00" type="h" x="353724.2928943964" y="4001138.806675991"/>
+            			
+            <leg mode="pt"/>
+            			
+            <act type="o" x="382591.0135354763" y="3949897.0943986415"/>
+            		
+        </plan>
+        	
+    </person>
+    	
+    <person id="12036043021">
+        		
+        <plan selected="no">
+            			
+            <act end_time="20:00:00" type="w" x="382553.303920335" y="3947377.439281608"/>
+            			
+            <leg mode="pt"/>
+            			
+            <act end_time="23:00:00" type="h" x="384802.5897098536" y="3967123.8709673025"/>
+            			
+            <leg mode="pt"/>
+            			
+            <act type="w" x="382553.303920335" y="3947377.439281608"/>
+            		
+        </plan>
+        	
+    </person>
+    	
+    <person id="12036069471">
+        		
+        <plan selected="no">
+            			
+            <act end_time="20:15:00" type="o" x="358058.3341667677" y="3933050.2253451855"/>
+            			
+            <leg mode="pt"/>
+            			
+            <act end_time="20:15:00" type="h" x="358434.32605245826" y="3932741.6524879686"/>
+            			
+            <leg mode="pt"/>
+            			
+            <act type="o" x="358058.3341667677" y="3933050.2253451855"/>
+            		
+        </plan>
+        	
+    </person>
+    
+</plans>

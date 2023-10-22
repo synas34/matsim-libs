@@ -4,45 +4,45 @@
 	<person id="2035019522">
 		<plan>
 			<act type="o" x="139.6314264" y="35.6410525" end_time="14:30:00"/>
-			<leg mode="car"/>
+			<leg mode="pt"/>
 			<act type="h" x="140.20901" y="36.07179167" end_time="16:30:00"/>
-			<leg mode="car"/>
+			<leg mode="pt"/>
 			<act type="o" x="139.6314264" y="35.6410525" />
 		</plan>
 	</person>
 	<person id="2205001333">
 		<plan>
 			<act type="o" x="139.7107883" y="35.65964972" end_time="12:30:00"/>
-			<leg mode="car"/>
+			<leg mode="pt"/>
 			<act type="o" x="139.7150739" y="35.66747389" end_time="15:30:00"/>
-			<leg mode="car"/>
+			<leg mode="pt"/>
 			<act type="o" x="139.7107883" y="35.65964972" />
 		</plan>
 	</person>
 	<person id="12023025731">
 		<plan>
 			<act type="o" x="139.7024631" y="35.68599389" end_time="13:19:00"/>
-			<leg mode="car"/>
+			<leg mode="pt"/>
 			<act type="h" x="139.3741228" y="36.14394722" end_time="18:19:00"/>
-			<leg mode="car"/>
+			<leg mode="pt"/>
 			<act type="o" x="139.7024631" y="35.68599389" />
 		</plan>
 	</person>
 	<person id="12036043021">
 		<plan>
 			<act type="w" x="139.7024142" y="35.66327694" end_time="20:00:00"/>
-			<leg mode="car"/>
+			<leg mode="pt"/>
 			<act type="h" x="139.7244217" y="35.84153806" end_time="23:00:00"/>
-			<leg mode="car"/>
+			<leg mode="pt"/>
 			<act type="w" x="139.7024142" y="35.66327694" />
 		</plan>
 	</person>
 	<person id="12036069471">
 		<plan>
 			<act type="o" x="139.4343867" y="35.53092361" end_time="20:15:00"/>
-			<leg mode="car"/>
+			<leg mode="pt"/>
 			<act type="h" x="139.4385864" y="35.52819611" end_time="20:15:00"/>
-			<leg mode="car"/>
+			<leg mode="pt"/>
 			<act type="o" x="139.4343867" y="35.53092361" />
 		</plan>
 	</person>

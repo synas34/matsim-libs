@@ -301,8 +301,8 @@ public class RailScheduleCreator {
 
 
 	public static void addTransitLineFromCSV(String networkPath, String transitSchedulePath, String folderPath) {
-		String csvPath = folderPath + "/Odakyu - Stations - r.csv";
-		String departuresCsvPath = folderPath + "/Odakyu - Departure Times.csv";
+		String csvPath = folderPath + "/JR Sagami - Stations.csv";
+		String departuresCsvPath = folderPath + "/JR Sagami - Departure Times.csv";
 		String transitLineName = new File(folderPath).getName();  // Extracting the folder name
 
 		Config config = ConfigUtils.createConfig();
@@ -402,7 +402,7 @@ public class RailScheduleCreator {
 			// Initialise scenario
 			String networkPath = "examples/scenarios/Odakyu1/rrte2.xml";
 			String transitSchedulePath = "examples/scenarios/Odakyu1/transitschedule.xml";
-			String foldersPath = "examples/scenarios/Odakyu1/OdakyuTransitData/Inbound/Chiyoda Line";
+			String foldersPath = "examples/scenarios/Odakyu1/TransitNetworkData/JR Sagami - r";
 
 
 			// Calling the addTransitLineFromCSV method

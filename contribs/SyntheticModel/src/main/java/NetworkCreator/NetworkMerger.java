@@ -31,21 +31,26 @@ public class NetworkMerger {
 			// Create a transformation
 			MathTransform transform = CRS.findMathTransform(sourceCRS, targetCRS);
 
-			// Iterate over all nodes and update their coordinates
+
+// Iterate over all nodes and update their coordinates
 			for (Node node : network.getNodes().values()) {
 				double x = node.getCoord().getX();
 				double y = node.getCoord().getY();
 
 				// Create a DirectPosition for transformation
-				DirectPosition2D sourcePosition = new DirectPosition2D(x, y);
+				DirectPosition2D sourcePosition = new DirectPosition2D(y, x);
 				DirectPosition2D transformedPosition = new DirectPosition2D();
 
 				try {
 					// Perform the transformation
 					transform.transform(sourcePosition, transformedPosition);
 
-					// Convert DirectPosition2D back to MATSim's Coord
-					Coord newCoord = new Coord(transformedPosition.getX(), transformedPosition.getY());
+					// Modify x and y coordinates
+					double newX = transformedPosition.getX(); // Keep the transformed x value
+					double newY = transformedPosition.getY(); // Invert the y value
+
+					// Convert the modified values back to MATSim's Coord
+					Coord newCoord = new Coord(newX, newY);
 					node.setCoord(newCoord);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -54,14 +59,13 @@ public class NetworkMerger {
 			}
 
 
-
 			// Write the updated network back to the output path
 			new NetworkWriter(network).write(outputPath);
 		}
 
 	public static void main(String[] args) throws Exception {
 		// Hardcoded paths
-		String existingNetworkPath = "examples/scenarios/Odakyu1/rrte.xml";
+		String existingNetworkPath = "examples/scenarios/Odakyu1/rrte3.xml";
 		String outputPath = "examples/scenarios/Odakyu1/test/rttte.xml";
 
 		new NetworkMerger().transformAndSaveNetwork(existingNetworkPath, outputPath);

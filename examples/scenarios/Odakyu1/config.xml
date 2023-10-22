@@ -9,18 +9,18 @@
 	</module>
 
 	<module name="network">
-		<param name="inputNetworkFile" value="rrte2.xml" />
+		<param name="inputNetworkFile" value="test/rttte.xml" />
 	</module>
 
 	<module name="plans">
-		<param name="inputPlansFile" value="plansv2.xml" />
+		<param name="inputPlansFile" value="test/plansv2.xml" />
 	</module>
 
 	<module name="controler">
 		<param name="outputDirectory" value="./output" />
 		<param name="overwriteFiles" value="deleteDirectoryIfExists" />
 		<param name="firstIteration" value="0" />
-		<param name="lastIteration" value="7" />
+		<param name="lastIteration" value="2" />
 		<param name="eventsFileFormat" value="xml" />
 		<param name="mobsim" value="qsim" />
 	</module>
@@ -199,7 +199,7 @@
 
 	<module name="changeMode">
 		<!-- provide a comma-separated list of leg modes -->
-		<param name="modes" value="car,bike,walk,pt" />
+		<param name="modes" value="car,walk,pt" />
 		<!-- Defines whether car availability is considered be considered or not. An agent has no car only if it has no license, or never access to a car. Default: true -->
 		<param name="ignoreCarAvailability" value="false" />
 	</module>
@@ -212,7 +212,7 @@
 		<!-- Defines whether car availability must be considered or not. A agent has no car only if it has no license, or never access to a car -->
 		<param name="considerCarAvailability" value="true" />
 		<!-- Defines all the modes available, including chain-based modes, seperated by commas -->
-		<param name="modes" value="walk,bike,car,pt" />
+		<param name="modes" value="walk,car,pt" />
 	</module>
 
 
@@ -267,77 +267,77 @@
 <!--	</module>-->
 
 
-	<module name="swissRailRaptor" >
-		<!-- Sets whether intermodal access and egress modes are selected by least cost (default) or randomly chosen out of the available access / egress modes. -->
-		<param name="intermodalAccessEgressModeSelection" value="RandomSelectOneModePerRoutingRequestAndDirection" />
-		<param name="useIntermodalAccessEgress" value="true" />
-		<param name="useRangeQuery" value="true" />
-		<param name="scoringParameters" value="Individual" />
-		<param name="transferPenaltyBaseCost" value="100" />
-		<param name="transferPenaltyCostPerTravelTimeHour" value="200" />
-		<param name="transferPenaltyMaxCost" value="300" />
-		<param name="transferPenaltyMinCost" value="130" />
+<!--	<module name="swissRailRaptor" >-->
+<!--		&lt;!&ndash; Sets whether intermodal access and egress modes are selected by least cost (default) or randomly chosen out of the available access / egress modes. &ndash;&gt;-->
+<!--		<param name="intermodalAccessEgressModeSelection" value="RandomSelectOneModePerRoutingRequestAndDirection" />-->
+<!--		<param name="useIntermodalAccessEgress" value="true" />-->
+<!--		<param name="useRangeQuery" value="true" />-->
+<!--		<param name="scoringParameters" value="Individual" />-->
+<!--		<param name="transferPenaltyBaseCost" value="100" />-->
+<!--		<param name="transferPenaltyCostPerTravelTimeHour" value="200" />-->
+<!--		<param name="transferPenaltyMaxCost" value="300" />-->
+<!--		<param name="transferPenaltyMinCost" value="130" />-->
 
-		<!-- The configuration for walking as access/egress mode. -->
-		<parameterset type="intermodalAccessEgress" >
-			<!-- Initial distance around a person's origin or destination within which transit stops are looked for. -->
-			<param name="initialSearchRadius" value="1500.0" />
-			<!-- Maximum distance a person is willing to walk to/from a transit stop. -->
-			<param name="maxRadius" value="2500.0" />
-			<!-- If less than 2 transit stops are found within the initial search radius,
-                 this value is added to the initial radius iteratively until transit stops are found or maxRadius is reached. -->
-			<param name="searchExtensionRadius" value="500.0" />
-			<!-- mode of transport for this parameterset is walking. -->
-			<param name="mode" value="walk" />
-		</parameterset>
-
-		<parameterset type="intermodalAccessEgress" >
-			<!-- Initial distance around a person's origin or destination within which transit stops are looked for. -->
-			<param name="initialSearchRadius" value="1500.0" />
-			<!-- Maximum distance a person is willing to walk to/from a transit stop. -->
-			<param name="maxRadius" value="2500.0" />
-			<!-- If less than 2 transit stops are found within the initial search radius,
-                 this value is added to the initial radius iteratively until transit stops are found or maxRadius is reached. -->
-			<param name="searchExtensionRadius" value="500.0" />
-			<!-- mode of transport for this parameterset is walking. -->
-			<param name="mode" value="bike" />
-		</parameterset>
-
-<!--		&lt;!&ndash; The configuration for DRT as access/egress mode. &ndash;&gt;-->
+<!--		&lt;!&ndash; The configuration for walking as access/egress mode. &ndash;&gt;-->
 <!--		<parameterset type="intermodalAccessEgress" >-->
-<!--			&lt;!&ndash; Initial distance around a person's origin or destination within which transit stops are looked for when using DRT. &ndash;&gt;-->
-<!--			<param name="initialSearchRadius" value="3000.0" />-->
-<!--			&lt;!&ndash; If specific link IDs are to be used for DRT, they would be specified by an attribute.-->
-<!--                 In this case, no such attribute is set (null). &ndash;&gt;-->
-<!--			<param name="linkIdAttribute" value="null" />-->
-<!--			&lt;!&ndash; Maximum distance a person is willing to travel using DRT to/from a transit stop. &ndash;&gt;-->
-<!--			<param name="maxRadius" value="4000.0" />-->
-<!--			<param name="mode" value="drt" />-->
-<!--			&lt;!&ndash; Specific agent attributes  considered for DRT access/egress. &ndash;&gt;-->
-<!--			<param name="personFilterAttribute" value="null" />-->
-<!--			<param name="personFilterValue" value="null" />-->
-<!--			&lt;!&ndash; Similar to walking, if fewer transit stops are found,-->
-<!--                 this value is added to the initial radius until stops are found or maxRadius is reached. &ndash;&gt;-->
-<!--			<param name="searchExtensionRadius" value="1000.0" />-->
-<!--			&lt;!&ndash; If sharing of DRT vehicles is considered, this defines the maximum search radius for potential ride-sharing opportunities.-->
-<!--                 Here, it's set to infinity, meaning there's no limit. &ndash;&gt;-->
-<!--			<param name="shareTripSearchRadius" value="Infinity" />-->
-<!--			&lt;!&ndash; If transit stops are filtered based on specific attributes, those would be defined here.-->
-<!--                 In this case, no such attributes are set. &ndash;&gt;-->
-<!--			<param name="stopFilterAttribute" value="null" />-->
-<!--			<param name="stopFilterValue" value="null" />-->
+<!--			&lt;!&ndash; Initial distance around a person's origin or destination within which transit stops are looked for. &ndash;&gt;-->
+<!--			<param name="initialSearchRadius" value="1500.0" />-->
+<!--			&lt;!&ndash; Maximum distance a person is willing to walk to/from a transit stop. &ndash;&gt;-->
+<!--			<param name="maxRadius" value="2500.0" />-->
+<!--			&lt;!&ndash; If less than 2 transit stops are found within the initial search radius,-->
+<!--                 this value is added to the initial radius iteratively until transit stops are found or maxRadius is reached. &ndash;&gt;-->
+<!--			<param name="searchExtensionRadius" value="500.0" />-->
+<!--			&lt;!&ndash; mode of transport for this parameterset is walking. &ndash;&gt;-->
+<!--			<param name="mode" value="walk" />-->
 <!--		</parameterset>-->
 
-		<parameterset type="rangeQuerySettings" >
-			<param name="maxEarlierDeparture_sec" value="900" />
-			<param name="maxLaterDeparture_sec" value="900" />
-		</parameterset>
-		<parameterset type="routeSelector" >
-			<param name="betaDepartureTime" value="0.0" />
-			<param name="betaTransferCount" value="300.0" />
-			<param name="betaTravelTime" value="1" />
-			<param name="subpopulations" value="" />
-		</parameterset>
-	</module>
+<!--		<parameterset type="intermodalAccessEgress" >-->
+<!--			&lt;!&ndash; Initial distance around a person's origin or destination within which transit stops are looked for. &ndash;&gt;-->
+<!--			<param name="initialSearchRadius" value="1500.0" />-->
+<!--			&lt;!&ndash; Maximum distance a person is willing to walk to/from a transit stop. &ndash;&gt;-->
+<!--			<param name="maxRadius" value="2500.0" />-->
+<!--			&lt;!&ndash; If less than 2 transit stops are found within the initial search radius,-->
+<!--                 this value is added to the initial radius iteratively until transit stops are found or maxRadius is reached. &ndash;&gt;-->
+<!--			<param name="searchExtensionRadius" value="500.0" />-->
+<!--			&lt;!&ndash; mode of transport for this parameterset is walking. &ndash;&gt;-->
+<!--			<param name="mode" value="bike" />-->
+<!--		</parameterset>-->
+
+<!--&lt;!&ndash;		&lt;!&ndash; The configuration for DRT as access/egress mode. &ndash;&gt;&ndash;&gt;-->
+<!--&lt;!&ndash;		<parameterset type="intermodalAccessEgress" >&ndash;&gt;-->
+<!--&lt;!&ndash;			&lt;!&ndash; Initial distance around a person's origin or destination within which transit stops are looked for when using DRT. &ndash;&gt;&ndash;&gt;-->
+<!--&lt;!&ndash;			<param name="initialSearchRadius" value="3000.0" />&ndash;&gt;-->
+<!--&lt;!&ndash;			&lt;!&ndash; If specific link IDs are to be used for DRT, they would be specified by an attribute.&ndash;&gt;-->
+<!--&lt;!&ndash;                 In this case, no such attribute is set (null). &ndash;&gt;&ndash;&gt;-->
+<!--&lt;!&ndash;			<param name="linkIdAttribute" value="null" />&ndash;&gt;-->
+<!--&lt;!&ndash;			&lt;!&ndash; Maximum distance a person is willing to travel using DRT to/from a transit stop. &ndash;&gt;&ndash;&gt;-->
+<!--&lt;!&ndash;			<param name="maxRadius" value="4000.0" />&ndash;&gt;-->
+<!--&lt;!&ndash;			<param name="mode" value="drt" />&ndash;&gt;-->
+<!--&lt;!&ndash;			&lt;!&ndash; Specific agent attributes  considered for DRT access/egress. &ndash;&gt;&ndash;&gt;-->
+<!--&lt;!&ndash;			<param name="personFilterAttribute" value="null" />&ndash;&gt;-->
+<!--&lt;!&ndash;			<param name="personFilterValue" value="null" />&ndash;&gt;-->
+<!--&lt;!&ndash;			&lt;!&ndash; Similar to walking, if fewer transit stops are found,&ndash;&gt;-->
+<!--&lt;!&ndash;                 this value is added to the initial radius until stops are found or maxRadius is reached. &ndash;&gt;&ndash;&gt;-->
+<!--&lt;!&ndash;			<param name="searchExtensionRadius" value="1000.0" />&ndash;&gt;-->
+<!--&lt;!&ndash;			&lt;!&ndash; If sharing of DRT vehicles is considered, this defines the maximum search radius for potential ride-sharing opportunities.&ndash;&gt;-->
+<!--&lt;!&ndash;                 Here, it's set to infinity, meaning there's no limit. &ndash;&gt;&ndash;&gt;-->
+<!--&lt;!&ndash;			<param name="shareTripSearchRadius" value="Infinity" />&ndash;&gt;-->
+<!--&lt;!&ndash;			&lt;!&ndash; If transit stops are filtered based on specific attributes, those would be defined here.&ndash;&gt;-->
+<!--&lt;!&ndash;                 In this case, no such attributes are set. &ndash;&gt;&ndash;&gt;-->
+<!--&lt;!&ndash;			<param name="stopFilterAttribute" value="null" />&ndash;&gt;-->
+<!--&lt;!&ndash;			<param name="stopFilterValue" value="null" />&ndash;&gt;-->
+<!--&lt;!&ndash;		</parameterset>&ndash;&gt;-->
+
+<!--		<parameterset type="rangeQuerySettings" >-->
+<!--			<param name="maxEarlierDeparture_sec" value="900" />-->
+<!--			<param name="maxLaterDeparture_sec" value="900" />-->
+<!--		</parameterset>-->
+<!--		<parameterset type="routeSelector" >-->
+<!--			<param name="betaDepartureTime" value="0.0" />-->
+<!--			<param name="betaTransferCount" value="300.0" />-->
+<!--			<param name="betaTravelTime" value="1" />-->
+<!--			<param name="subpopulations" value="" />-->
+<!--		</parameterset>-->
+<!--	</module>-->
 
 </config>

@@ -544,6 +544,129 @@
 	<vehicle id="Isehara Local_081900" type="pt"/>
 	<vehicle id="Isehara Semi Express_180000" type="pt"/>
 	<vehicle id="Isehara Semi Express_185900" type="pt"/>
+	<vehicle id="JR Sagami_051200" type="pt"/>
+	<vehicle id="JR Sagami_074000" type="pt"/>
+	<vehicle id="JR Sagami_075800" type="pt"/>
+	<vehicle id="JR Sagami_081100" type="pt"/>
+	<vehicle id="JR Sagami_082700" type="pt"/>
+	<vehicle id="JR Sagami_083900" type="pt"/>
+	<vehicle id="JR Sagami_085600" type="pt"/>
+	<vehicle id="JR Sagami_091900" type="pt"/>
+	<vehicle id="JR Sagami_094400" type="pt"/>
+	<vehicle id="JR Sagami_100600" type="pt"/>
+	<vehicle id="JR Sagami_102800" type="pt"/>
+	<vehicle id="JR Sagami_054200" type="pt"/>
+	<vehicle id="JR Sagami_105100" type="pt"/>
+	<vehicle id="JR Sagami_111100" type="pt"/>
+	<vehicle id="JR Sagami_113400" type="pt"/>
+	<vehicle id="JR Sagami_115400" type="pt"/>
+	<vehicle id="JR Sagami_121400" type="pt"/>
+	<vehicle id="JR Sagami_123900" type="pt"/>
+	<vehicle id="JR Sagami_125900" type="pt"/>
+	<vehicle id="JR Sagami_131900" type="pt"/>
+	<vehicle id="JR Sagami_133900" type="pt"/>
+	<vehicle id="JR Sagami_135900" type="pt"/>
+	<vehicle id="JR Sagami_060600" type="pt"/>
+	<vehicle id="JR Sagami_141900" type="pt"/>
+	<vehicle id="JR Sagami_143900" type="pt"/>
+	<vehicle id="JR Sagami_145900" type="pt"/>
+	<vehicle id="JR Sagami_151900" type="pt"/>
+	<vehicle id="JR Sagami_153900" type="pt"/>
+	<vehicle id="JR Sagami_155900" type="pt"/>
+	<vehicle id="JR Sagami_162200" type="pt"/>
+	<vehicle id="JR Sagami_164800" type="pt"/>
+	<vehicle id="JR Sagami_170300" type="pt"/>
+	<vehicle id="JR Sagami_171800" type="pt"/>
+	<vehicle id="JR Sagami_061800" type="pt"/>
+	<vehicle id="JR Sagami_173400" type="pt"/>
+	<vehicle id="JR Sagami_174800" type="pt"/>
+	<vehicle id="JR Sagami_180300" type="pt"/>
+	<vehicle id="JR Sagami_181700" type="pt"/>
+	<vehicle id="JR Sagami_183300" type="pt"/>
+	<vehicle id="JR Sagami_184800" type="pt"/>
+	<vehicle id="JR Sagami_190300" type="pt"/>
+	<vehicle id="JR Sagami_191800" type="pt"/>
+	<vehicle id="JR Sagami_193300" type="pt"/>
+	<vehicle id="JR Sagami_194800" type="pt"/>
+	<vehicle id="JR Sagami_063100" type="pt"/>
+	<vehicle id="JR Sagami_200300" type="pt"/>
+	<vehicle id="JR Sagami_201900" type="pt"/>
+	<vehicle id="JR Sagami_203400" type="pt"/>
+	<vehicle id="JR Sagami_205300" type="pt"/>
+	<vehicle id="JR Sagami_211000" type="pt"/>
+	<vehicle id="JR Sagami_212900" type="pt"/>
+	<vehicle id="JR Sagami_215400" type="pt"/>
+	<vehicle id="JR Sagami_221900" type="pt"/>
+	<vehicle id="JR Sagami_225100" type="pt"/>
+	<vehicle id="JR Sagami_232100" type="pt"/>
+	<vehicle id="JR Sagami_064200" type="pt"/>
+	<vehicle id="JR Sagami_234700" type="pt"/>
+	<vehicle id="JR Sagami_065600" type="pt"/>
+	<vehicle id="JR Sagami_071300" type="pt"/>
+	<vehicle id="JR Sagami_072500" type="pt"/>
+	<vehicle id="JR Sagami - r_044200" type="pt"/>
+	<vehicle id="JR Sagami - r_065400" type="pt"/>
+	<vehicle id="JR Sagami - r_070700" type="pt"/>
+	<vehicle id="JR Sagami - r_072300" type="pt"/>
+	<vehicle id="JR Sagami - r_073800" type="pt"/>
+	<vehicle id="JR Sagami - r_075300" type="pt"/>
+	<vehicle id="JR Sagami - r_080800" type="pt"/>
+	<vehicle id="JR Sagami - r_082200" type="pt"/>
+	<vehicle id="JR Sagami - r_083700" type="pt"/>
+	<vehicle id="JR Sagami - r_085200" type="pt"/>
+	<vehicle id="JR Sagami - r_090700" type="pt"/>
+	<vehicle id="JR Sagami - r_045900" type="pt"/>
+	<vehicle id="JR Sagami - r_092800" type="pt"/>
+	<vehicle id="JR Sagami - r_095100" type="pt"/>
+	<vehicle id="JR Sagami - r_101800" type="pt"/>
+	<vehicle id="JR Sagami - r_104600" type="pt"/>
+	<vehicle id="JR Sagami - r_110900" type="pt"/>
+	<vehicle id="JR Sagami - r_113500" type="pt"/>
+	<vehicle id="JR Sagami - r_115800" type="pt"/>
+	<vehicle id="JR Sagami - r_121800" type="pt"/>
+	<vehicle id="JR Sagami - r_123800" type="pt"/>
+	<vehicle id="JR Sagami - r_125800" type="pt"/>
+	<vehicle id="JR Sagami - r_051200" type="pt"/>
+	<vehicle id="JR Sagami - r_131800" type="pt"/>
+	<vehicle id="JR Sagami - r_133800" type="pt"/>
+	<vehicle id="JR Sagami - r_135800" type="pt"/>
+	<vehicle id="JR Sagami - r_141800" type="pt"/>
+	<vehicle id="JR Sagami - r_143800" type="pt"/>
+	<vehicle id="JR Sagami - r_145800" type="pt"/>
+	<vehicle id="JR Sagami - r_151800" type="pt"/>
+	<vehicle id="JR Sagami - r_153800" type="pt"/>
+	<vehicle id="JR Sagami - r_155700" type="pt"/>
+	<vehicle id="JR Sagami - r_160900" type="pt"/>
+	<vehicle id="JR Sagami - r_052600" type="pt"/>
+	<vehicle id="JR Sagami - r_162200" type="pt"/>
+	<vehicle id="JR Sagami - r_163500" type="pt"/>
+	<vehicle id="JR Sagami - r_164800" type="pt"/>
+	<vehicle id="JR Sagami - r_170200" type="pt"/>
+	<vehicle id="JR Sagami - r_171700" type="pt"/>
+	<vehicle id="JR Sagami - r_173200" type="pt"/>
+	<vehicle id="JR Sagami - r_174700" type="pt"/>
+	<vehicle id="JR Sagami - r_180200" type="pt"/>
+	<vehicle id="JR Sagami - r_181700" type="pt"/>
+	<vehicle id="JR Sagami - r_183200" type="pt"/>
+	<vehicle id="JR Sagami - r_054900" type="pt"/>
+	<vehicle id="JR Sagami - r_184700" type="pt"/>
+	<vehicle id="JR Sagami - r_190200" type="pt"/>
+	<vehicle id="JR Sagami - r_191700" type="pt"/>
+	<vehicle id="JR Sagami - r_193700" type="pt"/>
+	<vehicle id="JR Sagami - r_195400" type="pt"/>
+	<vehicle id="JR Sagami - r_201800" type="pt"/>
+	<vehicle id="JR Sagami - r_203500" type="pt"/>
+	<vehicle id="JR Sagami - r_205600" type="pt"/>
+	<vehicle id="JR Sagami - r_212400" type="pt"/>
+	<vehicle id="JR Sagami - r_215200" type="pt"/>
+	<vehicle id="JR Sagami - r_060400" type="pt"/>
+	<vehicle id="JR Sagami - r_222000" type="pt"/>
+	<vehicle id="JR Sagami - r_224700" type="pt"/>
+	<vehicle id="JR Sagami - r_232100" type="pt"/>
+	<vehicle id="JR Sagami - r_234800" type="pt"/>
+	<vehicle id="JR Sagami - r_061500" type="pt"/>
+	<vehicle id="JR Sagami - r_062600" type="pt"/>
+	<vehicle id="JR Sagami - r_064000" type="pt"/>
 	<vehicle id="Karakida Express_080300" type="pt"/>
 	<vehicle id="Karakida Express_105200" type="pt"/>
 	<vehicle id="Karakida Express_111200" type="pt"/>

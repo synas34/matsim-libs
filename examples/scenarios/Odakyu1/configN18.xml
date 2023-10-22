@@ -9,7 +9,7 @@
 	</module>
 
 	<module name="network">
-		<param name="inputNetworkFile" value="rrte2.xml" />
+		<param name="inputNetworkFile" value="rrte3.xml" />
 	</module>
 
 	<module name="plans">
@@ -20,7 +20,7 @@
 		<param name="outputDirectory" value="./output" />
 		<param name="overwriteFiles" value="deleteDirectoryIfExists" />
 		<param name="firstIteration" value="0" />
-		<param name="lastIteration" value="50" />
+		<param name="lastIteration" value="2" />
 		<param name="eventsFileFormat" value="xml" />
 		<param name="mobsim" value="qsim" />
 	</module>
@@ -49,6 +49,11 @@
 		</parameterset>
 		<parameterset type="modeParams">
 			<param name="mode" value="pt"/>
+			<param name="constant" value="0.7" />
+			<param name="marginalUtilityOfTraveling_util_hr" value="-0.03" />
+			<param name="monetaryDistanceRate" value="-0.03" />
+			<!-- [utils] daily utility constant. default=0 to be backwards compatible -->
+			<param name="dailyUtilityConstant" value="0.0" />
 		</parameterset>
 			<parameterset type="modeParams">
 				<param name="mode" value="walk"/>
@@ -114,7 +119,7 @@
 		</parameterset>
 		<parameterset type="strategysettings">
 			<param name="strategyName" value="ChangeTripMode"/>
-			<param name="weight" value="0.1"/>
+			<param name="weight" value="0.8"/>
 		</parameterset>
 
 	</module>

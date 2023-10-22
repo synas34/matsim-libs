@@ -14,12 +14,17 @@
 		<stopFacility id="Atsugi_Atsugi" x="139.3775" y="35.44297" linkRefId="Atsugi_Atsugi" isBlocking="false"/>
 		<stopFacility id="Atsugi_Ebina" x="139.38465" y="35.448260000000005" linkRefId="Atsugi_Ebina" isBlocking="false"/>
 		<stopFacility id="Atsugi_Hon-Atsugi" x="139.37054999999998" y="35.440765" linkRefId="Atsugi_Hon-Atsugi" isBlocking="false"/>
+		<stopFacility id="Atsugi_Shake" x="139.37734999999998" y="35.431855" linkRefId="Atsugi_Shake" isBlocking="false"/>
+		<stopFacility id="Banda_Harataima" x="139.36925000000002" y="35.537175" linkRefId="Banda_Harataima" isBlocking="false"/>
+		<stopFacility id="Banda_Kamimizo" x="139.36335000000003" y="35.551235" linkRefId="Banda_Kamimizo" isBlocking="false"/>
+		<stopFacility id="Chigasaki_Kita-Chigasaki" x="139.40865000000002" y="35.335210000000004" linkRefId="Chigasaki_Kita-Chigasaki" isBlocking="false"/>
 		<stopFacility id="Chitose-Funabashi_Chitose-Funabashi" x="139.6253" y="35.64791" linkRefId="Chitose-Funabashi_Chitose-Funabashi" isBlocking="false"/>
 		<stopFacility id="Chitose-Funabashi_Kyōdō" x="139.63155" y="35.64971" linkRefId="Chitose-Funabashi_Kyōdō" isBlocking="false"/>
 		<stopFacility id="Chitose-Funabashi_Soshigaya-Ōkura" x="139.6171" y="35.645465" linkRefId="Chitose-Funabashi_Soshigaya-Ōkura" isBlocking="false"/>
 		<stopFacility id="Ebina_Atsugi" x="139.38465" y="35.448260000000005" linkRefId="Ebina_Atsugi" isBlocking="false"/>
 		<stopFacility id="Ebina_Ebina" x="139.3918" y="35.45355" linkRefId="Ebina_Ebina" isBlocking="false"/>
 		<stopFacility id="Ebina_Hon-Atsugi" x="139.3777" y="35.446055" linkRefId="Ebina_Hon-Atsugi" isBlocking="false"/>
+		<stopFacility id="Ebina_Iriya" x="139.39175" y="35.46613" linkRefId="Ebina_Iriya" isBlocking="false"/>
 		<stopFacility id="Ebina_Isehara" x="139.35309999999998" y="35.424965" linkRefId="Ebina_Isehara" isBlocking="false"/>
 		<stopFacility id="Ebina_Machida" x="139.41879999999998" y="35.49913" linkRefId="Ebina_Machida" isBlocking="false"/>
 		<stopFacility id="Ebina_Sagami-Ōno" x="139.4153" y="35.49342" linkRefId="Ebina_Sagami-Ōno" isBlocking="false"/>
@@ -33,6 +38,9 @@
 		<stopFacility id="Hadano_Shibusawa" x="139.20625" y="35.37173" linkRefId="Hadano_Shibusawa" isBlocking="false"/>
 		<stopFacility id="Hadano_Shin-Matsuda" x="139.18285" y="35.35694" linkRefId="Hadano_Shin-Matsuda" isBlocking="false"/>
 		<stopFacility id="Hadano_Tōkaidaigaku-mae" x="139.2491" y="35.371365" linkRefId="Hadano_Tōkaidaigaku-mae" isBlocking="false"/>
+		<stopFacility id="Harataima_Banda" x="139.36925000000002" y="35.537175" linkRefId="Harataima_Banda" isBlocking="false"/>
+		<stopFacility id="Harataima_Shimomizo" x="139.3777" y="35.524005" linkRefId="Harataima_Shimomizo" isBlocking="false"/>
+		<stopFacility id="Hashimoto_Minami-Hashimoto" x="139.3483" y="35.58757" linkRefId="Hashimoto_Minami-Hashimoto" isBlocking="false"/>
 		<stopFacility id="Hibiya_Nijūbashimae" x="139.76080000000002" y="35.67807" linkRefId="Hibiya_Nijūbashimae" isBlocking="false"/>
 		<stopFacility id="Higashi-Kitazawa_Higashi-Kitazawa" x="139.6725" y="35.66508" linkRefId="Higashi-Kitazawa_Higashi-Kitazawa" isBlocking="false"/>
 		<stopFacility id="Higashi-Kitazawa_Shimo-Kitazawa" x="139.66985" y="35.66329" linkRefId="Higashi-Kitazawa_Shimo-Kitazawa" isBlocking="false"/>
@@ -48,6 +56,8 @@
 		<stopFacility id="Ikuta_Ikuta" x="139.5406" y="35.61482" linkRefId="Ikuta_Ikuta" isBlocking="false"/>
 		<stopFacility id="Ikuta_Mukōgaoka-Yūen" x="139.55205" y="35.615825" linkRefId="Ikuta_Mukōgaoka-Yūen" isBlocking="false"/>
 		<stopFacility id="Ikuta_Yomiuri-Land-mae" x="139.53385" y="35.61483" linkRefId="Ikuta_Yomiuri-Land-mae" isBlocking="false"/>
+		<stopFacility id="Iriya_Ebina" x="139.39175" y="35.46613" linkRefId="Iriya_Ebina" isBlocking="false"/>
+		<stopFacility id="Iriya_Sōbudaishita" x="139.38895" y="35.486000000000004" linkRefId="Iriya_Sōbudaishita" isBlocking="false"/>
 		<stopFacility id="Isehara_Aikō-Ishida" x="139.32954999999998" y="35.407275" linkRefId="Isehara_Aikō-Ishida" isBlocking="false"/>
 		<stopFacility id="Isehara_Isehara" x="139.3144" y="35.39638" linkRefId="Isehara_Isehara" isBlocking="false"/>
 		<stopFacility id="Isehara_Odawara" x="139.23515" y="35.326724999999996" linkRefId="Isehara_Odawara" isBlocking="false"/>
@@ -55,6 +65,10 @@
 		<stopFacility id="Izumi-Tamagawa_Izumi-Tamagawa" x="139.5733" y="35.6268" linkRefId="Izumi-Tamagawa_Izumi-Tamagawa" isBlocking="false"/>
 		<stopFacility id="Izumi-Tamagawa_Komae" x="139.575" y="35.62921" linkRefId="Izumi-Tamagawa_Komae" isBlocking="false"/>
 		<stopFacility id="Izumi-Tamagawa_Noborito" x="139.57105" y="35.623435" linkRefId="Izumi-Tamagawa_Noborito" isBlocking="false"/>
+		<stopFacility id="Kadosawabashi_Kurami" x="139.3792" y="35.400545" linkRefId="Kadosawabashi_Kurami" isBlocking="false"/>
+		<stopFacility id="Kadosawabashi_Shake" x="139.37869999999998" y="35.413585" linkRefId="Kadosawabashi_Shake" isBlocking="false"/>
+		<stopFacility id="Kagawa_Kita-Chigasaki" x="139.4038" y="35.347705" linkRefId="Kagawa_Kita-Chigasaki" isBlocking="false"/>
+		<stopFacility id="Kagawa_Samukawa" x="139.3938" y="35.361805000000004" linkRefId="Kagawa_Samukawa" isBlocking="false"/>
 		<stopFacility id="Kaisei_Kaisei" x="139.1357" y="35.32681" linkRefId="Kaisei_Kaisei" isBlocking="false"/>
 		<stopFacility id="Kaisei_Kayama" x="139.1391" y="35.318885" linkRefId="Kaisei_Kayama" isBlocking="false"/>
 		<stopFacility id="Kaisei_Odawara" x="139.1458" y="35.29194" linkRefId="Kaisei_Odawara" isBlocking="false"/>
@@ -62,11 +76,15 @@
 		<stopFacility id="Kakio_Kakio" x="139.4971" y="35.58891" linkRefId="Kakio_Kakio" isBlocking="false"/>
 		<stopFacility id="Kakio_Shin-Yurigaoka" x="139.50189999999998" y="35.595985" linkRefId="Kakio_Shin-Yurigaoka" isBlocking="false"/>
 		<stopFacility id="Kakio_Tsurukawa" x="139.49" y="35.586115" linkRefId="Kakio_Tsurukawa" isBlocking="false"/>
+		<stopFacility id="Kamimizo_Banda" x="139.36335000000003" y="35.551235" linkRefId="Kamimizo_Banda" isBlocking="false"/>
+		<stopFacility id="Kamimizo_Minami-Hashimoto" x="139.35784999999998" y="35.568595" linkRefId="Kamimizo_Minami-Hashimoto" isBlocking="false"/>
 		<stopFacility id="Kasumigaseki_Hibiya" x="139.75605000000002" y="35.67346" linkRefId="Kasumigaseki_Hibiya" isBlocking="false"/>
 		<stopFacility id="Kasumigaseki_Ōtemachi" x="139.7582" y="35.679575" linkRefId="Kasumigaseki_Ōtemachi" isBlocking="false"/>
 		<stopFacility id="Kayama_Kaisei" x="139.1391" y="35.318885" linkRefId="Kayama_Kaisei" isBlocking="false"/>
 		<stopFacility id="Kayama_Kayama" x="139.1425" y="35.31096" linkRefId="Kayama_Kayama" isBlocking="false"/>
 		<stopFacility id="Kayama_Tomizu" x="139.144028" y="35.3036745" linkRefId="Kayama_Tomizu" isBlocking="false"/>
+		<stopFacility id="Kita-Chigasaki_Chigasaki" x="139.40865000000002" y="35.335210000000004" linkRefId="Kita-Chigasaki_Chigasaki" isBlocking="false"/>
+		<stopFacility id="Kita-Chigasaki_Kagawa" x="139.4038" y="35.347705" linkRefId="Kita-Chigasaki_Kagawa" isBlocking="false"/>
 		<stopFacility id="Kita-Senju_Ayase" x="139.81535" y="35.756215" linkRefId="Kita-Senju_Ayase" isBlocking="false"/>
 		<stopFacility id="Kitami_Kitami" x="139.5855" y="35.63613" linkRefId="Kitami_Kitami" isBlocking="false"/>
 		<stopFacility id="Kitami_Komae" x="139.5811" y="35.633875" linkRefId="Kitami_Komae" isBlocking="false"/>
@@ -77,6 +95,8 @@
 		<stopFacility id="Komae_Komae" x="139.5767" y="35.63162" linkRefId="Komae_Komae" isBlocking="false"/>
 		<stopFacility id="Komae_Noborito" x="139.57274999999998" y="35.625845" linkRefId="Komae_Noborito" isBlocking="false"/>
 		<stopFacility id="Komae_Seijōgakuen-Mae" x="139.58735000000001" y="35.635715" linkRefId="Komae_Seijōgakuen-Mae" isBlocking="false"/>
+		<stopFacility id="Kurami_Kadosawabashi" x="139.3792" y="35.400545" linkRefId="Kurami_Kadosawabashi" isBlocking="false"/>
+		<stopFacility id="Kurami_Miyayama" x="139.37895" y="35.388275" linkRefId="Kurami_Miyayama" isBlocking="false"/>
 		<stopFacility id="Kyōdō_Chitose-Funabashi" x="139.63155" y="35.64971" linkRefId="Kyōdō_Chitose-Funabashi" isBlocking="false"/>
 		<stopFacility id="Kyōdō_Gōtokuji" x="139.64294999999998" y="35.65281" linkRefId="Kyōdō_Gōtokuji" isBlocking="false"/>
 		<stopFacility id="Kyōdō_Kyōdō" x="139.6378" y="35.65151" linkRefId="Kyōdō_Kyōdō" isBlocking="false"/>
@@ -92,9 +112,13 @@
 		<stopFacility id="Machida_Tamagawagakuen-mae" x="139.45485" y="35.554495" linkRefId="Machida_Tamagawagakuen-mae" isBlocking="false"/>
 		<stopFacility id="Machiya_Kita-Senju" x="139.79205000000002" y="35.745599999999996" linkRefId="Machiya_Kita-Senju" isBlocking="false"/>
 		<stopFacility id="Meiji-jingumae-(Harajuku)_Omotesandō" x="139.7074" y="35.66695" linkRefId="Meiji-jingumae-(Harajuku)_Omotesandō" isBlocking="false"/>
+		<stopFacility id="Minami-Hashimoto_Hashimoto" x="139.3483" y="35.58757" linkRefId="Minami-Hashimoto_Hashimoto" isBlocking="false"/>
+		<stopFacility id="Minami-Hashimoto_Kamimizo" x="139.35784999999998" y="35.568595" linkRefId="Minami-Hashimoto_Kamimizo" isBlocking="false"/>
 		<stopFacility id="Minami-Shinjuku_Minami-Shinjuku" x="139.6982" y="35.68316" linkRefId="Minami-Shinjuku_Minami-Shinjuku" isBlocking="false"/>
 		<stopFacility id="Minami-Shinjuku_Sangūbashi" x="139.69575" y="35.680645" linkRefId="Minami-Shinjuku_Sangūbashi" isBlocking="false"/>
 		<stopFacility id="Minami-Shinjuku_Shinjuku" x="139.6987" y="35.686814999999996" linkRefId="Minami-Shinjuku_Shinjuku" isBlocking="false"/>
+		<stopFacility id="Miyayama_Kurami" x="139.37895" y="35.388275" linkRefId="Miyayama_Kurami" isBlocking="false"/>
+		<stopFacility id="Miyayama_Samukawa" x="139.3837" y="35.374645" linkRefId="Miyayama_Samukawa" isBlocking="false"/>
 		<stopFacility id="Mukōgaoka-Yūen_Ikuta" x="139.55205" y="35.615825" linkRefId="Mukōgaoka-Yūen_Ikuta" isBlocking="false"/>
 		<stopFacility id="Mukōgaoka-Yūen_Mukōgaoka-Yūen" x="139.5635" y="35.61683" linkRefId="Mukōgaoka-Yūen_Mukōgaoka-Yūen" isBlocking="false"/>
 		<stopFacility id="Mukōgaoka-Yūen_Noborito" x="139.56615" y="35.618449999999996" linkRefId="Mukōgaoka-Yūen_Noborito" isBlocking="false"/>
@@ -124,6 +148,8 @@
 		<stopFacility id="Sagami-Ōno_Machida" x="139.4423" y="35.539" linkRefId="Sagami-Ōno_Machida" isBlocking="false"/>
 		<stopFacility id="Sagami-Ōno_Odakyū-Sagamihara" x="139.4312" y="35.524770000000004" linkRefId="Sagami-Ōno_Odakyū-Sagamihara" isBlocking="false"/>
 		<stopFacility id="Sagami-Ōno_Sagami-Ōno" x="139.4388" y="35.53329" linkRefId="Sagami-Ōno_Sagami-Ōno" isBlocking="false"/>
+		<stopFacility id="Samukawa_Kagawa" x="139.3938" y="35.361805000000004" linkRefId="Samukawa_Kagawa" isBlocking="false"/>
+		<stopFacility id="Samukawa_Miyayama" x="139.3837" y="35.374645" linkRefId="Samukawa_Miyayama" isBlocking="false"/>
 		<stopFacility id="Sangūbashi_Minami-Shinjuku" x="139.69575" y="35.680645" linkRefId="Sangūbashi_Minami-Shinjuku" isBlocking="false"/>
 		<stopFacility id="Sangūbashi_Sangūbashi" x="139.6933" y="35.67813" linkRefId="Sangūbashi_Sangūbashi" isBlocking="false"/>
 		<stopFacility id="Sangūbashi_Yoyogi-Hachiman" x="139.69085" y="35.67379" linkRefId="Sangūbashi_Yoyogi-Hachiman" isBlocking="false"/>
@@ -137,6 +163,8 @@
 		<stopFacility id="Setagaya-Daita_Setagaya-Daita" x="139.6608" y="35.65814" linkRefId="Setagaya-Daita_Setagaya-Daita" isBlocking="false"/>
 		<stopFacility id="Setagaya-Daita_Shimo-Kitazawa" x="139.664" y="35.659819999999996" linkRefId="Setagaya-Daita_Shimo-Kitazawa" isBlocking="false"/>
 		<stopFacility id="Setagaya-Daita_Umegaoka" x="139.65755000000001" y="35.65719" linkRefId="Setagaya-Daita_Umegaoka" isBlocking="false"/>
+		<stopFacility id="Shake_Atsugi" x="139.37734999999998" y="35.431855" linkRefId="Shake_Atsugi" isBlocking="false"/>
+		<stopFacility id="Shake_Kadosawabashi" x="139.37869999999998" y="35.413585" linkRefId="Shake_Kadosawabashi" isBlocking="false"/>
 		<stopFacility id="Shibusawa_Hadano" x="139.20625" y="35.37173" linkRefId="Shibusawa_Hadano" isBlocking="false"/>
 		<stopFacility id="Shibusawa_Shibusawa" x="139.1856" y="35.3739" linkRefId="Shibusawa_Shibusawa" isBlocking="false"/>
 		<stopFacility id="Shibusawa_Shin-Matsuda" x="139.16219999999998" y="35.35911" linkRefId="Shibusawa_Shin-Matsuda" isBlocking="false"/>
@@ -147,6 +175,8 @@
 		<stopFacility id="Shimo-Kitazawa_Setagaya-Daita" x="139.664" y="35.659819999999996" linkRefId="Shimo-Kitazawa_Setagaya-Daita" isBlocking="false"/>
 		<stopFacility id="Shimo-Kitazawa_Shimo-Kitazawa" x="139.6672" y="35.6615" linkRefId="Shimo-Kitazawa_Shimo-Kitazawa" isBlocking="false"/>
 		<stopFacility id="Shimo-Kitazawa_Yoyogi-Uehara" x="139.673" y="35.664995" linkRefId="Shimo-Kitazawa_Yoyogi-Uehara" isBlocking="false"/>
+		<stopFacility id="Shimomizo_Harataima" x="139.3777" y="35.524005" linkRefId="Shimomizo_Harataima" isBlocking="false"/>
+		<stopFacility id="Shimomizo_Sōbudaishita" x="139.38325" y="35.506025" linkRefId="Shimomizo_Sōbudaishita" isBlocking="false"/>
 		<stopFacility id="Shin-Matsuda_Kaisei" x="139.13725" y="35.335565" linkRefId="Shin-Matsuda_Kaisei" isBlocking="false"/>
 		<stopFacility id="Shin-Matsuda_Shibusawa" x="139.16219999999998" y="35.35911" linkRefId="Shin-Matsuda_Shibusawa" isBlocking="false"/>
 		<stopFacility id="Shin-Matsuda_Shin-Matsuda" x="139.1388" y="35.34432" linkRefId="Shin-Matsuda_Shin-Matsuda" isBlocking="false"/>
@@ -169,6 +199,8 @@
 		<stopFacility id="Sōbudai-mae_Odakyū-Sagamihara" x="139.41635" y="35.5081" linkRefId="Sōbudai-mae_Odakyū-Sagamihara" isBlocking="false"/>
 		<stopFacility id="Sōbudai-mae_Sōbudai-mae" x="139.4091" y="35.49995" linkRefId="Sōbudai-mae_Sōbudai-mae" isBlocking="false"/>
 		<stopFacility id="Sōbudai-mae_Zama" x="139.40449999999998" y="35.49084" linkRefId="Sōbudai-mae_Zama" isBlocking="false"/>
+		<stopFacility id="Sōbudaishita_Iriya" x="139.38895" y="35.486000000000004" linkRefId="Sōbudaishita_Iriya" isBlocking="false"/>
+		<stopFacility id="Sōbudaishita_Shimomizo" x="139.38325" y="35.506025" linkRefId="Sōbudaishita_Shimomizo" isBlocking="false"/>
 		<stopFacility id="Tamagawagakuen-mae_Machida" x="139.45485" y="35.554495" linkRefId="Tamagawagakuen-mae_Machida" isBlocking="false"/>
 		<stopFacility id="Tamagawagakuen-mae_Tamagawagakuen-mae" x="139.4639" y="35.56428" linkRefId="Tamagawagakuen-mae_Tamagawagakuen-mae" isBlocking="false"/>
 		<stopFacility id="Tamagawagakuen-mae_Tsurukawa" x="139.4734" y="35.5738" linkRefId="Tamagawagakuen-mae_Tsurukawa" isBlocking="false"/>
@@ -1845,6 +1877,219 @@
 			<departures>
 				<departure id="d_1" departureTime="18:00:00" vehicleRefId="Isehara Semi Express_180000"/>
 				<departure id="d_2" departureTime="18:59:00" vehicleRefId="Isehara Semi Express_185900"/>
+			</departures>
+		</transitRoute>
+	</transitLine>
+	<transitLine id="JR Sagami">
+		<transitRoute id="JR Sagami">
+			<transportMode>pt</transportMode>
+			<routeProfile>
+				<stop refId="Chigasaki_Kita-Chigasaki" arrivalOffset="00:00:00" departureOffset="00:00:00" awaitDeparture="false"/>
+				<stop refId="Kita-Chigasaki_Kagawa" arrivalOffset="00:00:00" departureOffset="00:00:00" awaitDeparture="false"/>
+				<stop refId="Kagawa_Samukawa" arrivalOffset="00:00:00" departureOffset="00:00:00" awaitDeparture="false"/>
+				<stop refId="Samukawa_Miyayama" arrivalOffset="00:00:00" departureOffset="00:00:00" awaitDeparture="false"/>
+				<stop refId="Miyayama_Kurami" arrivalOffset="00:00:00" departureOffset="00:00:00" awaitDeparture="false"/>
+				<stop refId="Kurami_Kadosawabashi" arrivalOffset="00:00:00" departureOffset="00:00:00" awaitDeparture="false"/>
+				<stop refId="Kadosawabashi_Shake" arrivalOffset="00:00:00" departureOffset="00:00:00" awaitDeparture="false"/>
+				<stop refId="Shake_Atsugi" arrivalOffset="00:00:00" departureOffset="00:00:00" awaitDeparture="false"/>
+				<stop refId="Atsugi_Ebina" arrivalOffset="00:00:00" departureOffset="00:00:00" awaitDeparture="false"/>
+				<stop refId="Ebina_Iriya" arrivalOffset="00:00:00" departureOffset="00:00:00" awaitDeparture="false"/>
+				<stop refId="Iriya_Sōbudaishita" arrivalOffset="00:00:00" departureOffset="00:00:00" awaitDeparture="false"/>
+				<stop refId="Sōbudaishita_Shimomizo" arrivalOffset="00:00:00" departureOffset="00:00:00" awaitDeparture="false"/>
+				<stop refId="Shimomizo_Harataima" arrivalOffset="00:00:00" departureOffset="00:00:00" awaitDeparture="false"/>
+				<stop refId="Harataima_Banda" arrivalOffset="00:00:00" departureOffset="00:00:00" awaitDeparture="false"/>
+				<stop refId="Banda_Kamimizo" arrivalOffset="00:00:00" departureOffset="00:00:00" awaitDeparture="false"/>
+				<stop refId="Kamimizo_Minami-Hashimoto" arrivalOffset="00:00:00" departureOffset="00:00:00" awaitDeparture="false"/>
+				<stop refId="Minami-Hashimoto_Hashimoto" arrivalOffset="00:00:00" departureOffset="00:00:00" awaitDeparture="false"/>
+			</routeProfile>
+			<route>
+				<link refId="Chigasaki_Kita-Chigasaki"/>
+				<link refId="Kita-Chigasaki_Kagawa"/>
+				<link refId="Kagawa_Samukawa"/>
+				<link refId="Samukawa_Miyayama"/>
+				<link refId="Miyayama_Kurami"/>
+				<link refId="Kurami_Kadosawabashi"/>
+				<link refId="Kadosawabashi_Shake"/>
+				<link refId="Shake_Atsugi"/>
+				<link refId="Atsugi_Ebina"/>
+				<link refId="Ebina_Iriya"/>
+				<link refId="Iriya_Sōbudaishita"/>
+				<link refId="Sōbudaishita_Shimomizo"/>
+				<link refId="Shimomizo_Harataima"/>
+				<link refId="Harataima_Banda"/>
+				<link refId="Banda_Kamimizo"/>
+				<link refId="Kamimizo_Minami-Hashimoto"/>
+				<link refId="Minami-Hashimoto_Hashimoto"/>
+			</route>
+			<departures>
+				<departure id="d_1" departureTime="05:12:00" vehicleRefId="JR Sagami_051200"/>
+				<departure id="d_10" departureTime="07:40:00" vehicleRefId="JR Sagami_074000"/>
+				<departure id="d_11" departureTime="07:58:00" vehicleRefId="JR Sagami_075800"/>
+				<departure id="d_12" departureTime="08:11:00" vehicleRefId="JR Sagami_081100"/>
+				<departure id="d_13" departureTime="08:27:00" vehicleRefId="JR Sagami_082700"/>
+				<departure id="d_14" departureTime="08:39:00" vehicleRefId="JR Sagami_083900"/>
+				<departure id="d_15" departureTime="08:56:00" vehicleRefId="JR Sagami_085600"/>
+				<departure id="d_16" departureTime="09:19:00" vehicleRefId="JR Sagami_091900"/>
+				<departure id="d_17" departureTime="09:44:00" vehicleRefId="JR Sagami_094400"/>
+				<departure id="d_18" departureTime="10:06:00" vehicleRefId="JR Sagami_100600"/>
+				<departure id="d_19" departureTime="10:28:00" vehicleRefId="JR Sagami_102800"/>
+				<departure id="d_2" departureTime="05:42:00" vehicleRefId="JR Sagami_054200"/>
+				<departure id="d_20" departureTime="10:51:00" vehicleRefId="JR Sagami_105100"/>
+				<departure id="d_21" departureTime="11:11:00" vehicleRefId="JR Sagami_111100"/>
+				<departure id="d_22" departureTime="11:34:00" vehicleRefId="JR Sagami_113400"/>
+				<departure id="d_23" departureTime="11:54:00" vehicleRefId="JR Sagami_115400"/>
+				<departure id="d_24" departureTime="12:14:00" vehicleRefId="JR Sagami_121400"/>
+				<departure id="d_25" departureTime="12:39:00" vehicleRefId="JR Sagami_123900"/>
+				<departure id="d_26" departureTime="12:59:00" vehicleRefId="JR Sagami_125900"/>
+				<departure id="d_27" departureTime="13:19:00" vehicleRefId="JR Sagami_131900"/>
+				<departure id="d_28" departureTime="13:39:00" vehicleRefId="JR Sagami_133900"/>
+				<departure id="d_29" departureTime="13:59:00" vehicleRefId="JR Sagami_135900"/>
+				<departure id="d_3" departureTime="06:06:00" vehicleRefId="JR Sagami_060600"/>
+				<departure id="d_30" departureTime="14:19:00" vehicleRefId="JR Sagami_141900"/>
+				<departure id="d_31" departureTime="14:39:00" vehicleRefId="JR Sagami_143900"/>
+				<departure id="d_32" departureTime="14:59:00" vehicleRefId="JR Sagami_145900"/>
+				<departure id="d_33" departureTime="15:19:00" vehicleRefId="JR Sagami_151900"/>
+				<departure id="d_34" departureTime="15:39:00" vehicleRefId="JR Sagami_153900"/>
+				<departure id="d_35" departureTime="15:59:00" vehicleRefId="JR Sagami_155900"/>
+				<departure id="d_36" departureTime="16:22:00" vehicleRefId="JR Sagami_162200"/>
+				<departure id="d_37" departureTime="16:48:00" vehicleRefId="JR Sagami_164800"/>
+				<departure id="d_38" departureTime="17:03:00" vehicleRefId="JR Sagami_170300"/>
+				<departure id="d_39" departureTime="17:18:00" vehicleRefId="JR Sagami_171800"/>
+				<departure id="d_4" departureTime="06:18:00" vehicleRefId="JR Sagami_061800"/>
+				<departure id="d_40" departureTime="17:34:00" vehicleRefId="JR Sagami_173400"/>
+				<departure id="d_41" departureTime="17:48:00" vehicleRefId="JR Sagami_174800"/>
+				<departure id="d_42" departureTime="18:03:00" vehicleRefId="JR Sagami_180300"/>
+				<departure id="d_43" departureTime="18:17:00" vehicleRefId="JR Sagami_181700"/>
+				<departure id="d_44" departureTime="18:33:00" vehicleRefId="JR Sagami_183300"/>
+				<departure id="d_45" departureTime="18:48:00" vehicleRefId="JR Sagami_184800"/>
+				<departure id="d_46" departureTime="19:03:00" vehicleRefId="JR Sagami_190300"/>
+				<departure id="d_47" departureTime="19:18:00" vehicleRefId="JR Sagami_191800"/>
+				<departure id="d_48" departureTime="19:33:00" vehicleRefId="JR Sagami_193300"/>
+				<departure id="d_49" departureTime="19:48:00" vehicleRefId="JR Sagami_194800"/>
+				<departure id="d_5" departureTime="06:31:00" vehicleRefId="JR Sagami_063100"/>
+				<departure id="d_50" departureTime="20:03:00" vehicleRefId="JR Sagami_200300"/>
+				<departure id="d_51" departureTime="20:19:00" vehicleRefId="JR Sagami_201900"/>
+				<departure id="d_52" departureTime="20:34:00" vehicleRefId="JR Sagami_203400"/>
+				<departure id="d_53" departureTime="20:53:00" vehicleRefId="JR Sagami_205300"/>
+				<departure id="d_54" departureTime="21:10:00" vehicleRefId="JR Sagami_211000"/>
+				<departure id="d_55" departureTime="21:29:00" vehicleRefId="JR Sagami_212900"/>
+				<departure id="d_56" departureTime="21:54:00" vehicleRefId="JR Sagami_215400"/>
+				<departure id="d_57" departureTime="22:19:00" vehicleRefId="JR Sagami_221900"/>
+				<departure id="d_58" departureTime="22:51:00" vehicleRefId="JR Sagami_225100"/>
+				<departure id="d_59" departureTime="23:21:00" vehicleRefId="JR Sagami_232100"/>
+				<departure id="d_6" departureTime="06:42:00" vehicleRefId="JR Sagami_064200"/>
+				<departure id="d_60" departureTime="23:47:00" vehicleRefId="JR Sagami_234700"/>
+				<departure id="d_7" departureTime="06:56:00" vehicleRefId="JR Sagami_065600"/>
+				<departure id="d_8" departureTime="07:13:00" vehicleRefId="JR Sagami_071300"/>
+				<departure id="d_9" departureTime="07:25:00" vehicleRefId="JR Sagami_072500"/>
+			</departures>
+		</transitRoute>
+	</transitLine>
+	<transitLine id="JR Sagami - r">
+		<transitRoute id="JR Sagami - r">
+			<transportMode>pt</transportMode>
+			<routeProfile>
+				<stop refId="Hashimoto_Minami-Hashimoto" arrivalOffset="00:00:00" departureOffset="00:00:00" awaitDeparture="false"/>
+				<stop refId="Minami-Hashimoto_Kamimizo" arrivalOffset="00:00:00" departureOffset="00:00:00" awaitDeparture="false"/>
+				<stop refId="Kamimizo_Banda" arrivalOffset="00:00:00" departureOffset="00:00:00" awaitDeparture="false"/>
+				<stop refId="Banda_Harataima" arrivalOffset="00:00:00" departureOffset="00:00:00" awaitDeparture="false"/>
+				<stop refId="Harataima_Shimomizo" arrivalOffset="00:00:00" departureOffset="00:00:00" awaitDeparture="false"/>
+				<stop refId="Shimomizo_Sōbudaishita" arrivalOffset="00:00:00" departureOffset="00:00:00" awaitDeparture="false"/>
+				<stop refId="Sōbudaishita_Iriya" arrivalOffset="00:00:00" departureOffset="00:00:00" awaitDeparture="false"/>
+				<stop refId="Iriya_Ebina" arrivalOffset="00:00:00" departureOffset="00:00:00" awaitDeparture="false"/>
+				<stop refId="Ebina_Atsugi" arrivalOffset="00:00:00" departureOffset="00:00:00" awaitDeparture="false"/>
+				<stop refId="Atsugi_Shake" arrivalOffset="00:00:00" departureOffset="00:00:00" awaitDeparture="false"/>
+				<stop refId="Shake_Kadosawabashi" arrivalOffset="00:00:00" departureOffset="00:00:00" awaitDeparture="false"/>
+				<stop refId="Kadosawabashi_Kurami" arrivalOffset="00:00:00" departureOffset="00:00:00" awaitDeparture="false"/>
+				<stop refId="Kurami_Miyayama" arrivalOffset="00:00:00" departureOffset="00:00:00" awaitDeparture="false"/>
+				<stop refId="Miyayama_Samukawa" arrivalOffset="00:00:00" departureOffset="00:00:00" awaitDeparture="false"/>
+				<stop refId="Samukawa_Kagawa" arrivalOffset="00:00:00" departureOffset="00:00:00" awaitDeparture="false"/>
+				<stop refId="Kagawa_Kita-Chigasaki" arrivalOffset="00:00:00" departureOffset="00:00:00" awaitDeparture="false"/>
+				<stop refId="Kita-Chigasaki_Chigasaki" arrivalOffset="00:00:00" departureOffset="00:00:00" awaitDeparture="false"/>
+			</routeProfile>
+			<route>
+				<link refId="Hashimoto_Minami-Hashimoto"/>
+				<link refId="Minami-Hashimoto_Kamimizo"/>
+				<link refId="Kamimizo_Banda"/>
+				<link refId="Banda_Harataima"/>
+				<link refId="Harataima_Shimomizo"/>
+				<link refId="Shimomizo_Sōbudaishita"/>
+				<link refId="Sōbudaishita_Iriya"/>
+				<link refId="Iriya_Ebina"/>
+				<link refId="Ebina_Atsugi"/>
+				<link refId="Atsugi_Shake"/>
+				<link refId="Shake_Kadosawabashi"/>
+				<link refId="Kadosawabashi_Kurami"/>
+				<link refId="Kurami_Miyayama"/>
+				<link refId="Miyayama_Samukawa"/>
+				<link refId="Samukawa_Kagawa"/>
+				<link refId="Kagawa_Kita-Chigasaki"/>
+				<link refId="Kita-Chigasaki_Chigasaki"/>
+			</route>
+			<departures>
+				<departure id="d_1" departureTime="04:42:00" vehicleRefId="JR Sagami - r_044200"/>
+				<departure id="d_10" departureTime="06:54:00" vehicleRefId="JR Sagami - r_065400"/>
+				<departure id="d_11" departureTime="07:07:00" vehicleRefId="JR Sagami - r_070700"/>
+				<departure id="d_12" departureTime="07:23:00" vehicleRefId="JR Sagami - r_072300"/>
+				<departure id="d_13" departureTime="07:38:00" vehicleRefId="JR Sagami - r_073800"/>
+				<departure id="d_14" departureTime="07:53:00" vehicleRefId="JR Sagami - r_075300"/>
+				<departure id="d_15" departureTime="08:08:00" vehicleRefId="JR Sagami - r_080800"/>
+				<departure id="d_16" departureTime="08:22:00" vehicleRefId="JR Sagami - r_082200"/>
+				<departure id="d_17" departureTime="08:37:00" vehicleRefId="JR Sagami - r_083700"/>
+				<departure id="d_18" departureTime="08:52:00" vehicleRefId="JR Sagami - r_085200"/>
+				<departure id="d_19" departureTime="09:07:00" vehicleRefId="JR Sagami - r_090700"/>
+				<departure id="d_2" departureTime="04:59:00" vehicleRefId="JR Sagami - r_045900"/>
+				<departure id="d_20" departureTime="09:28:00" vehicleRefId="JR Sagami - r_092800"/>
+				<departure id="d_21" departureTime="09:51:00" vehicleRefId="JR Sagami - r_095100"/>
+				<departure id="d_22" departureTime="10:18:00" vehicleRefId="JR Sagami - r_101800"/>
+				<departure id="d_23" departureTime="10:46:00" vehicleRefId="JR Sagami - r_104600"/>
+				<departure id="d_24" departureTime="11:09:00" vehicleRefId="JR Sagami - r_110900"/>
+				<departure id="d_25" departureTime="11:35:00" vehicleRefId="JR Sagami - r_113500"/>
+				<departure id="d_26" departureTime="11:58:00" vehicleRefId="JR Sagami - r_115800"/>
+				<departure id="d_27" departureTime="12:18:00" vehicleRefId="JR Sagami - r_121800"/>
+				<departure id="d_28" departureTime="12:38:00" vehicleRefId="JR Sagami - r_123800"/>
+				<departure id="d_29" departureTime="12:58:00" vehicleRefId="JR Sagami - r_125800"/>
+				<departure id="d_3" departureTime="05:12:00" vehicleRefId="JR Sagami - r_051200"/>
+				<departure id="d_30" departureTime="13:18:00" vehicleRefId="JR Sagami - r_131800"/>
+				<departure id="d_31" departureTime="13:38:00" vehicleRefId="JR Sagami - r_133800"/>
+				<departure id="d_32" departureTime="13:58:00" vehicleRefId="JR Sagami - r_135800"/>
+				<departure id="d_33" departureTime="14:18:00" vehicleRefId="JR Sagami - r_141800"/>
+				<departure id="d_34" departureTime="14:38:00" vehicleRefId="JR Sagami - r_143800"/>
+				<departure id="d_35" departureTime="14:58:00" vehicleRefId="JR Sagami - r_145800"/>
+				<departure id="d_36" departureTime="15:18:00" vehicleRefId="JR Sagami - r_151800"/>
+				<departure id="d_37" departureTime="15:38:00" vehicleRefId="JR Sagami - r_153800"/>
+				<departure id="d_38" departureTime="15:57:00" vehicleRefId="JR Sagami - r_155700"/>
+				<departure id="d_39" departureTime="16:09:00" vehicleRefId="JR Sagami - r_160900"/>
+				<departure id="d_4" departureTime="05:26:00" vehicleRefId="JR Sagami - r_052600"/>
+				<departure id="d_40" departureTime="16:22:00" vehicleRefId="JR Sagami - r_162200"/>
+				<departure id="d_41" departureTime="16:35:00" vehicleRefId="JR Sagami - r_163500"/>
+				<departure id="d_42" departureTime="16:48:00" vehicleRefId="JR Sagami - r_164800"/>
+				<departure id="d_43" departureTime="17:02:00" vehicleRefId="JR Sagami - r_170200"/>
+				<departure id="d_44" departureTime="17:17:00" vehicleRefId="JR Sagami - r_171700"/>
+				<departure id="d_45" departureTime="17:32:00" vehicleRefId="JR Sagami - r_173200"/>
+				<departure id="d_46" departureTime="17:47:00" vehicleRefId="JR Sagami - r_174700"/>
+				<departure id="d_47" departureTime="18:02:00" vehicleRefId="JR Sagami - r_180200"/>
+				<departure id="d_48" departureTime="18:17:00" vehicleRefId="JR Sagami - r_181700"/>
+				<departure id="d_49" departureTime="18:32:00" vehicleRefId="JR Sagami - r_183200"/>
+				<departure id="d_5" departureTime="05:49:00" vehicleRefId="JR Sagami - r_054900"/>
+				<departure id="d_50" departureTime="18:47:00" vehicleRefId="JR Sagami - r_184700"/>
+				<departure id="d_51" departureTime="19:02:00" vehicleRefId="JR Sagami - r_190200"/>
+				<departure id="d_52" departureTime="19:17:00" vehicleRefId="JR Sagami - r_191700"/>
+				<departure id="d_53" departureTime="19:37:00" vehicleRefId="JR Sagami - r_193700"/>
+				<departure id="d_54" departureTime="19:54:00" vehicleRefId="JR Sagami - r_195400"/>
+				<departure id="d_55" departureTime="20:18:00" vehicleRefId="JR Sagami - r_201800"/>
+				<departure id="d_56" departureTime="20:35:00" vehicleRefId="JR Sagami - r_203500"/>
+				<departure id="d_57" departureTime="20:56:00" vehicleRefId="JR Sagami - r_205600"/>
+				<departure id="d_58" departureTime="21:24:00" vehicleRefId="JR Sagami - r_212400"/>
+				<departure id="d_59" departureTime="21:52:00" vehicleRefId="JR Sagami - r_215200"/>
+				<departure id="d_6" departureTime="06:04:00" vehicleRefId="JR Sagami - r_060400"/>
+				<departure id="d_60" departureTime="22:20:00" vehicleRefId="JR Sagami - r_222000"/>
+				<departure id="d_61" departureTime="22:47:00" vehicleRefId="JR Sagami - r_224700"/>
+				<departure id="d_62" departureTime="23:21:00" vehicleRefId="JR Sagami - r_232100"/>
+				<departure id="d_63" departureTime="23:48:00" vehicleRefId="JR Sagami - r_234800"/>
+				<departure id="d_7" departureTime="06:15:00" vehicleRefId="JR Sagami - r_061500"/>
+				<departure id="d_8" departureTime="06:26:00" vehicleRefId="JR Sagami - r_062600"/>
+				<departure id="d_9" departureTime="06:40:00" vehicleRefId="JR Sagami - r_064000"/>
 			</departures>
 		</transitRoute>
 	</transitLine>
