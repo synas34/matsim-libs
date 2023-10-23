@@ -18,8 +18,8 @@ public class ModeModifier {
 			double freespeed = link.getFreespeed();
 			Set<String> allowedModes = link.getAllowedModes();
 
-			if (freespeed < 20 && !allowedModes.contains("pt")) {
-				link.setAllowedModes(Set.of("car", "walk", "bike"));
+			if (allowedModes.contains("publicTransport")) {
+				link.setAllowedModes(Set.of("pt"));
 			}
 		}
 
@@ -29,8 +29,8 @@ public class ModeModifier {
 
 	public static void main(String[] args) {
 		// Hardcoded paths for demonstration
-		String inputNetworkPath = "examples/scenarios/Odakyu1/rrte2.xml";
-		String outputPath = "examples/scenarios/Odakyu1/rrte3.xml";
+		String inputNetworkPath = "examples/scenarios/Odakyu1/network.xml";
+		String outputPath = "examples/scenarios/Odakyu1/test/network.xml";
 
 		new ModeModifier().modifyLinkModes(inputNetworkPath, outputPath);
 	}

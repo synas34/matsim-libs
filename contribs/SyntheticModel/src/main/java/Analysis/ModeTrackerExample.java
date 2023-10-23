@@ -17,9 +17,15 @@ import java.util.Map;
 import java.util.Set;
 
 public class ModeTrackerExample {
-	public static void main(String[] args) {
-		String pathToEventsFile = "examples/scenarios/Odakyu1/outputOct22/output_events.xml.gz"; // Replace with your path
 
+	private String pathToEventsFile;
+	private Map<String, Integer> modeCounts;
+
+	public ModeTrackerExample(String pathToEventsFile) {
+		this.pathToEventsFile = pathToEventsFile;
+	}
+
+	public void analyze() {
 		// Create event handlers
 		MainModeAnalyzer analyzer = new MainModeAnalyzer();
 		EventsManager eventsManager = EventsUtils.createEventsManager();
@@ -30,7 +36,6 @@ public class ModeTrackerExample {
 
 		// Now retrieve agents with main PT mode AFTER processing events
 		Set<Id<Person>> agentsWithMainPTMode = analyzer.getAgentsUsingPtMode();
-		System.out.println("Agent: " + agentsWithMainPTMode);
 
 		// Register ModeRecordingEventHandler
 		ModeRecordingEventHandler eventHandler = new ModeRecordingEventHandler(agentsWithMainPTMode);
@@ -44,25 +49,15 @@ public class ModeTrackerExample {
 		// Re-process the events to record modes (if you didn't reset the previous EventsManager)
 		new MatsimEventsReader(eventsManager).readFile(pathToEventsFile);
 
-		// Now you can retrieve and print results
-		List<Event> eventsForAgent = agentEventHandler.getAgentEvents();
-		Map<Id<Person>, Set<String>> modes = eventHandler.getAgentModes();
-
-		// Compute mode counts and print
-		Map<String, Integer> modeCounts = getModeCounts(modes);
-		for (Map.Entry<Id<Person>, Set<String>> entry : modes.entrySet()) {
-			System.out.println("Agent: " + entry.getKey() + ", Mode: " + entry.getValue());
-		}
-		for (Event event : eventsForAgent) {     // print specific agents events
-			System.out.println(event.toString());
-		}
-		for (Map.Entry<String, Integer> entry : modeCounts.entrySet()) {
-			System.out.println("Mode: " + entry.getKey() + ", Count: " + entry.getValue());
-		}
-
+		// Compute mode counts
+		this.modeCounts = computeModeCounts(eventHandler.getAgentModes());
 	}
 
-	private static Map<String, Integer> getModeCounts(Map<Id<Person>, Set<String>> modes) {
+	public Map<String, Integer> getModeCounts() {
+		return modeCounts;
+	}
+
+	private static Map<String, Integer> computeModeCounts(Map<Id<Person>, Set<String>> modes) {
 		Map<String, Integer> modeCounts = new HashMap<>();
 		for (Set<String> modeSet : modes.values()) {
 			for (String mode : modeSet) {
@@ -71,7 +66,4 @@ public class ModeTrackerExample {
 		}
 		return modeCounts;
 	}
-
-
 }
-

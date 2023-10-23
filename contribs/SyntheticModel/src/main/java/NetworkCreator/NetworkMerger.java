@@ -62,13 +62,38 @@ public class NetworkMerger {
 			// Write the updated network back to the output path
 			new NetworkWriter(network).write(outputPath);
 		}
+	public void adjustAndSaveNetwork(String existingNetworkPath, String outputPath) throws Exception {
+		// Load existing network
+		Network network = NetworkUtils.readNetwork(existingNetworkPath);
+
+		// Define the x and y shift values
+		double xShift = 394366.1936210745;
+		double yShift = 3984739.1570861016;
+
+		// Iterate over all nodes and update their coordinates
+		for (Node node : network.getNodes().values()) {
+			double x = node.getCoord().getX();
+			double y = node.getCoord().getY();
+
+			// Adjust x and y coordinates
+			double newX = x + xShift;
+			double newY = y + yShift;
+
+			// Set the modified coordinates back to the node
+			Coord newCoord = new Coord(newX, newY);
+			node.setCoord(newCoord);
+		}
+
+		// Write the updated network back to the output path
+		new NetworkWriter(network).write(outputPath);
+	}
 
 	public static void main(String[] args) throws Exception {
 		// Hardcoded paths
-		String existingNetworkPath = "examples/scenarios/Odakyu1/rrte3.xml";
-		String outputPath = "examples/scenarios/Odakyu1/test/rttte.xml";
+		String existingNetworkPath = "examples/scenarios/Odakyu1/test/map-tokyo.xml";
+		String outputPath = "examples/scenarios/Odakyu1/test/IshibashiImport.xml";
 
-		new NetworkMerger().transformAndSaveNetwork(existingNetworkPath, outputPath);
+		new NetworkMerger().adjustAndSaveNetwork(existingNetworkPath, outputPath);
 	}
 
 }
