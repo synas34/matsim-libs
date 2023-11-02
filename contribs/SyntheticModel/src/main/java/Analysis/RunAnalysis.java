@@ -7,59 +7,56 @@ import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.chart.plot.CategoryPlot;
 import org.jfree.chart.renderer.category.BarRenderer;
 import org.jfree.data.category.DefaultCategoryDataset;
+import org.matsim.api.core.v01.Id;
+import org.matsim.api.core.v01.population.Person;
+import org.matsim.core.api.experimental.events.EventsManager;
+import org.matsim.core.events.EventsManagerImpl;
+import org.matsim.core.events.EventsUtils;
+import org.matsim.core.events.MatsimEventsReader;
 
 import javax.swing.*;
 import java.awt.Color;
-import java.util.HashMap;
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.Map;
 
 public class RunAnalysis {
 
 	public static void main(String[] args) {
-		String pathToEventsFile = "examples/scenarios/Odakyu1/output/output_events.xml.gz";
+		String pathToEventsFile = "examples/scenarios/UrbanLine/SuburbanCorex5/outputFMLM/output_events.xml.gz";
+		String outputPath = "contribs/SyntheticModel/test/tt.csv";  // Modify this to your desired output path
 
-		ModeTrackerExample tracker = new ModeTrackerExample(pathToEventsFile);
-		tracker.analyze();
+		// Set up events manager and handler
+		EventsManager eventsManager = EventsUtils.createEventsManager();
+		TravelTimeEventHandler travelTimeHandler = new TravelTimeEventHandler();
+		eventsManager.addHandler(travelTimeHandler);
 
-		// Now retrieve mode counts and create bar chart
-		Map<String, Integer> modeCounts = tracker.getModeCounts();
-		createBarChart(modeCounts);
+		// Read events from the file
+		MatsimEventsReader eventsReader = new MatsimEventsReader(eventsManager);
+		eventsReader.readFile(pathToEventsFile);
+
+		// Retrieve travel times
+		Map<Id<Person>, Double> travelTimes = travelTimeHandler.getTravelTimes();
+
+		// Write to CSV
+		writeTravelTimesToCSV(travelTimes, outputPath);
 	}
 
-	private static void createBarChart(Map<String, Integer> data) {
-		DefaultCategoryDataset dataset = new DefaultCategoryDataset();
+	private static void writeTravelTimesToCSV(Map<Id<Person>, Double> travelTimes, String outputPath) {
+		try (BufferedWriter writer = new BufferedWriter(new FileWriter(outputPath))) {
+			// Write header
+			writer.write("PersonID,TravelTime\n");
 
-		for (Map.Entry<String, Integer> entry : data.entrySet()) {
-			dataset.addValue(entry.getValue(), "Modes Count", entry.getKey());
+			// Write data
+			for (Map.Entry<Id<Person>, Double> entry : travelTimes.entrySet()) {
+				writer.write(entry.getKey() + "," + entry.getValue() + "\n");
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
-
-		JFreeChart barChart = ChartFactory.createBarChart(
-			"Modes Count",
-			"Modes",
-			"Count",
-			dataset,
-			PlotOrientation.VERTICAL,
-			true, true, false
-		);
-
-		CategoryPlot plot = barChart.getCategoryPlot();
-		BarRenderer renderer = (BarRenderer) plot.getRenderer();
-
-		// Define colors for each mode
-		Color[] colors = {Color.BLUE, Color.GREEN, Color.RED, Color.YELLOW, Color.ORANGE, Color.PINK, Color.CYAN}; // Add more colors if needed
-		int colorIndex = 0;
-
-		int columnCount = plot.getDataset().getColumnCount();
-		for (int i = 0; i < columnCount; i++) {
-			renderer.setSeriesPaint(i, colors[colorIndex % colors.length]);
-			colorIndex++;
-		}
-
-		JFrame frame = new JFrame();
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.getContentPane().add(new ChartPanel(barChart));
-		frame.pack();
-		frame.setVisible(true);
 	}
+
+	// Remaining methods for the bar chart...
 
 }
