@@ -39,7 +39,7 @@
 
 		<param name="lateArrival" value="-180" />
 		<param name="earlyDeparture" value="-0" />
-		<param name="performing" value="+600" />
+		<param name="performing" value="+6000" />
 		<param name="waiting" value="-0" />
 
 		<!-- MODE PARAMETERS -->
@@ -95,7 +95,7 @@
 		</parameterset>
 		<parameterset type="modeParams">
 			<param name="mode" value="pt"/>
-			<param name="constant" value="-0.7" />
+			<param name="constant" value="1000.7" />
 			<param name="marginalUtilityOfTraveling_util_hr" value="-0.03" />
 			<param name="monetaryDistanceRate" value="-0.03" />
 			<!-- [utils] daily utility constant. default=0 to be backwards compatible -->

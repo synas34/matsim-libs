@@ -44,8 +44,13 @@ public class PlansTransformer {
 			Node act = actList.item(i);
 			NamedNodeMap attributes = act.getAttributes();
 
-			double x = Double.parseDouble(attributes.getNamedItem("x").getNodeValue());
-			double y = Double.parseDouble(attributes.getNamedItem("y").getNodeValue());
+			String xValue = attributes.getNamedItem("x").getNodeValue();
+			String yValue = attributes.getNamedItem("y").getNodeValue();
+			Node idAttribute = attributes.getNamedItem("id"); // Assuming there's an 'id' attribute in your Node.
+
+			if (!xValue.equals("NA") && !yValue.equals("NA")) {
+				double x = Double.parseDouble(xValue);
+				double y = Double.parseDouble(yValue);
 
 			DirectPosition2D sourcePosition = new DirectPosition2D(y, x);
 			DirectPosition2D transformedPosition = new DirectPosition2D();
@@ -53,6 +58,11 @@ public class PlansTransformer {
 
 			attributes.getNamedItem("x").setNodeValue(String.valueOf(transformedPosition.getX()));
 			attributes.getNamedItem("y").setNodeValue(String.valueOf(transformedPosition.getY()));
+			} else {
+				// Debugging statement for NA values
+				String nodeId = idAttribute != null ? idAttribute.getNodeValue() : "unknown";
+				System.err.println("Debug: Node with id '" + nodeId + "' has 'NA' for x coordinate.");
+			}
 		}
 
 		System.out.println("Writing transformed plans to output path...");
@@ -74,8 +84,8 @@ public class PlansTransformer {
 		System.out.println("Transformation completed!");
 	}
 	public static void main(String[] args) throws Exception {
-		String existingPlansPath = "examples/scenarios/Odakyu1/plansv3.xml";
-		String outputPath = "examples/scenarios/Odakyu1/test/plansv3.xml";
+		String existingPlansPath = "C:\\Users\\MATSIM\\IdeaProjects\\matsim-libs\\examples\\scenarios\\Odakyu2\\plansv1.xml";
+		String outputPath = "C:\\Users\\MATSIM\\IdeaProjects\\matsim-libs\\examples\\scenarios\\Odakyu2\\test\\plansv1.xml";
 
 		new PlansTransformer().transformAndSavePlans(existingPlansPath, outputPath);
 	}
