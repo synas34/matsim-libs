@@ -8,7 +8,14 @@
   <groupId>org.matsim.contrib</groupId>
   <artifactId>socnetsim</artifactId>
   <name>socnetsim</name>
-  <build>
+    <dependencies>
+        <dependency>
+            <groupId>org.json</groupId>
+            <artifactId>org.json</artifactId>
+            <version>chargebee-1.0</version>
+        </dependency>
+    </dependencies>
+    <build>
     <plugins>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>

@@ -73,6 +73,16 @@
             <artifactId>matsim</artifactId>
             <version>15.0-2023w14</version>
         </dependency>
-    </dependencies>
+        <dependency>
+            <groupId>org.json</groupId>
+            <artifactId>org.json</artifactId>
+            <version>chargebee-1.0</version>
+        </dependency>
+		<dependency>
+			<groupId>org.jfree</groupId>
+			<artifactId>jfreechart</artifactId>
+			<version>1.5.4</version>
+		</dependency>
+	</dependencies>
 
 </project>

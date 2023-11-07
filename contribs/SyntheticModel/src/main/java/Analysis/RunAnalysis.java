@@ -24,8 +24,8 @@ import java.util.Map;
 public class RunAnalysis {
 
 	public static void main(String[] args) {
-		String pathToEventsFile = "examples/scenarios/UrbanLine/SuburbanCorex5/outputFMLM/output_events.xml.gz";
-		String outputPath = "contribs/SyntheticModel/test/tt.csv";  // Modify this to your desired output path
+		String pathToEventsFile = "examples/scenarios/Odakyu1/output/output_events.xml.gz";
+		String outputPath = "examples/scenarios/Odakyu1/Analyses/tt.csv";  // Modify this to your desired output path
 
 		// Set up events manager and handler
 		EventsManager eventsManager = EventsUtils.createEventsManager();

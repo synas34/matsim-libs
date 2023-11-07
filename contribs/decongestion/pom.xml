@@ -8,4 +8,11 @@
     <groupId>org.matsim.contrib</groupId>
     <artifactId>decongestion</artifactId>
     <name>decongestion</name>
+    <dependencies>
+        <dependency>
+            <groupId>org.json</groupId>
+            <artifactId>org.json</artifactId>
+            <version>chargebee-1.0</version>
+        </dependency>
+    </dependencies>
 </project>

@@ -144,96 +144,10 @@ public class RailScheduleCreator {
 
 	}
 
-	/**
-	 * Load an existing network file and a CSV file with station names and coordinates,
-	 * then adds nodes to the network corresponding with each row of the CSV and generates links connecting them.
-	 *
-	 * @param networkFilePath  Path to the existing Network file with station names and coordinates.
-	 * @param csvFilePath     Path to the CSV file with station names and coordinates.
-	 * @throws IOException If there's a problem reading the files.
-	 */
-
-	public static List<Id<Link>> loadFromCsvAndGenerateLinks(String networkFilePath, String csvFilePath, boolean skipWriting) throws IOException, FactoryException {
-		Network network = NetworkUtils.readNetwork(networkFilePath);
-		List<Id<Link>> linkIds = new ArrayList<>();
-
-		// Set up CRS and MathTransform for coordinate transformation
-		CoordinateReferenceSystem sourceCRS = CRS.decode("EPSG:4326"); // WGS84
-		CoordinateReferenceSystem targetCRS = CRS.decode("EPSG:32654"); // UTM 54N
-		MathTransform transform = CRS.findMathTransform(sourceCRS, targetCRS);
-
-		try (BufferedReader br = new BufferedReader(new FileReader(csvFilePath))) {
-			String line;
-			Node previousNode = null;
-
-			while ((line = br.readLine()) != null) {
-				String[] parts = line.split(",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)", -1);
-
-				String stationName = parts[0].replace("\"", "").trim();
-				String[] coordinates = parts[1].replace("\"", "").split(",");
-
-				double latitude = Double.parseDouble(coordinates[0].trim());
-				double longitude = Double.parseDouble(coordinates[1].trim());
-				System.out.println("Created node: " + latitude +"and"+ longitude);
-
-				// Transform coordinates
-				DirectPosition2D sourcePosition = new DirectPosition2D(latitude, longitude);
-				DirectPosition2D transformedPosition = new DirectPosition2D();
-				transform.transform(sourcePosition, transformedPosition);
-				double transformedX = transformedPosition.getX();
-				double transformedY = transformedPosition.getY();
-				System.out.println("transformed node: " + transformedX +"and"+ transformedY);
-
-				// Use existing node if it exists, otherwise create a new one
-				Node currentNode = network.getNodes().get(Id.createNodeId(stationName));
-				if (currentNode == null) {
-					Coord coord = new Coord(transformedX, transformedY);
-					currentNode = network.getFactory().createNode(Id.createNodeId(stationName), coord);
-					network.addNode(currentNode);
-				}
-
-
-
-				if (previousNode != null) {
-					Id<Link> linkId = Id.createLinkId(previousNode.getId().toString() + "_" + currentNode.getId().toString());
-					Link currentLink = network.getLinks().get(linkId);
-					linkIds.add(linkId);
-						if (currentLink == null) {
-								createSingleLink(network, previousNode, currentNode);
-						}
-					Id<Link> selflinkId = Id.createLinkId(currentNode.getId().toString() + "_" + currentNode.getId().toString());
-					Link selfLink = network.getLinks().get(selflinkId);
-					linkIds.add(selflinkId);
-						if (selfLink == null) {
-							createLinkWithLength(network, currentNode, currentNode, 1.0);
-						}
-
-				} else {
-					Id<Link> selflinkId = Id.createLinkId(currentNode.getId().toString() + "_" + currentNode.getId().toString());
-					Link selfLink = network.getLinks().get(selflinkId);
-					linkIds.add(selflinkId);
-					if (selfLink == null) {
-						createLinkWithLength(network, currentNode, currentNode, 1.0);
-					}
-
-				}
-
-				previousNode = currentNode;
-			}
-		} catch (TransformException e) {
-			throw new RuntimeException(e);
-		}
-		// Write the modified network back to the XML file only if skipWriting is false
-		if (!skipWriting) {
-			new NetworkWriter(network).write(networkFilePath);
-		}
-		System.out.println("LinkIDs that are stops: " + linkIds );
-		return linkIds;
-	}
 
 
 	// The function to create a link with specified length
-	private static void createLinkWithLength(Network network, Node fromNode, Node toNode, double length) {
+	static void createLinkWithLength(Network network, Node fromNode, Node toNode, double length) {
 		Link link = network.getFactory().createLink(Id.createLinkId(fromNode.getId() + "_" + toNode.getId()), fromNode, toNode);
 		link.setLength(length);
 
@@ -246,7 +160,7 @@ public class RailScheduleCreator {
 		network.addLink(link);
 		System.out.println("Created Link: " + link.getId());
 	}
-	private static void createSingleLink(Network network, Node fromNode, Node toNode) {
+	static void createSingleLink(Network network, Node fromNode, Node toNode) {
 		Link link = network.getFactory().createLink(Id.createLinkId(fromNode.getId() + "_" + toNode.getId()), fromNode, toNode);
 
 		// Setting specified attributes for the link
@@ -314,7 +228,7 @@ public class RailScheduleCreator {
 		return transitRouteStops;
 	}
 
-	private static void DepartureCreator(TransitScheduleFactory scheduleFactory, TransitRoute transitRoute_r, String[] times, String[] vehicleRefIds) {
+	static void DepartureCreator(TransitScheduleFactory scheduleFactory, TransitRoute transitRoute_r, String[] times, String[] vehicleRefIds) {
 		for (int i = 0; i < times.length; i++) {
 			Id<Departure> departureId = Id.create("d_" + (i + 1), Departure.class);
 			double departureTime = Time.parseTime(times[i]);
@@ -326,6 +240,89 @@ public class RailScheduleCreator {
 		}
 	}
 
+
+	/**
+	 * Load an existing network file and a CSV file with station names and coordinates,
+	 * then adds nodes to the network corresponding with each row of the CSV and generates links connecting them.
+	 *
+	 * @param networkFilePath  Path to the existing Network file with station names and coordinates.
+	 * @param csvFilePath     Path to the CSV file with station names and coordinates.
+	 * @throws IOException If there's a problem reading the files.
+	 */
+
+	public static List<Id<Link>> loadFromCsvAndGenerateLinks(String networkFilePath, String csvFilePath, boolean skipWriting) throws IOException, FactoryException {
+		Network network = NetworkUtils.readNetwork(networkFilePath);
+		List<Id<Link>> linkIds = new ArrayList<>();
+
+		// Set up CRS and MathTransform for coordinate transformation
+		CoordinateReferenceSystem sourceCRS = CRS.decode("EPSG:4326"); // WGS84
+		CoordinateReferenceSystem targetCRS = CRS.decode("EPSG:32654"); // UTM 54N
+		MathTransform transform = CRS.findMathTransform(sourceCRS, targetCRS);
+
+		try (BufferedReader br = new BufferedReader(new FileReader(csvFilePath))) {
+			String line;
+			Node previousNode = null;
+
+			while ((line = br.readLine()) != null) {
+				String[] parts = line.split(",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)", -1);
+
+				String stationName = parts[0].replace("\"", "").trim();
+				String[] coordinates = parts[1].replace("\"", "").split(",");
+
+				double latitude = Double.parseDouble(coordinates[0].trim());
+				double longitude = Double.parseDouble(coordinates[1].trim());
+				System.out.println("Created node: " + latitude +"and"+ longitude);
+
+				// Transform coordinates
+				DirectPosition2D sourcePosition = new DirectPosition2D(latitude, longitude);
+				DirectPosition2D transformedPosition = new DirectPosition2D();
+				transform.transform(sourcePosition, transformedPosition);
+				double transformedX = transformedPosition.getX();
+				double transformedY = transformedPosition.getY();
+				System.out.println("transformed node: " + transformedX +"and"+ transformedY);
+
+				// Use existing node if it exists, otherwise create a new one
+				Node currentNode = network.getNodes().get(Id.createNodeId(stationName));
+				if (currentNode == null) {
+					Coord coord = new Coord(transformedX, transformedY);
+					currentNode = network.getFactory().createNode(Id.createNodeId(stationName), coord);
+					network.addNode(currentNode);
+				}
+
+				if (previousNode != null) {
+					Id<Link> linkId = Id.createLinkId(previousNode.getId().toString() + "_" + currentNode.getId().toString());
+					Link currentLink = network.getLinks().get(linkId);
+					linkIds.add(linkId);
+					if (currentLink == null) {
+						createSingleLink(network, previousNode, currentNode);
+					}
+					Id<Link> selflinkId = Id.createLinkId(currentNode.getId().toString() + "_" + currentNode.getId().toString());
+					Link selfLink = network.getLinks().get(selflinkId);
+					linkIds.add(selflinkId);
+					if (selfLink == null) {
+						createLinkWithLength(network, currentNode, currentNode, 1.0);
+					}
+
+				} else {
+					Id<Link> selflinkId = Id.createLinkId(currentNode.getId().toString() + "_" + currentNode.getId().toString());
+					Link selfLink = network.getLinks().get(selflinkId);
+					linkIds.add(selflinkId);
+					if (selfLink == null) {
+						createLinkWithLength(network, currentNode, currentNode, 1.0);
+					}
+				}
+				previousNode = currentNode;
+			}
+		} catch (TransformException e) {
+			throw new RuntimeException(e);
+		}
+		// Write the modified network back to the XML file only if skipWriting is false
+		if (!skipWriting) {
+			new NetworkWriter(network).write(networkFilePath);
+		}
+		System.out.println("LinkIDs that are stops: " + linkIds );
+		return linkIds;
+	}
 
 	public static void addTransitLineFromCSV(String networkPath, String transitSchedulePath, String folderPath) {
 		String csvPath = folderPath + "/JR Yokohama - Stations.csv";
@@ -395,7 +392,7 @@ public class RailScheduleCreator {
 
 
 
-		private static List<TransitStopFacility> createStopFacilities(Scenario scenario, TransitScheduleFactory scheduleFactory, List<Id<Link>> linkIds) {
+		static List<TransitStopFacility> createStopFacilities(Scenario scenario, TransitScheduleFactory scheduleFactory, List<Id<Link>> linkIds) {
 			List<TransitStopFacility> stopFacilities = new ArrayList<>();
 			for (Id<Link> linkId : linkIds) {
 				Link link = scenario.getNetwork().getLinks().get(linkId);
@@ -414,7 +411,7 @@ public class RailScheduleCreator {
     			return stopFacilities;
 		}
 
-	private static List<TransitRouteStop> createTransitRouteStopsForFacilities(TransitScheduleFactory scheduleFactory, List<TransitStopFacility> stopFacilities) {
+	static List<TransitRouteStop> createTransitRouteStopsForFacilities(TransitScheduleFactory scheduleFactory, List<TransitStopFacility> stopFacilities) {
 		List<TransitRouteStop> transitRouteStops = new ArrayList<>();
 		for (TransitStopFacility stopFacility : stopFacilities) {
 			TransitRouteStop routeStop = scheduleFactory.createTransitRouteStop(stopFacility, 0, 0); // Assuming 0 dwell time for simplicity

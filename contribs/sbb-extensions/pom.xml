@@ -10,5 +10,12 @@
     <groupId>org.matsim.contrib</groupId>
     <artifactId>sbb-extensions</artifactId>
     <name>sbb-extensions</name>
+    <dependencies>
+        <dependency>
+            <groupId>org.json</groupId>
+            <artifactId>org.json</artifactId>
+            <version>chargebee-1.0</version>
+        </dependency>
+    </dependencies>
 
 </project>

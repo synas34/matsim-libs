@@ -17,6 +17,11 @@
             <artifactId>gt-jdbc-postgis</artifactId>
             <version>${geotools.version}</version>
         </dependency>
+        <dependency>
+            <groupId>org.json</groupId>
+            <artifactId>org.json</artifactId>
+            <version>chargebee-1.0</version>
+        </dependency>
 
     </dependencies>
 
