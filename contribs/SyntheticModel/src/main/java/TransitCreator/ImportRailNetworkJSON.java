@@ -18,6 +18,7 @@ import org.opengis.referencing.operation.MathTransform;
 import org.opengis.referencing.operation.TransformException;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -33,7 +34,8 @@ public class ImportRailNetworkJSON {
 	public static void main(String[] args) throws IOException, JSONException, FactoryException, TransformException {
 		String stationsJson = new String(Files.readAllBytes(Paths.get("contribs/SyntheticModel/src/main/java/TransitCreator/stations.json")));
 		String railwaysJson = new String(Files.readAllBytes(Paths.get("contribs/SyntheticModel/src/main/java/TransitCreator/railways.json")));
-		List<Link> allRailLinksCreated = GenerateLinksJSON(stationsJson, railwaysJson, true);
+		String networkFilePath = "examples/scenarios/Odakyu1/network1.xml";
+		List<Link> allRailLinksCreated = GenerateLinksJSON(stationsJson, railwaysJson, networkFilePath,true);
 		System.out.println(allRailLinksCreated);
 
 		// Print out every link created
@@ -97,12 +99,17 @@ public class ImportRailNetworkJSON {
 	}
 
 	// Method to generate links for the MATSim network and return a list of all rail links created
-	public static List<Link> GenerateLinksJSON(String stationsJson, String railwaysJson, boolean skipWriting) throws IOException, FactoryException, JSONException, TransformException {
+	public static List<Link> GenerateLinksJSON(String stationsJson, String railwaysJson, String networkFilePath, boolean skipWriting) throws IOException, FactoryException, JSONException, TransformException {
 		// Import the station and railway data
 		Map<String, Map<String, Object>> railNetwork = importRailNetworkJSON(stationsJson, railwaysJson);
 
-		// Read the network
-		Network network = NetworkUtils.createNetwork();
+		// Initalise and read the network
+		Network network;
+		if (skipWriting) {
+			network = NetworkUtils.createNetwork();
+		} else {
+			network = NetworkUtils.readNetwork(networkFilePath);
+		}
 
 		// Set up CRS and MathTransform for coordinate transformation
 		CoordinateReferenceSystem sourceCRS = CRS.decode("EPSG:4326"); // WGS84
@@ -143,15 +150,17 @@ public class ImportRailNetworkJSON {
 					Link currentLink = network.getLinks().get(linkId);
 					if (currentLink == null) {
 						createSingleLink(network, previousNode, currentNode);
+						currentLink = network.getLinks().get(linkId);
 						allRailLinksCreated.add(currentLink);
-						System.out.println(currentLink);
+						System.out.println(currentLink + "currents");
 					}
 					Id<Link> selflinkId = Id.createLinkId(currentNode.getId().toString() + "_" + currentNode.getId().toString());
 					Link selfLink = network.getLinks().get(selflinkId);
 					if (selfLink == null) {
 						createLinkWithLength(network, currentNode, currentNode, 1.0);
+						selfLink = network.getLinks().get(selflinkId);
 						allRailLinksCreated.add(selfLink);
-						System.out.println(selfLink);
+						System.out.println(selfLink + "selfs");
 					}
 
 				} else {
@@ -159,8 +168,9 @@ public class ImportRailNetworkJSON {
 					Link selfLink = network.getLinks().get(selflinkId);
 					if (selfLink == null) {
 						createLinkWithLength(network, currentNode, currentNode, 1.0);
+						selfLink = network.getLinks().get(selflinkId);
 						allRailLinksCreated.add(selfLink);
-						System.out.println(selfLink);
+						System.out.println(selfLink+ "selfs");
 					}
 				}
 				previousNode = currentNode;
@@ -168,8 +178,24 @@ public class ImportRailNetworkJSON {
 			}
 		}
 
-		// If skipWriting is true, we don't write the network to a file
-		// The method returns the list of all rail links created instead
+
+		// Check if we need to write the network to a file
+		if (!skipWriting) {
+			// Use the provided file path for the network file
+			NetworkWriter networkWriter = new NetworkWriter(network);
+			networkWriter.write(networkFilePath);
+			System.out.println("Network written to file: " + networkFilePath);
+		}  else {
+			// Extract the directory from the provided network file path
+			File networkFile = new File(networkFilePath);
+			String directoryPath = networkFile.getParent();
+			// Generate a new file name in the same directory
+			String newFileName = directoryPath + File.separator + "network_" + System.currentTimeMillis() + ".xml";
+			NetworkWriter networkWriter = new NetworkWriter(network);
+			networkWriter.write(newFileName);
+			System.out.println("Network written to new file: " + newFileName);
+		}
+
 		return allRailLinksCreated;
 	}
 

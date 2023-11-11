@@ -2777,7 +2777,7 @@
 		"zh-Hant": "南千住"
 	}
 }, {
-	"id": "JR-East.JobanRapid.KitaSenju",
+	"id": "JR-East.JobanRapid.Kita-Senju",
 	"railway": "JR-East.JobanRapid",
 	"coord": [139.80482, 35.7499],
 	"title": {
@@ -24295,7 +24295,7 @@
 	],
 	"altitude": -1
 }, {
-	"id": "MIR.TsukubaExpress.KitaSenju",
+	"id": "MIR.TsukubaExpress.Kita-Senju",
 	"railway": "MIR.TsukubaExpress",
 	"coord": [139.8051076, 35.7495276],
 	"title": {

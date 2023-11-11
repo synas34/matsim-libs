@@ -7,8 +7,8 @@ import java.io.*;
 public class TransitVehicleGenerator {
 
 	public static void main(String[] args) {
-		String inputFile = "examples/scenarios/Odakyu1/transitschedule.xml";
-		String outputFile = "examples/scenarios/Odakyu1/test/transitVehicles.xml";
+		String inputFile = "examples/scenarios/Odakyu1/transitschedule11.xml";
+		String outputFile = "examples/scenarios/Odakyu1/test/transitVehicles11.xml";
 		generateTransitVehicleXml(inputFile, outputFile);
 	}
 

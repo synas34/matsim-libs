@@ -90,8 +90,8 @@ public class NetworkMerger {
 
 	public static void main(String[] args) throws Exception {
 		// Hardcoded paths
-		String existingNetworkPath = "examples/scenarios/Odakyu1/test/map-tokyo.xml";
-		String outputPath = "examples/scenarios/Odakyu1/test/IshibashiImport.xml";
+		String existingNetworkPath = "examples/scenarios/Odakyu1/skeleton.xml";
+		String outputPath = "examples/scenarios/Odakyu1/skeleton1.xml";
 
 		new NetworkMerger().adjustAndSaveNetwork(existingNetworkPath, outputPath);
 	}

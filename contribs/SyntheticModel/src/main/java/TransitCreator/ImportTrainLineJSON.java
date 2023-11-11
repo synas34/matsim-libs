@@ -17,77 +17,13 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import org.json.JSONTokener;
 import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.*;
 
 import static TransitCreator.RailScheduleCreator.*;
 
 public class ImportTrainLineJSON {
-
-	public static void ImportTrainLineCSV(String networkPath, String transitSchedulePath, String folderPath) {
-		String csvPath = folderPath + "/JR Yokohama - Stations.csv";
-		String departuresCsvPath = folderPath + "/JR Yokohama - Departure Times.csv";
-		String transitLineName = new File(folderPath).getName();  // Extracting the folder name
-		Config config = ConfigUtils.createConfig();
-		Scenario scenario = ScenarioUtils.createScenario(config);
-
-		// Read the existing network and transit schedule
-		new MatsimNetworkReader(scenario.getNetwork()).readFile(networkPath);
-		new TransitScheduleReader(scenario).readFile(transitSchedulePath);
-
-		// Load linkIds from the CSV file
-		List<Id<Link>> linkIds = new ArrayList<>();
-		try {
-			linkIds = loadFromCsvAndGenerateLinks(networkPath, csvPath, false);  // Set to true to skip writing
-		} catch (IOException e) {
-			e.printStackTrace();
-		} catch (FactoryException e) {
-			throw new RuntimeException(e);
-		}
-
-		// Read departure times from the CSV file
-		List<String> departureTimesList = new ArrayList<>();
-		try (BufferedReader reader = new BufferedReader(new FileReader(departuresCsvPath))) {
-			String line;
-			while ((line = reader.readLine()) != null) {
-				departureTimesList.add(line.trim());
-			}
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-
-		// Convert departureTimesList to an array
-		String[] departureTimes = departureTimesList.toArray(new String[0]);
-
-		// Generate vehicleRefIds based on the departure times and the transit line name
-		String[] vehicleRefIds = Arrays.stream(departureTimes).map(time -> transitLineName + "_" + time.replace(":", "")).toArray(String[]::new);
-
-		TransitScheduleFactory scheduleFactory = scenario.getTransitSchedule().getFactory();
-
-		// Creating Network Route and Stops
-		Id<Link> startLinkId = linkIds.get(0);
-		Id<Link> endLinkId = linkIds.get(linkIds.size() - 1);
-		List<Id<Link>> intermediateLinkIds = linkIds.subList(1, linkIds.size() - 1);
-		NetworkRoute networkRoute = RouteUtils.createLinkNetworkRouteImpl(startLinkId, intermediateLinkIds, endLinkId);
-
-		List<TransitStopFacility> stopFacilities = createStopFacilities(scenario, scheduleFactory, linkIds);
-		List<TransitRouteStop> transitRouteStops = createTransitRouteStopsForFacilities(scheduleFactory, stopFacilities);
-
-		// Creating Transit Routes
-		TransitRoute transitRoute = scheduleFactory.createTransitRoute(Id.create(transitLineName, TransitRoute.class), networkRoute, transitRouteStops, "pt");
-
-
-		// Populate the departures for the created routes using the first half of vehicleRefIds
-		DepartureCreator(scheduleFactory, transitRoute, departureTimes, vehicleRefIds);
-
-		// Creating Transit Line and adding to the schedule
-		TransitLine transitLine = scheduleFactory.createTransitLine(Id.create(transitLineName, TransitLine.class));
-		transitLine.addRoute(transitRoute);
-
-		scenario.getTransitSchedule().addTransitLine(transitLine);
-
-		// Write the updated transit schedule back to the same file
-		new TransitScheduleWriter(scenario.getTransitSchedule()).writeFile(transitSchedulePath);
-	}
 
 	public static void ImportTrainLineJSON(String networkPath, String transitSchedulePath, String jsonFilePath) {
 		// Remove the file extension and path to get the name for the TransitLine
@@ -100,49 +36,68 @@ public class ImportTrainLineJSON {
 		// Read the existing network and transit schedule
 		new MatsimNetworkReader(scenario.getNetwork()).readFile(networkPath);
 		new TransitScheduleReader(scenario).readFile(transitSchedulePath);
-
-		// Extract linkIds, departure times, and vehicleRefIds from the JSON file
-		Map<List<Id<Link>>, List<ScheduleInfo>> scheduleMap = extractLinkIdsFromJson(jsonFilePath);
-
 		TransitScheduleFactory scheduleFactory = scenario.getTransitSchedule().getFactory();
 		TransitLine transitLine = scheduleFactory.createTransitLine(Id.create(transitLineName, TransitLine.class));
 
-		// Loop through each unique linkIDs combination to create a TransitRoute and DepartureCreator
+		// Check if the transit line is already in the transit schedule
+		if (!scenario.getTransitSchedule().getTransitLines().containsKey(transitLine.getId())) {
+
+		// Extract linkIds, departure times, and vehicleRefIds from the JSON file
+		Map<List<Id<Link>>, List<ScheduleInfo>> scheduleMap = extractLinkIdsFromJson(jsonFilePath);
+		// Printing the schedule map for testing
 		for (Map.Entry<List<Id<Link>>, List<ScheduleInfo>> entry : scheduleMap.entrySet()) {
-			List<Id<Link>> linkIds = entry.getKey();
-			List<ScheduleInfo> schedules = entry.getValue();
-
-			// Sort the schedule information
-			schedules.sort(Comparator.comparing(s -> s.departureTime));
-
-			// Extract departure times and vehicleRefIds
-			String[] departureTimes = schedules.stream().map(s -> s.departureTime).toArray(String[]::new);
-			String[] vehicleRefIds = schedules.stream().map(s -> s.vehicleRefId).toArray(String[]::new);
-
-			// Creating Network Route and Stops
-			Id<Link> startLinkId = linkIds.get(0);
-			Id<Link> endLinkId = linkIds.get(linkIds.size() - 1);
-			List<Id<Link>> intermediateLinkIds = linkIds.subList(1, linkIds.size() - 1);
-			NetworkRoute networkRoute = RouteUtils.createLinkNetworkRouteImpl(startLinkId, intermediateLinkIds, endLinkId);
-
-			List<TransitStopFacility> stopFacilities = createStopFacilities(scenario, scheduleFactory, linkIds);
-			List<TransitRouteStop> transitRouteStops = createTransitRouteStopsForFacilities(scheduleFactory, stopFacilities);
-
-			// Creating Transit Routes
-			TransitRoute transitRoute = scheduleFactory.createTransitRoute(Id.create(transitLineName + "_" + entry.getKey().toString(), TransitRoute.class), networkRoute, transitRouteStops, "pt");
-
-			// Populate the departures for the created routes
-			DepartureCreator(scheduleFactory, transitRoute, departureTimes, vehicleRefIds);
-
-			// Add the route to the TransitLine
-			transitLine.addRoute(transitRoute);
+			System.out.println("Unique LinkIDs Combination:");
+			for (Id<Link> linkId : entry.getKey()) {
+				System.out.print(linkId + ", ");
+			}
+			System.out.println("\nAssociated Schedules:");
+			for (ScheduleInfo info : entry.getValue()) {
+				System.out.println("Departure Time: " + info.departureTime + ", Vehicle Ref ID: " + info.vehicleRefId);
+			}
+			System.out.println("--------------------------------------");
 		}
+			// Loop through each unique linkIDs combination to create a TransitRoute and DepartureCreator
+			for (Map.Entry<List<Id<Link>>, List<ScheduleInfo>> entry : scheduleMap.entrySet()) {
+				List<Id<Link>> linkIds = entry.getKey();
+				List<ScheduleInfo> schedules = entry.getValue();
 
-		// Add the TransitLine to the scenario
-		scenario.getTransitSchedule().addTransitLine(transitLine);
+				// Sort the schedule information
+				schedules.sort(Comparator.comparing(s -> s.departureTime));
 
-		// Write the updated transit schedule back to the file
-		new TransitScheduleWriter(scenario.getTransitSchedule()).writeFile(transitSchedulePath);
+				// Extract departure times and vehicleRefIds
+				String[] departureTimes = schedules.stream().map(s -> s.departureTime).toArray(String[]::new);
+				String[] vehicleRefIds = schedules.stream().map(s -> s.vehicleRefId).toArray(String[]::new);
+				System.out.println("Departure Time: " + departureTimes);
+
+				// Creating Network Route and Stops
+				Id<Link> startLinkId = linkIds.get(0);
+				Id<Link> endLinkId = linkIds.get(linkIds.size() - 1);
+				List<Id<Link>> intermediateLinkIds = linkIds.subList(1, linkIds.size() - 1);
+				NetworkRoute networkRoute = RouteUtils.createLinkNetworkRouteImpl(startLinkId, intermediateLinkIds, endLinkId);
+				System.out.println("Network Route: " + networkRoute);
+
+				List<TransitStopFacility> stopFacilities = createStopFacilities(scenario, scheduleFactory, linkIds);
+				List<TransitRouteStop> transitRouteStops = createTransitRouteStopsForFacilities(scheduleFactory, stopFacilities);
+
+				// Creating Transit Routes
+				TransitRoute transitRoute = scheduleFactory.createTransitRoute(Id.create(transitLineName + "_" + entry.getKey().toString(), TransitRoute.class), networkRoute, transitRouteStops, "pt");
+
+				// Populate the departures for the created routes
+				DepartureCreator(scheduleFactory, transitRoute, departureTimes, vehicleRefIds);
+
+				// Add the route to the TransitLine
+				transitLine.addRoute(transitRoute);
+			}
+
+			// Add the TransitLine to the scenario
+			scenario.getTransitSchedule().addTransitLine(transitLine);
+
+			// Write the updated transit schedule back to the file
+			new TransitScheduleWriter(scenario.getTransitSchedule()).writeFile(transitSchedulePath);
+		} else {
+			// Log statement if the transit line is already present
+			System.out.println("Transit line " + transitLine.getId() + " is already present in the transit schedule.");
+		}
 	}
 
 
@@ -169,14 +124,23 @@ public class ImportTrainLineJSON {
 				JSONArray timetable = trainSchedule.getJSONArray("tt");
 
 				List<Id<Link>> linkIds = new ArrayList<>();
-				// Add only unique LinkIDs to the list
 				for (int j = 0; j < timetable.length(); j++) {
 					JSONObject stationSchedule = timetable.getJSONObject(j);
 					String stationId = stationSchedule.getString("s");
-					linkIds.add(Id.create(stationId, Link.class));
+
+					// Insert a hyphen before the second capital letter after the last period
+					int lastPeriodIndex = stationId.lastIndexOf('.');
+					if (lastPeriodIndex != -1 && lastPeriodIndex < stationId.length() - 1) {
+						int secondCapitalIndex = findSecondCapitalIndex(stationId, lastPeriodIndex + 1);
+						if (secondCapitalIndex != -1) {
+							stationId = stationId.substring(0, secondCapitalIndex) + "-" + stationId.substring(secondCapitalIndex);
+						}
+					}
+
+					String concatenatedId = stationId + "_" + stationId;
+					linkIds.add(Id.create(concatenatedId, Link.class));
 				}
 
-				// Use LinkedHashSet to preserve the order and remove duplicates
 				List<Id<Link>> uniqueLinkIds = new ArrayList<>(new LinkedHashSet<>(linkIds));
 
 				String departureTime = timetable.getJSONObject(0).getString("d");
@@ -189,33 +153,49 @@ public class ImportTrainLineJSON {
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
-            throw new RuntimeException(e);
-        } catch (JSONException e) {
-            throw new RuntimeException(e);
-        }
+			throw new RuntimeException(e);
+		} catch (JSONException e) {
+			throw new RuntimeException(e);
+		}
 
-        return scheduleMap;
+		return scheduleMap;
 	}
+
+	private static int findSecondCapitalIndex(String str, int start) {
+		boolean foundFirstCapital = false;
+		for (int i = start; i < str.length(); i++) {
+			if (Character.isUpperCase(str.charAt(i))) {
+				if (foundFirstCapital) {
+					return i;
+				}
+				foundFirstCapital = true;
+			}
+		}
+		return -1;
+	}
+
+
+
 
 	public static void main(String[] args) throws IOException {
 
-		String jsonFilePath = "contribs/SyntheticModel/src/main/java/TransitCreator/jreast-jobanrapid.json";
-		Map<List<Id<Link>>, List<ScheduleInfo>> scheduleMap = extractLinkIdsFromJson(jsonFilePath);
+		String networkPath = "examples/scenarios/Odakyu1/network_1699671185214.xml";
+		String transitSchedulePath = "examples/scenarios/Odakyu1/transitschedule11.xml";
+		String jsonFolder = "contribs/SyntheticModel/src/main/java/TransitCreator/train-timetables"; // Folder containing JSON files
 
-		// Printing the schedule map for testing
-		for (Map.Entry<List<Id<Link>>, List<ScheduleInfo>> entry : scheduleMap.entrySet()) {
-			System.out.println("Unique LinkIDs Combination:");
-			for (Id<Link> linkId : entry.getKey()) {
-				System.out.print(linkId + ", ");
-			}
-			System.out.println("\nAssociated Schedules:");
-			for (ScheduleInfo info : entry.getValue()) {
-				System.out.println("Departure Time: " + info.departureTime + ", Vehicle Ref ID: " + info.vehicleRefId);
-			}
-			System.out.println("--------------------------------------");
-		}
-
-
+		// Get the list of files in the specified folder
+		Files.walk(Paths.get(jsonFolder))
+			.filter(Files::isRegularFile)
+			.forEach(filePath -> {
+				if (filePath.toString().endsWith(".json")) {
+					String jsonFilePath = filePath.toString();
+					Map<List<Id<Link>>, List<ScheduleInfo>> scheduleMap = extractLinkIdsFromJson(jsonFilePath);
+					ImportTrainLineJSON(networkPath, transitSchedulePath, jsonFilePath);
+				}
+			});
 	}
+
+
 }
+
 
