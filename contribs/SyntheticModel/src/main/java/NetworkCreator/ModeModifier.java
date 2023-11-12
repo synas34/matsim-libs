@@ -28,8 +28,8 @@ public class ModeModifier {
 
 	public static void main(String[] args) {
 		// Hardcoded paths for demonstration
-		String inputNetworkPath = "examples/scenarios/Odakyu1/network1.xml";
-		String outputPath = "examples/scenarios/Odakyu1/test/network1.xml";
+		String inputNetworkPath = "examples/scenarios/UrbanLine/Lastditch/FMLM4/network_pt.xml";
+		String outputPath = "examples/scenarios/UrbanLine/Lastditch/FMLM4/network_pt.xml";
 
 		new ModeModifier().modifyLinkModes(inputNetworkPath, outputPath);
 	}
