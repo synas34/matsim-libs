@@ -171,6 +171,14 @@ public class RailScheduleCreator {
 		link.setAllowedModes(modes);
 		network.addLink(link);
 		System.out.println("Created Link: " + link.getId());
+		Link link_r = network.getFactory().createLink(Id.createLinkId(toNode.getId() + "_" + fromNode.getId()), toNode , fromNode);
+
+		// Setting specified attributes for the link
+		link_r.setCapacity(9999);
+		link_r.setFreespeed(20.0 / 3.6); // Convert km/h to m/s
+		link_r.setAllowedModes(modes);
+		network.addLink(link_r);
+		System.out.println("Created Link: " + link_r.getId());
 	}
 
 	public void createRailLink(Network network, Node fromNode, Node toNode, List<Id<Link>> linkIds, List<Id<Link>> linkIds_r) {

@@ -36,7 +36,6 @@ public class ImportRailNetworkJSON {
 		String railwaysJson = new String(Files.readAllBytes(Paths.get("contribs/SyntheticModel/src/main/java/TransitCreator/railways.json")));
 		String networkFilePath = "examples/scenarios/Odakyu1/network1.xml";
 		List<Link> allRailLinksCreated = GenerateLinksJSON(stationsJson, railwaysJson, networkFilePath,true);
-		System.out.println(allRailLinksCreated);
 
 		// Print out every link created
 		for (Link link : allRailLinksCreated) {
@@ -45,7 +44,29 @@ public class ImportRailNetworkJSON {
 				", To Node: " + link.getToNode().getId() +
 				", Length: " + link.getLength());
 		}
+//		Map<String, Map<String, Object>> railNetwork = importRailNetworkJSON(stationsJson, railwaysJson);
+//
+//		// Printing the rail network for testing
+//		for (Map.Entry<String, Map<String, Object>> entry : railNetwork.entrySet()) {
+//			System.out.println("Railway ID: " + entry.getKey());
+//			Map<String, Object> railwayData = entry.getValue();
+//			System.out.println("Title: " + railwayData.get("title"));
+//			System.out.println("Color: " + railwayData.get("color"));
+//			System.out.println("Car Composition: " + railwayData.get("carComposition"));
+//			System.out.println("Stations:");
+//
+//			@SuppressWarnings("unchecked")
+//			List<Map<String, Object>> stationsList = (List<Map<String, Object>>) railwayData.get("stations");
+//			for (Map<String, Object> station : stationsList) {
+//				System.out.println("Station Title: " + station.get("title"));
+//				System.out.println("Latitude: " + station.get("x"));
+//				System.out.println("Longitude: " + station.get("y"));
+//				System.out.println("----------------");
+//			}
+//			System.out.println("======================================");
+//		}
 	}
+
 
 	public static Map<String, Map<String, Object>> importRailNetworkJSON(String stationsJson, String railwaysJson) throws JSONException {
 		JSONArray stationsArray = new JSONArray(stationsJson);
@@ -85,8 +106,7 @@ public class ImportRailNetworkJSON {
 					stationData.put("x", coord.getDouble(1)); // Latitude
 					stationData.put("y", coord.getDouble(0)); // Longitude
 					// Use the fully qualified ID instead of just the simple name
-					stationData.put("id", station.getString("id")); // Fully qualified station ID
-					stationData.put("title", station.getJSONObject("title").getString("en")); // Station Name
+					stationData.put("title", station.getString("id")); // Fully qualified station ID
 					stationsList.add(stationData);
 				}
 			}
@@ -128,7 +148,11 @@ public class ImportRailNetworkJSON {
 
 			// Process each station in the current railway
 			for (Map<String, Object> stationData : stations) {
-				String stationId = railwayId + "." + stationData.get("title");
+				// Original station ID
+				String originalStationId = "" + stationData.get("title");
+
+				// Processed station ID: remove dashes, dots, spaces and convert to lowercase
+				String stationId = originalStationId.replaceAll("[\\-\\.\\s]", "").toLowerCase();
 				double x = (Double) stationData.get("x");
 				double y = (Double) stationData.get("y");
 

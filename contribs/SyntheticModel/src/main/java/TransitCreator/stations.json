@@ -2777,7 +2777,7 @@
 		"zh-Hant": "南千住"
 	}
 }, {
-	"id": "JR-East.JobanRapid.Kita-Senju",
+	"id": "JR-East.JobanRapid.KitaSenju",
 	"railway": "JR-East.JobanRapid",
 	"coord": [139.80482, 35.7499],
 	"title": {
@@ -24295,7 +24295,7 @@
 	],
 	"altitude": -1
 }, {
-	"id": "MIR.TsukubaExpress.Kita-Senju",
+	"id": "MIR.TsukubaExpress.KitaSenju",
 	"railway": "MIR.TsukubaExpress",
 	"coord": [139.8051076, 35.7495276],
 	"title": {
@@ -27132,7 +27132,7 @@
 		"zh-Hant": "上北台"
 	}
 }, {
-	"id": "ChibaMonorail.Line1.ChibaMinato",
+	"id": "ChibaMonorail.Line1.Chiba-Minato",
 	"railway": "ChibaMonorail.Line1",
 	"coord": [140.102485, 35.6074294],
 	"title": {
@@ -27143,7 +27143,7 @@
 		"zh-Hant": "千葉港"
 	}
 }, {
-	"id": "ChibaMonorail.Line1.ShiyakushoMae",
+	"id": "ChibaMonorail.Line1.Shiyakusho-Mae",
 	"railway": "ChibaMonorail.Line1",
 	"coord": [140.1078479, 35.6072241],
 	"title": {
@@ -27178,7 +27178,7 @@
 		"ja-Wiki": "栄町駅 (千葉県)"
 	}
 }, {
-	"id": "ChibaMonorail.Line1.YoshikawaKoen",
+	"id": "ChibaMonorail.Line1.Yoshikawa-Koen",
 	"railway": "ChibaMonorail.Line1",
 	"coord": [140.1200969, 35.6088494],
 	"title": {
@@ -27189,7 +27189,7 @@
 		"zh-Hant": "葭川公園"
 	}
 }, {
-	"id": "ChibaMonorail.Line1.KenchoMae",
+	"id": "ChibaMonorail.Line1.Kencho-Mae",
 	"railway": "ChibaMonorail.Line1",
 	"coord": [140.1221568, 35.6036854],
 	"title": {
@@ -27212,7 +27212,7 @@
 		"zh-Hant": "千葉"
 	}
 }, {
-	"id": "ChibaMonorail.Line2.ChibaKoen",
+	"id": "ChibaMonorail.Line2.Chiba-Koen",
 	"railway": "ChibaMonorail.Line2",
 	"coord": [140.1178236, 35.6198055],
 	"title": {
@@ -27257,7 +27257,7 @@
 		"ja-Wiki": "穴川駅 (千葉県)"
 	}
 }, {
-	"id": "ChibaMonorail.Line2.SportsCenter",
+	"id": "ChibaMonorail.Line2.Sports-Center",
 	"railway": "ChibaMonorail.Line2",
 	"coord": [140.1161569, 35.6432352],
 	"title": {
@@ -27268,7 +27268,7 @@
 		"zh-Hant": "體育中心"
 	}
 }, {
-	"id": "ChibaMonorail.Line2.DobutsuKoen",
+	"id": "ChibaMonorail.Line2.Dobutsu-Koen",
 	"railway": "ChibaMonorail.Line2",
 	"coord": [140.1255139, 35.6425768],
 	"title": {
@@ -27324,7 +27324,7 @@
 		"zh-Hant": "小倉台"
 	}
 }, {
-	"id": "ChibaMonorail.Line2.ChishirodaiKita",
+	"id": "ChibaMonorail.Line2.Chishirodai-Kita",
 	"railway": "ChibaMonorail.Line2",
 	"coord": [140.1820367, 35.6274151],
 	"title": {

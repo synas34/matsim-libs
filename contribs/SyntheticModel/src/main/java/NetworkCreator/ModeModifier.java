@@ -13,13 +13,12 @@ public class ModeModifier {
 		// Load the existing network
 		Network network = NetworkUtils.readNetwork(inputNetworkPath);
 
-		// Iterate over all links and modify the modes attribute for those with freespeed less than 20 and without pt
+		// Iterate over all links and increase the freespeed to 25.5555555555 for those with pt mode
 		for (Link link : network.getLinks().values()) {
-			double freespeed = link.getFreespeed();
 			Set<String> allowedModes = link.getAllowedModes();
-
-			if (allowedModes.contains("publicTransport")) {
-				link.setAllowedModes(Set.of("pt"));
+			if (allowedModes.contains("pt")) {
+				link.setFreespeed(25.5555555555);
+				link.setCapacity(2000);
 			}
 		}
 
@@ -29,8 +28,8 @@ public class ModeModifier {
 
 	public static void main(String[] args) {
 		// Hardcoded paths for demonstration
-		String inputNetworkPath = "examples/scenarios/Odakyu1/network.xml";
-		String outputPath = "examples/scenarios/Odakyu1/test/network.xml";
+		String inputNetworkPath = "examples/scenarios/Odakyu1/network1.xml";
+		String outputPath = "examples/scenarios/Odakyu1/test/network1.xml";
 
 		new ModeModifier().modifyLinkModes(inputNetworkPath, outputPath);
 	}

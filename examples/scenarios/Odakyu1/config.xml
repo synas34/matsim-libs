@@ -9,7 +9,7 @@
 	</module>
 
 	<module name="network">
-		<param name="inputNetworkFile" value="network.xml" />
+		<param name="inputNetworkFile" value="test/network1.xml" />
 	</module>
 
 	<module name="plans">
@@ -192,8 +192,8 @@
 
 	<module name="transit">
 		<param name="useTransit" value="true" />
-		<param name="transitScheduleFile" value="transitschedule.xml" />
-		<param name="vehiclesFile" value="transitVehicles.xml" />
+		<param name="transitScheduleFile" value="transitschedule16.xml" />
+		<param name="vehiclesFile" value="test/transitVehicles11.xml" />
 		<param name="transitModes" value="pt" />
 	</module>
 

@@ -3,6 +3,11 @@ package PlansCreator;
 
 import org.geotools.geometry.DirectPosition2D;
 import org.geotools.referencing.CRS;
+import org.matsim.api.core.v01.Scenario;
+import org.matsim.api.core.v01.population.*;
+import org.matsim.core.config.Config;
+import org.matsim.core.config.ConfigUtils;
+import org.matsim.core.scenario.ScenarioUtils;
 import org.opengis.referencing.crs.CoordinateReferenceSystem;
 import org.opengis.referencing.operation.MathTransform;
 import org.w3c.dom.*;
@@ -83,10 +88,39 @@ public class PlansTransformer {
 		fileWriter.close();
 		System.out.println("Transformation completed!");
 	}
-	public static void main(String[] args) throws Exception {
-		String existingPlansPath = "C:\\Users\\MATSIM\\IdeaProjects\\matsim-libs\\examples\\scenarios\\Odakyu2\\plansv1.xml";
-		String outputPath = "C:\\Users\\MATSIM\\IdeaProjects\\matsim-libs\\examples\\scenarios\\Odakyu2\\test\\plansv1.xml";
 
-		new PlansTransformer().transformAndSavePlans(existingPlansPath, outputPath);
+	public void transformStartingMode(String existingPlansPath, String outputPath) {
+		System.out.println("Starting transformation process...");
+
+		// Load the existing MATSim scenario
+		Config config = ConfigUtils.createConfig();
+		config.plans().setInputFile(existingPlansPath);
+		Scenario scenario = ScenarioUtils.loadScenario(config);
+
+		// Access the population
+		Population population = scenario.getPopulation();
+
+		// Iterate through the population and modify each leg to 'pt'
+		for (Person person : population.getPersons().values()) {
+			for (Plan plan : person.getPlans()) {
+				for (PlanElement element : plan.getPlanElements()) {
+					if (element instanceof Leg leg) {
+						leg.setMode("pt");
+					}
+				}
+			}
+		}
+
+		// Write the modified plans to output path
+		new PopulationWriter(population).write(outputPath);
+		System.out.println("Transformation completed!");
+	}
+
+	public static void main(String[] args) throws Exception {
+		String existingPlansPath = "C:\\Users\\MATSIM\\IdeaProjects\\matsim-libs\\examples\\scenarios\\Odakyu1\\plansv3.xml";
+		String outputPath = "C:\\Users\\MATSIM\\IdeaProjects\\matsim-libs\\examples\\scenarios\\Odakyu1\\test\\plansv3.xml";
+		new PlansTransformer().transformStartingMode(existingPlansPath, outputPath);
+
+		//new PlansTransformer().transformAndSavePlans(existingPlansPath, outputPath);
 	}
 }

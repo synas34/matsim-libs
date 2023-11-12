@@ -124,23 +124,16 @@ public class ImportTrainLineJSON {
 				JSONArray timetable = trainSchedule.getJSONArray("tt");
 
 				List<Id<Link>> linkIds = new ArrayList<>();
+				// Add concatenated LinkIDs to the list
 				for (int j = 0; j < timetable.length(); j++) {
 					JSONObject stationSchedule = timetable.getJSONObject(j);
 					String stationId = stationSchedule.getString("s");
-
-					// Insert a hyphen before the second capital letter after the last period
-					int lastPeriodIndex = stationId.lastIndexOf('.');
-					if (lastPeriodIndex != -1 && lastPeriodIndex < stationId.length() - 1) {
-						int secondCapitalIndex = findSecondCapitalIndex(stationId, lastPeriodIndex + 1);
-						if (secondCapitalIndex != -1) {
-							stationId = stationId.substring(0, secondCapitalIndex) + "-" + stationId.substring(secondCapitalIndex);
-						}
-					}
-
+					// Process the stationId: remove dashes, dots, spaces and convert to lowercase
+					stationId = stationId.replaceAll("[\\-\\.\\s]", "").toLowerCase();
 					String concatenatedId = stationId + "_" + stationId;
 					linkIds.add(Id.create(concatenatedId, Link.class));
 				}
-
+				// Use LinkedHashSet to preserve the order and remove duplicates
 				List<Id<Link>> uniqueLinkIds = new ArrayList<>(new LinkedHashSet<>(linkIds));
 
 				String departureTime = timetable.getJSONObject(0).getString("d");
@@ -161,26 +154,11 @@ public class ImportTrainLineJSON {
 		return scheduleMap;
 	}
 
-	private static int findSecondCapitalIndex(String str, int start) {
-		boolean foundFirstCapital = false;
-		for (int i = start; i < str.length(); i++) {
-			if (Character.isUpperCase(str.charAt(i))) {
-				if (foundFirstCapital) {
-					return i;
-				}
-				foundFirstCapital = true;
-			}
-		}
-		return -1;
-	}
-
-
-
 
 	public static void main(String[] args) throws IOException {
 
-		String networkPath = "examples/scenarios/Odakyu1/network_1699671185214.xml";
-		String transitSchedulePath = "examples/scenarios/Odakyu1/transitschedule11.xml";
+		String networkPath = "examples/scenarios/Odakyu1/network_1699689046546.xml";
+		String transitSchedulePath = "examples/scenarios/Odakyu1/transitschedule13.xml";
 		String jsonFolder = "contribs/SyntheticModel/src/main/java/TransitCreator/train-timetables"; // Folder containing JSON files
 
 		// Get the list of files in the specified folder
@@ -189,7 +167,6 @@ public class ImportTrainLineJSON {
 			.forEach(filePath -> {
 				if (filePath.toString().endsWith(".json")) {
 					String jsonFilePath = filePath.toString();
-					Map<List<Id<Link>>, List<ScheduleInfo>> scheduleMap = extractLinkIdsFromJson(jsonFilePath);
 					ImportTrainLineJSON(networkPath, transitSchedulePath, jsonFilePath);
 				}
 			});
