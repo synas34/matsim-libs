@@ -20,7 +20,7 @@
 		<param name="outputDirectory" value="./output" />
 		<param name="overwriteFiles" value="deleteDirectoryIfExists" />
 		<param name="firstIteration" value="0" />
-		<param name="lastIteration" value="10" />
+		<param name="lastIteration" value="25" />
 		<param name="eventsFileFormat" value="xml" />
 		<param name="mobsim" value="qsim" />
 	</module>
@@ -200,7 +200,7 @@
 
 	<module name="changeMode">
 		<!-- provide a comma-separated list of leg modes -->
-		<param name="modes" value="car,walk,bike,pt" />
+		<param name="modes" value="car,walk,pt" />
 		<!-- Defines whether car availability is considered be considered or not. An agent has no car only if it has no license, or never access to a car. Default: true -->
 		<param name="ignoreCarAvailability" value="false" />
 	</module>
@@ -209,11 +209,11 @@
 		<!-- Only for backwards compatibility.  Defines if only trips from modes list should change mode, or all trips.  Options: fromAllModesToSpecifiedModes fromSpecifiedModesToSpecifiedModes  -->
 		<param name="behavior" value="fromSpecifiedModesToSpecifiedModes" />
 		<!-- Defines the chain-based modes, seperated by commas -->
-		<param name="chainBasedModes" value="car,bike" />
+		<param name="chainBasedModes" value="car" />
 		<!-- Defines whether car availability must be considered or not. A agent has no car only if it has no license, or never access to a car -->
 		<param name="considerCarAvailability" value="true" />
 		<!-- Defines all the modes available, including chain-based modes, seperated by commas -->
-		<param name="modes" value="walk,car,bike,pt" />
+		<param name="modes" value="walk,car,pt" />
 	</module>
 
 
