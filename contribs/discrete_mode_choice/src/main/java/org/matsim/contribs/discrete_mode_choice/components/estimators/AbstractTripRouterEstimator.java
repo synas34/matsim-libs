@@ -22,7 +22,7 @@ import org.matsim.facilities.Facility;
  * TripRouter. Instead of just getting a proposed mode, this class already
  * routes the trip with the given mode in the background. All that remains is to
  * analyze the PlanElements to estimate a utility.
- * 
+ *
  * @author sebhoerl
  */
 public abstract class AbstractTripRouterEstimator implements TripEstimator {

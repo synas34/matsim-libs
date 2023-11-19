@@ -169,22 +169,26 @@
 	<module name="strategy">
 		<param name="maxAgentPlanMemorySize" value="5" /> <!-- 0 means unlimited -->
 
-		<parameterset type="strategysettings">
-			<param name="strategyName" value="BestScore"/>
-			<param name="weight" value="0.7"/>
-		</parameterset>
+<!--		<parameterset type="strategysettings">-->
+<!--			<param name="strategyName" value="BestScore"/>-->
+<!--			<param name="weight" value="0.7"/>-->
+<!--		</parameterset>-->
 
-		<parameterset type="strategysettings">
-			<param name="strategyName" value="ReRoute"/>
-			<param name="weight" value="0.1"/>
-		</parameterset>
+<!--		<parameterset type="strategysettings">-->
+<!--			<param name="strategyName" value="ReRoute"/>-->
+<!--			<param name="weight" value="0.1"/>-->
+<!--		</parameterset>-->
 
+<!--		<parameterset type="strategysettings">-->
+<!--			<param name="strategyName" value="TimeAllocationMutator"/>-->
+<!--			<param name="weight" value="0.1"/>-->
+<!--		</parameterset>-->
+<!--		<parameterset type="strategysettings">-->
+<!--			<param name="strategyName" value="ChangeTripMode"/>-->
+<!--			<param name="weight" value="0.8"/>-->
+<!--		</parameterset>-->
 		<parameterset type="strategysettings">
-			<param name="strategyName" value="TimeAllocationMutator"/>
-			<param name="weight" value="0.1"/>
-		</parameterset>
-		<parameterset type="strategysettings">
-			<param name="strategyName" value="ChangeTripMode"/>
+			<param name="strategyName" value="DiscreteModeChoice" />
 			<param name="weight" value="0.8"/>
 		</parameterset>
 
@@ -205,16 +209,16 @@
 		<param name="ignoreCarAvailability" value="false" />
 	</module>
 
-	<module name="subtourModeChoice" >
-		<!-- Only for backwards compatibility.  Defines if only trips from modes list should change mode, or all trips.  Options: fromAllModesToSpecifiedModes fromSpecifiedModesToSpecifiedModes  -->
-		<param name="behavior" value="fromSpecifiedModesToSpecifiedModes" />
-		<!-- Defines the chain-based modes, seperated by commas -->
-		<param name="chainBasedModes" value="car" />
-		<!-- Defines whether car availability must be considered or not. A agent has no car only if it has no license, or never access to a car -->
-		<param name="considerCarAvailability" value="true" />
-		<!-- Defines all the modes available, including chain-based modes, seperated by commas -->
-		<param name="modes" value="walk,car,pt" />
-	</module>
+<!--	<module name="subtourModeChoice" >-->
+<!--		&lt;!&ndash; Only for backwards compatibility.  Defines if only trips from modes list should change mode, or all trips.  Options: fromAllModesToSpecifiedModes fromSpecifiedModesToSpecifiedModes  &ndash;&gt;-->
+<!--		<param name="behavior" value="fromSpecifiedModesToSpecifiedModes" />-->
+<!--		&lt;!&ndash; Defines the chain-based modes, seperated by commas &ndash;&gt;-->
+<!--		<param name="chainBasedModes" value="car" />-->
+<!--		&lt;!&ndash; Defines whether car availability must be considered or not. A agent has no car only if it has no license, or never access to a car &ndash;&gt;-->
+<!--		<param name="considerCarAvailability" value="true" />-->
+<!--		&lt;!&ndash; Defines all the modes available, including chain-based modes, seperated by commas &ndash;&gt;-->
+<!--		<param name="modes" value="walk,car,pt" />-->
+<!--	</module>-->
 
 
 <!--	&lt;!&ndash; This module is dedicated to configuring the multi-modal DRT (Demand Responsive Transport). &ndash;&gt;-->
@@ -340,5 +344,18 @@
 <!--			<param name="subpopulations" value="" />-->
 <!--		</parameterset>-->
 <!--	</module>-->
+
+	<module name="DiscreteModeChoice">
+		<param name="modelType" value="Tour" />
+		<param name="selector" value="MultinomialLogit" />
+		<param name="tourConstraints" value="VehicleContinuity,SubtourMode" />
+		<param name="tourFinder" value="PlanBased" />
+		<param name="tripEstimator" value="MyEstimatorName" />
+		<param name="tourEstimator" value="Cumulative" />
+
+		<parameterset type="modeAvailability:Car">
+			<param name="availableModes" value="pt, car, walk" />
+		</parameterset>
+	</module>
 
 </config>
