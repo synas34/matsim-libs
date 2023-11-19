@@ -3,7 +3,7 @@
 <config>
 
 	<module name="global">
-		<param name="randomSeed" value="4711" />
+		<param name="randomSeed" value="4721" />
 		<param name="coordinateSystem" value="EPSG:6677" />
 		<param name="numberOfThreads" value="34" />
 	</module>
