@@ -168,14 +168,14 @@ public class NTripEstimator extends AbstractTripRouterEstimator {
 				case TransportMode.pt: utility = -0.7 - 0.15 * totalTravelTime; break;
 				case TransportMode.walk: utility = -7.48 * totalTravelTime; break;
 				case TransportMode.bike: utility = -1.47 - 5.28 * totalTravelTime; break;
-				case TransportMode.drt: utility = -10000000; break;          }
+				case TransportMode.drt: utility = -0.7 - 6.04 * totalTravelTime; break;          }
 		} else {
 			switch (mode) {
 				case TransportMode.car: utility = -1.96 - 5.3 * totalTravelTime; break;
 				case TransportMode.pt: utility = -0.7 - 0.15 * totalTravelTime; break;
 				case TransportMode.walk: utility = -7.48 * totalTravelTime; break;
 				case TransportMode.bike: utility = -1.47 - 5.28 * totalTravelTime;break;
-				case TransportMode.drt: utility = -100000000; break;   }
+				case TransportMode.drt: utility = -0.7 - 6.04 * totalTravelTime; break;   }
 		}
 		return utility;
 	}
@@ -197,7 +197,7 @@ public class NTripEstimator extends AbstractTripRouterEstimator {
 					utility = -1.47 - 5.28 * totalTravelTime;
 					break;
 				case TransportMode.drt:
-					utility = -1000000;
+					utility = -0.7 - 6.04 * totalTravelTime;
 					break;
 			}
 		} else {
@@ -215,7 +215,7 @@ public class NTripEstimator extends AbstractTripRouterEstimator {
 					utility = -1.47 - 5.28 * totalTravelTime;
 					break;
 				case TransportMode.drt:
-					utility = -1000000 ;
+					utility = -0.7 - 6.04 * totalTravelTime ;
 					break;
 			}
 		}

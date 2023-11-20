@@ -20,7 +20,7 @@
 		<param name="outputDirectory" value="./output" />
 		<param name="overwriteFiles" value="deleteDirectoryIfExists" />
 		<param name="firstIteration" value="0" />
-		<param name="lastIteration" value="25" />
+		<param name="lastIteration" value="20" />
 		<param name="eventsFileFormat" value="xml" />
 		<param name="mobsim" value="qsim" />
 	</module>
@@ -208,15 +208,15 @@
 			<param name="maxTravelTimeAlpha" value="3.0"/>
 			<!-- Beta parameter for max travel time estimation. This value in seconds will be added to the estimated travel time. -->
 			<param name="maxTravelTimeBeta" value="1200"/>
-			<param name="vehiclesFile" value="outputdrts0S33.xml"/>
+			<param name="vehiclesFile" value="drts0S4.xml"/>
 <!--			<param name="drtServiceAreaShapeFile" value="Shapefile/SecondSquare.shp"/>-->
 
 			<parameterset type="zonalSystem">
 				<!-- Specifies how the zones are generated. Here, it's based on a grid derived from the network. -->
-				<param name="zonesGeneration" value="GridFromNetwork"/>
+				<param name="zonesGeneration" value="ShapeFile"/>
 				<!-- The cell size of the grid in meters. This defines the size of each zone in the zonal system. -->
-				<param name="cellSize" value="500"/>
-				<!--				<param name="zonesShapeFile" value="Shapefile/SecondSquare.shp"/>-->
+<!--				<param name="cellSize" value="500"/>-->
+				<param name="zonesShapeFile" value="Shapefile/SecondSquare.shp"/>
 			</parameterset>
 
 			<parameterset type="rebalancing">
@@ -244,6 +244,56 @@
 		</parameterset>
 	</module>
 
+<!--	&lt;!&ndash; This module is dedicated to configuring the multi-modal DRT (Demand Responsive Transport). &ndash;&gt;-->
+<!--	<module name="multiModeDrt1">-->
+<!--		<parameterset type="drt">-->
+<!--			&lt;!&ndash; The search strategy for finding a vehicle for a DRT request. &ndash;&gt;-->
+<!--			<parameterset type="ExtensiveInsertionSearch"/>-->
+<!--			&lt;!&ndash; The duration of a stop in seconds. This is the time a vehicle waits at a stop. &ndash;&gt;-->
+<!--			<param name="stopDuration" value="60"/>-->
+<!--			&lt;!&ndash; Operational Scheme, either of door2door, stopbased or serviceAreaBased. door2door by default &ndash;&gt;-->
+<!--			<param name="operationalScheme" value="door2door"/>-->
+<!--			&lt;!&ndash; Maximum wait time in seconds before being picked up by a DRT vehicle. &ndash;&gt;-->
+<!--			<param name="maxWaitTime" value="600"/>-->
+<!--			&lt;!&ndash; Alpha parameter for max travel time estimation. Used to increase the travel time estimation based on direct travel time. &ndash;&gt;-->
+<!--			<param name="maxTravelTimeAlpha" value="3.0"/>-->
+<!--			&lt;!&ndash; Beta parameter for max travel time estimation. This value in seconds will be added to the estimated travel time. &ndash;&gt;-->
+<!--			<param name="maxTravelTimeBeta" value="1200"/>-->
+<!--			<param name="vehiclesFile" value="outputdrts0S33.xml"/>-->
+<!--			&lt;!&ndash;			<param name="drtServiceAreaShapeFile" value="Shapefile/SecondSquare.shp"/>&ndash;&gt;-->
+
+<!--			<parameterset type="zonalSystem">-->
+<!--				&lt;!&ndash; Specifies how the zones are generated. Here, it's based on a grid derived from the network. &ndash;&gt;-->
+<!--				<param name="zonesGeneration" value="ShapeFile"/>-->
+<!--				&lt;!&ndash; The cell size of the grid in meters. This defines the size of each zone in the zonal system. &ndash;&gt;-->
+<!--&lt;!&ndash;				<param name="cellSize" value="500"/>&ndash;&gt;-->
+<!--				<param name="zonesShapeFile" value="Shapefile/SecondSquare.shp"/>-->
+<!--			</parameterset>-->
+
+<!--			<parameterset type="rebalancing">-->
+<!--				&lt;!&ndash; Uses the min-cost flow rebalancing strategy. &ndash;&gt;-->
+<!--				<parameterset type="minCostFlowRebalancingStrategy">-->
+<!--					&lt;!&ndash; Target alpha value for the rebalancing strategy. &ndash;&gt;-->
+<!--					<param name="targetAlpha" value="0.5"/>-->
+<!--					&lt;!&ndash; Target beta value for the rebalancing strategy. &ndash;&gt;-->
+<!--					<param name="targetBeta" value="0.5"/>-->
+<!--				</parameterset>-->
+<!--			</parameterset>-->
+
+<!--			<parameterset type="drtfare">-->
+<!--				&lt;!&ndash; Base fare for a DRT trip. &ndash;&gt;-->
+<!--				<param name="basefare" value="100.0"/>-->
+<!--				&lt;!&ndash; Daily subscription fee for using the DRT service. &ndash;&gt;-->
+<!--				<param name="dailySubscriptionFee" value="0.0"/>-->
+<!--				&lt;!&ndash; Fare per meter of travel. &ndash;&gt;-->
+<!--				<param name="distanceFare_m" value="0.03"/>-->
+<!--				&lt;!&ndash; Fare per hour of travel. &ndash;&gt;-->
+<!--				<param name="timeFare_h" value="57"/>-->
+<!--				&lt;!&ndash; Minimum fare charged per DRT trip. &ndash;&gt;-->
+<!--				<param name="minFarePerTrip" value="0"/>-->
+<!--			</parameterset>-->
+<!--		</parameterset>-->
+<!--	</module>-->
 
 	<module name="swissRailRaptor" >
 		<!-- Sets whether intermodal access and egress modes are selected by least cost (default) or randomly chosen out of the available access / egress modes. -->

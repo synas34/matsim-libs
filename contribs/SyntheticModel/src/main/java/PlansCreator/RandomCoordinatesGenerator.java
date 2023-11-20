@@ -1,5 +1,7 @@
 package PlansCreator;
 
+import org.matsim.api.core.v01.Coord;
+
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -54,6 +56,39 @@ public class RandomCoordinatesGenerator {
 		return coordinates;
 	}
 
+	public List<Coord> generateCoords() {
+		List<Coord> coordinates = new ArrayList<>();
+
+		for (int i = 0; i < densities.size(); i++) {
+			int density = densities.get(i);
+			double decayRate = decayRates.get(i);
+			double centerX = i * SQUARE_SIZE + SQUARE_SIZE / 2;
+			double centerY = SQUARE_SIZE / 2;
+
+			int pointsWithinRadius = (int) (density * decayRate);
+
+			// Generating points within the 400-length radius
+			for (int j = 0; j < pointsWithinRadius; j++) {
+				double theta = 2 * Math.PI * random.nextDouble();
+				double r = 250 * Math.sqrt(random.nextDouble()); // sqrt for uniform point distribution inside a circle
+
+				double x = centerX + r * Math.cos(theta);
+				double y = centerY + r * Math.sin(theta);
+
+				coordinates.add(new Coord(x, y));
+			}
+
+			// Generating points outside the 400-length radius uniformly in the square
+			for (int j = pointsWithinRadius; j < density; j++) {
+				double x = centerX + (random.nextDouble() - 0.5) * SQUARE_SIZE;
+				double y = centerY + (random.nextDouble() - 0.5) * SQUARE_SIZE;
+
+				coordinates.add(new Coord(x, y));
+			}
+		}
+
+		return coordinates;
+	}
 
 
 	public void writeToXML(String filePath, String filename) throws IOException {

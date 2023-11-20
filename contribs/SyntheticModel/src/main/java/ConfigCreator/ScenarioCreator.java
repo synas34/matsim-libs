@@ -17,7 +17,7 @@ import java.util.List;
 
 public class ScenarioCreator {
 //djiajdaojsdao
-	private static final String SCENARIO_PATH = "examples/scenarios/UrbanLine/UrbanPrototypex3";
+	private static final String SCENARIO_PATH = "examples/scenarios/UrbanLine/Extension/Corridor";
 
 	public static void main(String[] args) throws Exception {
 
@@ -43,36 +43,40 @@ public class ScenarioCreator {
 
 	private static void createNetwork() throws Exception {
 		List<Integer> slicesList = List.of(
-//			30, 27, 26, //CBD
-//			24, 23, 21, 20//urban area
-//			18, 16, 15, 14, 13, 12 //suburban transition ~300  (170 - 430)
-			23, 20, 18, 13, 12 //suburban Core ~300  (170 - 430)
-//			27, 27, 27 //suburb
+			30, 27, 26, //CBD
+			24, 23, 21, 20,//urban area
+			18, 16, 15, 14, 13, 12, //suburban transition ~300  (170 - 430)
+//			23, 20, 18, 13, 12 //suburban Core ~300  (170 - 430)
+			11, 10, 9, 8, 8, 8, 8, 8, 7, 7, 7, 7, 6, 6, 6 //suburb
 		);
 		SyntheticNetworkCreator.main(new String[]{SCENARIO_PATH}, slicesList);
 	}
 
 	private static void createHouseholdsAndCommercialCoordinates() throws Exception {
 		List<Integer> households = List.of(
-//			8000, 10000, 10000, //main core
-//			10000, 9000, 9000, 7000 //urban area
-//			3000, 4000, 3200, 2500, 1800, 3000 //suburban transition ~3200 (1300 - 5900)
-			5000, 4500, 4500, 1000, 800 //suburban Core ~300  (170 - 430)
-//			800, 500, 700 //suburb
+			8000, 10000, 10000, //main core
+			10000, 9000, 9000, 7000, //urban area
+			3000, 4000, 3200, 2500, 1800, 3000, //suburban transition ~3200 (1300 - 5900)
+//			5000, 4500, 4500, 1000, 800, //suburban Core ~300  (170 - 430)
+ 			800, 500, 700, 500, 500, 500, 500, 500, 500, 500, 500, 500, 500, 500, 500 //suburb
+
 		);
 		List<Double> decayRates = List.of(
-//			0.1, 0.6, 0.7 ,// main core
-//			0.1, 0.7, 0.5, 0.3 // urban area
-//			0.2, 0.2, 0.5, 0.8, 0.9, 0.9// suburban transition
-			0.7, 0.3, 0.2, 0.3, 0.6
-//			0.3, 0.4, 0.9 //suburb
+			0.1, 0.6, 0.7 ,// main core
+			0.1, 0.7, 0.5, 0.3, // urban area
+			0.2, 0.2, 0.5, 0.8, 0.9, 0.9,// suburban transition
+//			0.7, 0.3, 0.2, 0.3, 0.6,
+ 			0.2, 0.2, 0.5, 0.3, 0.6, 0.5, 0.2, 0.2, 0.3, 0.6, 0.1, 0.5, 0.6, 0.2, 0.3 //suburb
+
 		);
 		List<Integer> commercial = List.of(
-//			1500, 1500, 1500, //main core
-//			1000, 700, 500, 400 //urban area
-//			250, 200, 130, 150, 100, 90 //suburban transition ~130 (60 - 290)
-			700, 300, 250, 80, 50
+			1500, 1500, 1500, //main core
+			1000, 700, 500, 400, //urban area
+			250, 200, 130, 150, 100, 90, //suburban transition ~130 (60 - 290)
+//			700, 300, 250, 80, 50
 //			50, 70, 70 //suburb
+ 			70, 70, 80, 50, 60, 60, 50, 60, 40, 50, 40, 30, 20, 30, 30 //suburb
+
 		);
 
 		RandomCoordinatesGenerator generator = new RandomCoordinatesGenerator(households, decayRates);
@@ -84,8 +88,8 @@ public class ScenarioCreator {
 
 	private static void createPlans() throws ParserConfigurationException, IOException, SAXException {
 		PlansXMLSynthesizer synthesizer = new PlansXMLSynthesizer(SCENARIO_PATH);
-		int numberOfPlansToGenerate = 20000; // specify the desired number of plans here
-		int numberOfCBDPlans = 8000; // specify the desired number of plans here
+		int numberOfPlansToGenerate = 30000; // specify the desired number of plans here
+		int numberOfCBDPlans = 3000; // specify the desired number of plans here
 		Coord start = new Coord(-6100, 500);
 		synthesizer.synthesize(numberOfPlansToGenerate,numberOfCBDPlans, start, 0.35 );
 	}

@@ -1,11 +1,13 @@
 package ConfigCreator;
 
 import MyDMC.NDMCExtension;
+import MyDMC.NasirDMCExtension;
 import org.apache.commons.io.IOUtils;
 import org.hibernate.validator.constraints.URL;
 import org.matsim.api.core.v01.Scenario;
 import org.matsim.contribs.discrete_mode_choice.modules.DiscreteModeChoiceConfigurator;
 import org.matsim.contribs.discrete_mode_choice.modules.DiscreteModeChoiceModule;
+import org.matsim.contribs.discrete_mode_choice.modules.config.DiscreteModeChoiceConfigGroup;
 import org.matsim.core.config.Config;
 import org.matsim.core.config.ConfigUtils;
 import org.matsim.core.controler.Controler;
@@ -16,18 +18,17 @@ import org.matsim.examples.ExamplesUtils;
 
 public class RunRandomSelection {
 	static public void main(String[] args) {
-		String configURL = "examples/scenarios/UrbanLine/Extension/base/config.xml";
+		String configURL = "examples/scenarios/UrbanLine/Extension/Corridor/config.xml";
 
-		Config config = ConfigUtils.loadConfig(configURL);
+		Config config = ConfigUtils.loadConfig(configURL,new DiscreteModeChoiceConfigGroup());
 		config.controler().setOverwriteFileSetting(OutputDirectoryHierarchy.OverwriteFileSetting.deleteDirectoryIfExists);
-		config.controler().setOutputDirectory("examples/scenarios/UrbanLine/Extension/base/output");
+		config.controler().setOutputDirectory("examples/scenarios/UrbanLine/Extension/Corridor/output");
 
 		Scenario scenario = ScenarioUtils.loadScenario(config);
 
 		Controler controller = new Controler(scenario);
 		controller.addOverridingModule(new DiscreteModeChoiceModule());
-		DiscreteModeChoiceConfigurator.configureAsSubtourModeChoiceReplacement(config);
-		controller.addOverridingModule(new NDMCExtension());
+		controller.addOverridingModule(new NasirDMCExtension());
 		DiscreteModeChoiceConfigurator.configureAsModeChoiceInTheLoop(config);
 		controller.run();
 	}

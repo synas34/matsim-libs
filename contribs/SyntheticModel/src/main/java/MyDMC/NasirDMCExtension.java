@@ -6,6 +6,6 @@ public class NasirDMCExtension extends AbstractDiscreteModeChoiceExtension {
 	@Override
 	public void installExtension() {
 
-		bindTripEstimator("MyEstimatorName").to(NTripEstimator.class);
+		bindTripEstimator("NasirEstimatorName").to(NasirTripEstimator.class);
 	}
 }
