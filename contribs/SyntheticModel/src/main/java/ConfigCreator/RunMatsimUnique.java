@@ -1,7 +1,6 @@
 package ConfigCreator;
 
-import MyDMC.NDMCExtension;
-import MyDMC.NasirDMCExtension;
+import MyDMC.*;
 import org.matsim.api.core.v01.Scenario;
 import org.matsim.contrib.drt.extension.preplanned.run.PreplannedDrtModeModule;
 import org.matsim.contrib.drt.run.*;
@@ -32,14 +31,14 @@ public class RunMatsimUnique {
 
 		Config config;
 		if ( args==null || args.length==0 || args[0]==null ){
-			config = ConfigUtils.loadConfig( "examples/scenarios/UrbanLine/Extension/zoneSuburban/config.xml", new MultiModeDrtConfigGroup(),
+			config = ConfigUtils.loadConfig( "examples/scenarios/UrbanLine/Extension/zoneUrban/config.xml", new MultiModeDrtConfigGroup(),
 				new DvrpConfigGroup(), new OTFVisConfigGroup(),new DiscreteModeChoiceConfigGroup()  );
 		} else {
 			config = ConfigUtils.loadConfig( args );
 		}
 
 		config.controler().setOverwriteFileSetting( OutputDirectoryHierarchy.OverwriteFileSetting.deleteDirectoryIfExists );
-		config.controler().setOutputDirectory("examples/scenarios/UrbanLine/Extension/zoneSuburban/output300");
+		config.controler().setOutputDirectory("examples/scenarios/UrbanLine/Extension/zoneUrban/outputHighFare");
 		// possibly modify config here
 		config.qsim().setSimStarttimeInterpretation(QSimConfigGroup.StarttimeInterpretation.onlyUseStarttime);
 		config.qsim().setSimEndtimeInterpretation((QSimConfigGroup.EndtimeInterpretation.onlyUseEndtime));
@@ -53,7 +52,7 @@ public class RunMatsimUnique {
 		TransitRoute transitRoute = transitSchedule.getTransitLines().get(Id.create("Shuttle", TransitRoute.class)).getRoutes().get(Id.create("Suburbs", TransitRoute.class));
 		// Add Discrete Choice Module
 		controller.addOverridingModule(new DiscreteModeChoiceModule());
-		controller.addOverridingModule(new NDMCExtension());
+		controller.addOverridingModule(new NDMCExtensionHighFare());
 		DiscreteModeChoiceConfigurator.configureAsModeChoiceInTheLoop(config);
 		// Add VehicleTracker
 		VehicleTracker vehicleTracker = new VehicleTracker();

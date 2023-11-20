@@ -53,19 +53,19 @@ public class NTripEstimator extends AbstractTripRouterEstimator {
 			// Compute mode-specific utility based on car availability
 			if (nextActivityIsWork) {
 				// Utility calculations when the next activity is work
-				utility = calculateUtilityForWorkActivity(mode, totalTravelTime, carAlwaysAvailable);
+				utility = calculateUtilityForWorkActivity(mode, totalTravelTime, totalTravelDistance, carAlwaysAvailable);
 			} else {
 				// Standard utility calculations
-				utility = calculateStandardUtility(mode, totalTravelTime, carAlwaysAvailable);
+				utility = calculateStandardUtility(mode, totalTravelTime, totalTravelDistance, carAlwaysAvailable);
 			}
 		} else {
 			// Compute mode-specific utility based on car availability
 			if (nextActivityIsWork) {
 				// Utility calculations when the next activity is work
-				utility = calculateUtilityForWorkActivityDRT(mode, totalTravelTime, carAlwaysAvailable);
+				utility = calculateUtilityForWorkActivityDRT(mode, totalTravelTime, totalTravelDistance, carAlwaysAvailable);
 			} else {
 				// Standard utility calculations
-				utility = calculateStandardUtilityDRT(mode, totalTravelTime, carAlwaysAvailable);
+				utility = calculateStandardUtilityDRT(mode, totalTravelTime, totalTravelDistance, carAlwaysAvailable);
 			}
 		}
 		return utility;
@@ -86,16 +86,16 @@ public class NTripEstimator extends AbstractTripRouterEstimator {
 		return  xCoordinate >= 1000 && xCoordinate1 >= 1000 ;
 	}
 
-	private double calculateUtilityForWorkActivity(String mode, double totalTravelTime, boolean carAlwaysAvailable) {
+	private double calculateUtilityForWorkActivity(String mode, double totalTravelTime, double totalTravelDistance, boolean carAlwaysAvailable) {
 		double utility = 0;
 		if (carAlwaysAvailable) {
 			// Mode Choice Constants Estimated from Odakyu Trips
 			switch (mode) {
-				case TransportMode.car: utility = -0.96 - 0.3 * totalTravelTime;break;
-				case TransportMode.pt: utility = -0.7 - 0.15 * totalTravelTime;break;
+				case TransportMode.car: utility = -0.96 - 0.3 * totalTravelTime - 0.0013 * (totalTravelDistance * 10); break;
+				case TransportMode.pt: utility = -1.7 - 0.15 * totalTravelTime - 0.0013 * (totalTravelDistance * 2) ;break;
 				case TransportMode.walk: utility = -7.48 * totalTravelTime;break;
 				case TransportMode.bike: utility = -1.47 - 5.28 * totalTravelTime;break;
-				case TransportMode.drt: utility = -0.7 - 6.04 * totalTravelTime;break;
+				case TransportMode.drt: utility = -0.7 - 2.94 * totalTravelTime - 0.0013 * (totalTravelDistance * 70) ;break;
 			}
 		} else {
 			switch (mode) {
@@ -108,25 +108,25 @@ public class NTripEstimator extends AbstractTripRouterEstimator {
 //			case TransportMode.walk:
 //				utility = -1.0 * totalTravelTime;
 //				break;
-				case TransportMode.car: utility = -1.96 - 5.3 * totalTravelTime; break;
-				case TransportMode.pt: utility = -0.7 - 0.15 * totalTravelTime; break;
+				case TransportMode.car: utility = -1.96 - 5.3 * totalTravelTime - 0.0013 * (totalTravelDistance * 10); break;
+				case TransportMode.pt: utility = -1.7 - 0.15 * totalTravelTime - 0.0013 * (totalTravelDistance * 2) ; break;
 				case TransportMode.walk: utility = -7.48 * totalTravelTime; break;
 				case TransportMode.bike: utility = -1.47 - 5.28 * totalTravelTime;break;
-				case TransportMode.drt: utility = -0.7 - 6.04 * totalTravelTime; break;
+				case TransportMode.drt: utility = -0.7 - 2.94 * totalTravelTime - 0.0013 * (totalTravelDistance * 70) ; break;
 			}
 		}
 		return utility;
 	}
-	private double calculateStandardUtility(String mode, double totalTravelTime, boolean carAlwaysAvailable) {
+	private double calculateStandardUtility(String mode, double totalTravelTime, double totalTravelDistance, boolean carAlwaysAvailable) {
 		double utility = 0;
 		// Mode Choice Constants Estimated from Odakyu Trips
 		if (carAlwaysAvailable) {
 			switch (mode) {
 				case TransportMode.car:
-					utility = -0.96 - 0.3 * totalTravelTime;
+					utility = -0.96 - 0.3 * totalTravelTime - 0.0013 * (totalTravelDistance * 10);
 					break;
 				case TransportMode.pt:
-					utility = -1.7 - 5.15 * totalTravelTime;
+					utility = -1.7 - 5.15 * totalTravelTime - 0.0013 * (totalTravelDistance * 2) ;
 					break;
 				case TransportMode.walk:
 					utility = -7.48 * totalTravelTime;
@@ -135,16 +135,16 @@ public class NTripEstimator extends AbstractTripRouterEstimator {
 					utility = -1.47 - 5.28 * totalTravelTime;
 					break;
 				case TransportMode.drt:
-					utility = -0.7 - 6.04 * totalTravelTime;
+					utility = -0.7 -2.94 * totalTravelTime - 0.0013 * (totalTravelDistance * 70) ;
 					break;
 			}
 		} else {
 			switch (mode) {
 				case TransportMode.car:
-					utility = -0.96 - 5.3 * totalTravelTime;
+					utility = -0.96 - 5.3 * totalTravelTime - 0.0013 * (totalTravelDistance * 10);
 					break;
 				case TransportMode.pt:
-					utility = -1.7 - 5.15 * totalTravelTime;
+					utility = -1.7 - 5.15 * totalTravelTime - 0.0013 * (totalTravelDistance * 2) ;
 					break;
 				case TransportMode.walk:
 					utility = -7.48 * totalTravelTime;
@@ -153,42 +153,42 @@ public class NTripEstimator extends AbstractTripRouterEstimator {
 					utility = -1.47 - 5.28 * totalTravelTime;
 					break;
 				case TransportMode.drt:
-					utility = -0.7 - 6.04 * totalTravelTime;
+					utility = -0.7 - 2.94 * totalTravelTime - 0.0013 * (totalTravelDistance * 70) ;
 					break;
 			}
 		}
 
 		return utility;
 	}
-	private double calculateUtilityForWorkActivityDRT(String mode, double totalTravelTime, boolean carAlwaysAvailable) {
+	private double calculateUtilityForWorkActivityDRT(String mode, double totalTravelTime, double totalTravelDistance, boolean carAlwaysAvailable) {
 		double utility = 0;
 		if (carAlwaysAvailable) {
 			switch (mode) {
-				case TransportMode.car: utility = -0.96 - 0.3 * totalTravelTime; break;
-				case TransportMode.pt: utility = -0.7 - 0.15 * totalTravelTime; break;
+				case TransportMode.car: utility = -0.96 - 0.3 * totalTravelTime - 0.0013 * (totalTravelDistance * 10); break;
+				case TransportMode.pt: utility = -1.7 - 0.15 * totalTravelTime - 0.0013 * (totalTravelDistance * 2) ; break;
 				case TransportMode.walk: utility = -7.48 * totalTravelTime; break;
 				case TransportMode.bike: utility = -1.47 - 5.28 * totalTravelTime; break;
-				case TransportMode.drt: utility = -0.7 - 6.04 * totalTravelTime; break;          }
+				case TransportMode.drt: utility = -0.7 - 2.94 * totalTravelTime - 0.0013 * (totalTravelDistance * 70) ; break;          }
 		} else {
 			switch (mode) {
-				case TransportMode.car: utility = -1.96 - 5.3 * totalTravelTime; break;
-				case TransportMode.pt: utility = -0.7 - 0.15 * totalTravelTime; break;
+				case TransportMode.car: utility = -1.96 - 5.3 * totalTravelTime- 0.0013 * (totalTravelDistance * 10); break;
+				case TransportMode.pt: utility = -1.7 - 0.15 * totalTravelTime - 0.0013 * (totalTravelDistance * 2) ; break;
 				case TransportMode.walk: utility = -7.48 * totalTravelTime; break;
 				case TransportMode.bike: utility = -1.47 - 5.28 * totalTravelTime;break;
-				case TransportMode.drt: utility = -0.7 - 6.04 * totalTravelTime; break;   }
+				case TransportMode.drt: utility = -0.7 - 2.94 * totalTravelTime  - 0.0013 * (totalTravelDistance * 70) ; break;   }
 		}
 		return utility;
 	}
-	private double calculateStandardUtilityDRT(String mode, double totalTravelTime, boolean carAlwaysAvailable) {
+	private double calculateStandardUtilityDRT(String mode, double totalTravelTime, double totalTravelDistance, boolean carAlwaysAvailable) {
 		double utility = 0;
 		// Mode Choice Constants Estimated from Odakyu Trips
 		if (carAlwaysAvailable) {
 			switch (mode) {
 				case TransportMode.car:
-					utility = -0.96 - 0.3 * totalTravelTime;
+					utility = -0.96 - 0.3 * totalTravelTime - 0.0013 * (totalTravelDistance * 10);
 					break;
 				case TransportMode.pt:
-					utility = -1.7 - 5.15 * totalTravelTime;
+					utility = -1.7 - 5.15 * totalTravelTime - 0.0013 * (totalTravelDistance * 2) ;
 					break;
 				case TransportMode.walk:
 					utility = -7.48 * totalTravelTime;
@@ -197,16 +197,16 @@ public class NTripEstimator extends AbstractTripRouterEstimator {
 					utility = -1.47 - 5.28 * totalTravelTime;
 					break;
 				case TransportMode.drt:
-					utility = -0.7 - 6.04 * totalTravelTime;
+					utility = -0.7 - 2.94 * totalTravelTime - 0.0013 * (totalTravelDistance * 70) ;
 					break;
 			}
 		} else {
 			switch (mode) {
 				case TransportMode.car:
-					utility = -0.96 - 5.3 * totalTravelTime;
+					utility = -0.96 - 5.3 * totalTravelTime - 0.0013 * (totalTravelDistance * 10);
 					break;
 				case TransportMode.pt:
-					utility = -1.7 - 5.15 * totalTravelTime;
+					utility = -1.7 - 5.15 * totalTravelTime  - 0.0013 * (totalTravelDistance * 2) ;
 					break;
 				case TransportMode.walk:
 					utility = -7.48 * totalTravelTime;
@@ -215,7 +215,7 @@ public class NTripEstimator extends AbstractTripRouterEstimator {
 					utility = -1.47 - 5.28 * totalTravelTime;
 					break;
 				case TransportMode.drt:
-					utility = -0.7 - 6.04 * totalTravelTime ;
+					utility = -0.7 - 2.94 * totalTravelTime - 0.0013 * (totalTravelDistance * 70) ;
 					break;
 			}
 		}
