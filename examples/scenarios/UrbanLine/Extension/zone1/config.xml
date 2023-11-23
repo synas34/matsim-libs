@@ -208,7 +208,7 @@
 			<param name="maxTravelTimeAlpha" value="3.0"/>
 			<!-- Beta parameter for max travel time estimation. This value in seconds will be added to the estimated travel time. -->
 			<param name="maxTravelTimeBeta" value="1200"/>
-			<param name="vehiclesFile" value="drts0S4.xml"/>
+			<param name="vehiclesFile" value="drts50S4.xml"/>
 <!--			<param name="drtServiceAreaShapeFile" value="Shapefile/SecondSquare.shp"/>-->
 
 			<parameterset type="zonalSystem">

@@ -32,11 +32,16 @@ public class CreateDRTVehiclesXML {
 		int seats = 4;
 		int size = 1;
 		int count = 0;
-		String outputDirectory = "examples/scenarios/UrbanLine/Extension/zoneSuburban/";
-		String drtsFile = outputDirectory + "drts" + count + "S" + seats + ".xml";
+		int fleetsize = 250;
+		String outputDirectory = "examples/scenarios/UrbanLine/Extension/zone1/";
+		String drtsFile = outputDirectory + "drts" + fleetsize + "S" + seats + ".xml";
 
 		// Set up your square densities and decay rates here
-		List<Integer> densities = List.of(0, 0, 140, 100, 60);
+		// 1/200 = 17, 15, 14, 1, 1
+		// 1/100 = 35, 29, 29, 2, 1
+		// 1/70 = 50, 42, 41, 3, 2
+		// 1/40 = 88, 73, 73, 5, 3
+		List<Integer> densities = List.of(88, 73, 73, 5, 3);
 		List<Double> decayRates = List.of(0.7, 0.5, 0.5, 0.9, 0.3);
 
 		RandomCoordinatesGenerator generator = new RandomCoordinatesGenerator(densities, decayRates);

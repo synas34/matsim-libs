@@ -43,7 +43,7 @@ public final class TransportMode {
 	public static final String train = "train";
 	public static final String ship = "ship";
 	public static final String airplane = "airplane";
-
+	public static final String drtA = "drtA";
 
 	@Deprecated // use non_network_walk
 	public static final String access_walk = "non_network_walk" ;
@@ -51,8 +51,8 @@ public final class TransportMode {
 	public static final String egress_walk = "non_network_walk" ;
 	// (The directionality is not useful: what may be an egress_walk from the point of view of drt may be an access_walk from the point of view of pt.
 	// kai, jun'19)
-	
-	// non_network_walk as access/egress to modes other than walk on the network was replaced by walk. - kn/gl-nov'19 
+
+	// non_network_walk as access/egress to modes other than walk on the network was replaced by walk. - kn/gl-nov'19
 
 	public static final String non_network_walk = "non_network_walk" ;
 
