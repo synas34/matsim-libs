@@ -18,11 +18,11 @@ import org.matsim.examples.ExamplesUtils;
 
 public class RunRandomSelection {
 	static public void main(String[] args) {
-		String configURL = "examples/scenarios/UrbanLine/Extension/suburb/config.xml";
+		String configURL = "examples/scenarios/Odakyu2/config.xml";
 
 		Config config = ConfigUtils.loadConfig(configURL,new DiscreteModeChoiceConfigGroup());
 		config.controler().setOverwriteFileSetting(OutputDirectoryHierarchy.OverwriteFileSetting.deleteDirectoryIfExists);
-		config.controler().setOutputDirectory("examples/scenarios/UrbanLine/Extension/suburb/output");
+		config.controler().setOutputDirectory("examples/scenarios/Odakyu2/outputDCM");
 
 		Scenario scenario = ScenarioUtils.loadScenario(config);
 
