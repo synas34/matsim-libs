@@ -24,11 +24,11 @@ import org.matsim.examples.ExamplesUtils;
 
 public class RunRandomSelection {
 	static public void main(String[] args) {
-		String configURL = "examples/scenarios/Odakyu2/config.xml";
+		String configURL = "examples/scenarios/Odakyu3/config.xml";
 
 		Config config = ConfigUtils.loadConfig(configURL,new DiscreteModeChoiceConfigGroup());
 		config.controler().setOverwriteFileSetting(OutputDirectoryHierarchy.OverwriteFileSetting.deleteDirectoryIfExists);
-		config.controler().setOutputDirectory("examples/scenarios/Odakyu2/test2");
+		config.controler().setOutputDirectory("examples/scenarios/Odakyu3/output");
 
 		Scenario scenario = ScenarioUtils.loadScenario(config);
 
@@ -37,13 +37,11 @@ public class RunRandomSelection {
 		controller.addOverridingModule(new NasirDMCExtension());
 		DiscreteModeChoiceConfigurator.configureAsModeChoiceInTheLoop(config);
 
-/*
 		// Add Tour Length Filter Module
 		TourLengthFilterConfigGroup filterConfig = new TourLengthFilterConfigGroup("tourFilter", "TourLengthFilter");
-		filterConfig.setMaximumLength(2);
+		filterConfig.setMaximumLength(10);
 		config.addModule(filterConfig);
 
-*/
 
 		controller.run();
 

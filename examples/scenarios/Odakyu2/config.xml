@@ -13,7 +13,7 @@
 	</module>
 
 	<module name="plans">
-		<param name="inputPlansFile" value="plansv4.xml" />
+		<param name="inputPlansFile" value="plansv3.xml" />
 	</module>
 
 	<module name="controler">
@@ -197,7 +197,7 @@
 
 	<module name="transit">
 		<param name="useTransit" value="true" />
-		<param name="transitScheduleFile" value="transitschedule.xml" />
+		<param name="transitScheduleFile" value="updated_transitschedule2.xml" />
 		<param name="vehiclesFile" value="transitVehicles.xml" />
 		<param name="transitModes" value="pt" />
 	</module>

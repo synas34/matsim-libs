@@ -16,6 +16,7 @@ import org.matsim.pt.transitSchedule.api.TransitScheduleReader;
 import org.matsim.pt.transitSchedule.api.TransitScheduleWriter;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 public class MATSimTransitScheduleProcessor {
@@ -43,17 +44,31 @@ public class MATSimTransitScheduleProcessor {
 			}
 		}
 
+		removeEmptyTransitRoutes(transitSchedule);
+
 		// Write the updated transit schedule back to the output path
 		new TransitScheduleWriter(transitSchedule).writeFile(outputPath);
 	}
 
-
+	private void removeEmptyTransitRoutes(TransitSchedule transitSchedule) {
+		for (TransitLine line : transitSchedule.getTransitLines().values()) {
+			List<Id<TransitRoute>> routesToRemove = new ArrayList<>();
+			for (TransitRoute route : line.getRoutes().values()) {
+				if (route.getDepartures().isEmpty()) {
+					routesToRemove.add(route.getId());
+				}
+			}
+			// Now remove the collected routes
+			for (Id<TransitRoute> routeId : routesToRemove) {
+				line.removeRoute(line.getRoutes().get(routeId));
+			}
+		}
+	}
 
 
 	public static void main(String[] args) throws Exception {
-		String inputFilePath = "examples/scenarios/Odakyu2/transitscheduletest.xml"; // Replace with your input file path
-		String outputFilePath = "examples/scenarios/Odakyu2/updated_transitschedule.xml"; // Replace with your output file path
-
+		String inputFilePath = "examples/scenarios/Odakyu2/updated_transitschedule.xml"; // Replace with your input file path
+		String outputFilePath = "examples/scenarios/Odakyu2/updated_transitschedule2.xml"; // Replace with your output file path
 
 		new MATSimTransitScheduleProcessor().removeSaturdayHolidayDepartures(inputFilePath, outputFilePath);
 
