@@ -8,6 +8,7 @@ import org.matsim.api.core.v01.Scenario;
 import org.matsim.api.core.v01.population.*;
 import org.matsim.core.config.Config;
 import org.matsim.core.config.ConfigUtils;
+import org.matsim.core.population.PersonUtils;
 import org.matsim.core.scenario.ScenarioUtils;
 import org.opengis.referencing.crs.CoordinateReferenceSystem;
 import org.opengis.referencing.operation.MathTransform;
@@ -20,7 +21,7 @@ import java.io.IOException;
 public class CsvToMatsimPlan {
 
 	public static void main(String[] args) throws IOException {
-		String csvFile = "C:\\Users\\MATSIM\\Downloads\\NoPersonDataTrips.csv"; // Replace with your CSV file path
+		String csvFile = "C:\\Users\\Public\\Documents\\RStudio\\noSAVNLv1\\Nov28_Trips.csv"; // Replace with your CSV file path
 		String line;
 		String cvsSplitBy = ","; // CSV delimiter
 
@@ -35,23 +36,24 @@ public class CsvToMatsimPlan {
 				// Use comma as separator
 				String[] trip = line.split(cvsSplitBy);
 
-				String personId = trip[0].replace("\"", "");
-				String originActType = trip[1].replace("\"", "");
-				String destActType = trip[2].replace("\"", "");
-				double departureTime = convertTimeToSeconds(trip[3]);
-				double origLon = Double.parseDouble(trip[4]);
-				double origLat = Double.parseDouble(trip[5]);
+				String personId = trip[1].replace("\"", "");
+				String originActType = trip[2].replace("\"", "");
+				String destActType = trip[3].replace("\"", "");
+				double departureTime = convertTimeToSeconds(trip[4]);
+				double origLon = Double.parseDouble(trip[5]);
+				double origLat = Double.parseDouble(trip[6]);
 				DirectPosition2D transformedOrigin = CoordinateTransformer(origLat,origLon , "EPSG:4326", "EPSG:32654");
 				Coord origcoord = new Coord(transformedOrigin.getX(), transformedOrigin.getY());
-				double destLon = Double.parseDouble(trip[6]);
-				double destLat = Double.parseDouble(trip[7]);
+				double destLon = Double.parseDouble(trip[7]);
+				double destLat = Double.parseDouble(trip[8]);
 				DirectPosition2D transformedDest = CoordinateTransformer(destLat , destLon, "EPSG:4326", "EPSG:32654");
 				Coord destcoord = new Coord(transformedDest.getX(), transformedDest.getY());
-
+				String carAvail = trip[9].replace("\"", ""); // Assuming the car_avail is the 9th column (index 8)
 
 				// Create a person and plan
 				Person person = populationFactory.createPerson(Id.createPersonId(personId));
 				Plan plan = populationFactory.createPlan();
+				PersonUtils.setCarAvail(person, carAvail);
 
 				// Create and add origin activity
 				Activity originActivity = populationFactory.createActivityFromCoord(originActType, origcoord);
@@ -75,7 +77,7 @@ public class CsvToMatsimPlan {
         }
 
         // Write the population to a file
-		new PopulationWriter(population).write("C:\\Users\\MATSIM\\Downloads/plansv4.xml");
+		new PopulationWriter(population).write("contribs/SyntheticModel/test/plans.xml");
 	}
 
 	private static double convertTimeToSeconds(String time) {
@@ -87,14 +89,7 @@ public class CsvToMatsimPlan {
 		return hours * 3600 + minutes * 60 + seconds;
 	}
 
-	private static double convertCoord(String time) {
-		String cleanTime = time.replace("\"", "");
-		String[] parts = cleanTime.split(":");
-		int hours = Integer.parseInt(parts[0]);
-		int minutes = Integer.parseInt(parts[1]);
-		int seconds = Integer.parseInt(parts[2]);
-		return hours * 3600 + minutes * 60 + seconds;
-	}
+
 	private static DirectPosition2D CoordinateTransformer(double lon, double lat, String sourceCRSCode, String targetCRSCode) throws Exception {
 		CoordinateReferenceSystem sourceCRS = CRS.decode(sourceCRSCode);
 		CoordinateReferenceSystem targetCRS = CRS.decode(targetCRSCode);
@@ -104,8 +99,5 @@ public class CsvToMatsimPlan {
 		transform.transform(sourcePosition, transformedPosition);
 		return transformedPosition;
 	}
-
-
-
 
 }

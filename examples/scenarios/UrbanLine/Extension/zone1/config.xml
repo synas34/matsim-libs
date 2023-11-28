@@ -203,19 +203,20 @@
 			<!-- Operational Scheme, either of door2door, stopbased or serviceAreaBased. door2door by default -->
 			<param name="operationalScheme" value="door2door"/>
 			<!-- Maximum wait time in seconds before being picked up by a DRT vehicle. -->
-			<param name="maxWaitTime" value="600"/>
+			<param name="maxWaitTime" value="0"/>
+			<param name="rejectRequestIfMaxWaitOrTravelTimeViolated" value="true"/>
 			<!-- Alpha parameter for max travel time estimation. Used to increase the travel time estimation based on direct travel time. -->
 			<param name="maxTravelTimeAlpha" value="3.0"/>
 			<!-- Beta parameter for max travel time estimation. This value in seconds will be added to the estimated travel time. -->
 			<param name="maxTravelTimeBeta" value="1200"/>
-			<param name="vehiclesFile" value="drts50S4.xml"/>
+			<param name="vehiclesFile" value="drts5S4.xml"/>
 <!--			<param name="drtServiceAreaShapeFile" value="Shapefile/SecondSquare.shp"/>-->
 
 			<parameterset type="zonalSystem">
 				<!-- Specifies how the zones are generated. Here, it's based on a grid derived from the network. -->
 				<param name="zonesGeneration" value="GridFromNetwork"/>
 				<!-- The cell size of the grid in meters. This defines the size of each zone in the zonal system. -->
-				<param name="cellSize" value="50"/>
+				<param name="cellSize" value="500"/>
 <!--				<param name="zonesShapeFile" value="Shapefile/SecondSquare.shp"/>-->
 			</parameterset>
 

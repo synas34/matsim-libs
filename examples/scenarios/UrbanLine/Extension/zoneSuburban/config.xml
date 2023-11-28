@@ -273,7 +273,7 @@
 				<!-- Specifies how the zones are generated. Here, it's based on a grid derived from the network. -->
 				<param name="zonesGeneration" value="ShapeFile"/>
 				<!-- The cell size of the grid in meters. This defines the size of each zone in the zonal system. -->
-				<!--				<param name="cellSize" value="500"/>-->
+				<param name="cellSize" value="500"/>
 				<param name="zonesShapeFile" value="Shapefile/zoneUrban.shp"/>
 			</parameterset>
 
@@ -289,15 +289,15 @@
 
 			<parameterset type="drtfare">
 				<!-- Base fare for a DRT trip. -->
-				<param name="basefare" value="300.0"/>
+				<param name="basefare" value="100.0"/>
 				<!-- Daily subscription fee for using the DRT service. -->
 				<param name="dailySubscriptionFee" value="0.0"/>
 				<!-- Fare per meter of travel. -->
-				<param name="distanceFare_m" value="0.1"/>
+				<param name="distanceFare_m" value="0.0013"/>
 				<!-- Fare per hour of travel. -->
 				<param name="timeFare_h" value="57"/>
 				<!-- Minimum fare charged per DRT trip. -->
-				<param name="minFarePerTrip" value="150"/>
+				<param name="minFarePerTrip" value="0"/>
 			</parameterset>
 		</parameterset>
 	</module>
