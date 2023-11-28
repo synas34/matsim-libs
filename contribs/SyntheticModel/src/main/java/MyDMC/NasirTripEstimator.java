@@ -77,57 +77,32 @@ public class NasirTripEstimator extends AbstractTripRouterEstimator {
 
 	private double calculateUtilityForWorkActivity(String mode, double totalTravelTime, double totalTravelDistance, boolean carAlwaysAvailable) {
 		double utility = 0;
-		if (carAlwaysAvailable) {
 			// Mode Choice Constants Estimated from Odakyu Trips
 			switch (mode) {
 				case TransportMode.car: utility = -1.96 - 5.3 * totalTravelTime - 0.0013 * (totalTravelDistance * 10); break;
 				case TransportMode.pt: utility = -0.7 - 0.15 * totalTravelTime - 0.0013 * (totalTravelDistance * 2) ;break;
 				case TransportMode.walk: utility = -7.48 * totalTravelTime;break;
 				case TransportMode.bike: utility = -1.47 - 5.28 * totalTravelTime;break;			}
-		} else {
-			switch (mode) {
-				case TransportMode.car: utility = -1.96 - 5.3 * totalTravelTime - 0.0013 * (totalTravelDistance * 10); break;
-				case TransportMode.pt: utility = -0.7 - 0.15 * totalTravelTime - 0.0013 * (totalTravelDistance * 2) ; break;
-				case TransportMode.walk: utility = -7.48 * totalTravelTime; break;
-				case TransportMode.bike: utility = -1.47 - 5.28 * totalTravelTime;break;
-			}
-		}
 		return utility;
 	}
 	private double calculateStandardUtility(String mode, double totalTravelTime, double totalTravelDistance,  boolean carAlwaysAvailable) {
 		double utility = 0;
 		// Mode Choice Constants Estimated from Odakyu Trips
-		if (carAlwaysAvailable) {
-			switch (mode) {
-				case TransportMode.car:
-					utility = -1.96 - 5.3 * totalTravelTime - 0.0013 * (totalTravelDistance * 10);
-					break;
-				case TransportMode.pt:
-					utility = -1.7 - 5.15 * totalTravelTime - 0.0013 * (totalTravelDistance * 2) ;
-					break;
-				case TransportMode.walk:
-					utility = -7.48 * totalTravelTime;
-					break;
-				case TransportMode.bike:
-					utility = -1.47 - 5.28 * totalTravelTime;
-					break;
-			}
-		} else {
-			switch (mode) {
-				case TransportMode.car:
-					utility = -1.96 - 5.3 * totalTravelTime - 0.0013 * (totalTravelDistance * 10);
-					break;
-				case TransportMode.pt:
-					utility = -1.7 - 5.15 * totalTravelTime - 0.0013 * (totalTravelDistance * 2) ;
-					break;
-				case TransportMode.walk:
-					utility = -7.48 * totalTravelTime;
-					break;
-				case TransportMode.bike:
-					utility = -1.47 - 5.28 * totalTravelTime;
-					break;
-			}
+		switch (mode) {
+			case TransportMode.car:
+				utility = -1.96 - 5.3 * totalTravelTime - 0.0013 * (totalTravelDistance * 10);
+				break;
+			case TransportMode.pt:
+				utility = -0.7 - 5.15 * totalTravelTime - 0.0013 * (totalTravelDistance * 2) ;
+				break;
+			case TransportMode.walk:
+				utility = -7.48 * totalTravelTime;
+				break;
+			case TransportMode.bike:
+				utility = -1.47 - 5.28 * totalTravelTime;
+				break;
 		}
+
 
 		return utility;
 	}

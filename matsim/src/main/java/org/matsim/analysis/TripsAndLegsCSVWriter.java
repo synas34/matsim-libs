@@ -68,14 +68,14 @@ public class TripsAndLegsCSVWriter {
             "dep_time", "trav_time", "wait_time", "distance", "mode", "start_link",
             "start_x", "start_y", "end_link", "end_x", "end_y", "access_stop_id", "egress_stop_id", "transit_line", "transit_route", "vehicle_id"};
 
-    private final String[] TRIPSHEADER;
-    private final String[] LEGSHEADER;
-    private final String separator;
-    private final CustomTripsWriterExtension tripsWriterExtension;
-    private final Scenario scenario;
-    private final CustomLegsWriterExtension legsWriterExtension;
-    private final AnalysisMainModeIdentifier mainModeIdentifier;
-    private final CustomTimeWriter customTimeWriter;
+    private static String[] TRIPSHEADER;
+    private static String[] LEGSHEADER;
+    private static String separator;
+    private static CustomTripsWriterExtension tripsWriterExtension;
+    private static Scenario scenario;
+    private static CustomLegsWriterExtension legsWriterExtension;
+    private static AnalysisMainModeIdentifier mainModeIdentifier;
+    private static CustomTimeWriter customTimeWriter;
 
     private static final Logger log = LogManager.getLogger(TripsAndLegsCSVWriter.class);
 
@@ -92,7 +92,7 @@ public class TripsAndLegsCSVWriter {
         this.customTimeWriter = customTimeWriter;
     }
 
-    public void write(IdMap<Person, Plan> experiencedPlans, String tripsFilename, String legsFilename) {
+    public static void write(IdMap<Person, Plan> experiencedPlans, String tripsFilename, String legsFilename) {
         try (CSVPrinter tripsCSVprinter = new CSVPrinter(IOUtils.getBufferedWriter(tripsFilename),
                 CSVFormat.DEFAULT.withDelimiter(separator.charAt(0)).withHeader(TRIPSHEADER));
              CSVPrinter legsCSVprinter = new CSVPrinter(IOUtils.getBufferedWriter(legsFilename),
@@ -111,7 +111,7 @@ public class TripsAndLegsCSVWriter {
         }
     }
 
-    private Tuple<Iterable<?>, Iterable<?>> getPlanCSVRecords(Plan experiencedPlan, Id<Person> personId) {
+    private static Tuple<Iterable<?>, Iterable<?>> getPlanCSVRecords(Plan experiencedPlan, Id<Person> personId) {
         List<List<String>> tripRecords = new ArrayList<>();
         List<List<String>> legRecords = new ArrayList<>();
         Tuple<Iterable<?>, Iterable<?>> record = new Tuple<>(tripRecords, legRecords);
@@ -256,7 +256,7 @@ public class TripsAndLegsCSVWriter {
         return record;
     }
 
-    private List<String> getLegRecord(Leg leg, String personId, String tripId, Activity previousAct, Activity nextAct, TripStructureUtils.Trip trip) {
+    private static List<String> getLegRecord(Leg leg, String personId, String tripId, Activity previousAct, Activity nextAct, TripStructureUtils.Trip trip) {
         List<String> record = new ArrayList<>();
         record.add(personId);
         record.add(tripId);
@@ -324,7 +324,7 @@ public class TripsAndLegsCSVWriter {
         return record;
     }
 
-    private Coord getCoordFromActivity(Activity activity) {
+    private static Coord getCoordFromActivity(Activity activity) {
         if (activity.getCoord() != null) {
             return activity.getCoord();
         } else if (activity.getFacilityId() != null && scenario.getActivityFacilities().getFacilities().containsKey(activity.getFacilityId())) {
@@ -334,7 +334,7 @@ public class TripsAndLegsCSVWriter {
     }
 
     //this is the least desirable way
-    private Coord getCoordFromLink(Id<Link> linkId) {
+    private static Coord getCoordFromLink(Id<Link> linkId) {
         return scenario.getNetwork().getLinks().get(linkId).getToNode().getCoord();
     }
 

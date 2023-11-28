@@ -20,7 +20,7 @@ public final class DefaultAnalysisMainModeIdentifier implements AnalysisMainMode
 
 	@Inject
 	public DefaultAnalysisMainModeIdentifier() {
-		drtModes = Arrays.asList(TransportMode.drt, "drt1", "drt2", "drt_teleportation");
+		drtModes = Arrays.asList(TransportMode.drt, "drtA", "drtB", "drt_teleportation");
 
 		modeHierarchy.add(TransportMode.transit_walk); // !!!
 		modeHierarchy.add(TransportMode.walk);

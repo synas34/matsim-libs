@@ -57,7 +57,7 @@ public class PlansTransformer {
 				double x = Double.parseDouble(xValue);
 				double y = Double.parseDouble(yValue);
 
-			DirectPosition2D sourcePosition = new DirectPosition2D(y, x);
+			DirectPosition2D sourcePosition = new DirectPosition2D(x, y);
 			DirectPosition2D transformedPosition = new DirectPosition2D();
 			transform.transform(sourcePosition, transformedPosition);
 
@@ -89,6 +89,7 @@ public class PlansTransformer {
 		System.out.println("Transformation completed!");
 	}
 
+
 	public void transformStartingMode(String existingPlansPath, String outputPath) {
 		System.out.println("Starting transformation process...");
 
@@ -117,10 +118,10 @@ public class PlansTransformer {
 	}
 
 	public static void main(String[] args) throws Exception {
-		String existingPlansPath = "C:\\Users\\MATSIM\\IdeaProjects\\matsim-libs\\examples\\scenarios\\Odakyu1\\plansv3.xml";
-		String outputPath = "C:\\Users\\MATSIM\\IdeaProjects\\matsim-libs\\examples\\scenarios\\Odakyu1\\test\\plansv3.xml";
-		new PlansTransformer().transformStartingMode(existingPlansPath, outputPath);
+		String existingPlansPath = "C:\\Users\\MATSIM\\Downloads/output_plans.xml";
+		String outputPath = "C:\\Users\\MATSIM\\Downloads/plansv3.xml";
+//		new PlansTransformer().transformStartingMode(existingPlansPath, outputPath);
 
-		//new PlansTransformer().transformAndSavePlans(existingPlansPath, outputPath);
+		new PlansTransformer().transformAndSavePlans(existingPlansPath, outputPath);
 	}
 }

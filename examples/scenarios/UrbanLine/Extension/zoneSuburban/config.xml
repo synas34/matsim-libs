@@ -42,6 +42,7 @@
 		<param name="earlyDeparture" value="-0" />
 		<param name="performing" value="+60" />
 		<param name="waiting" value="-0" />
+		<param name="writeExperiencedPlans" value="true" />
 
 		<!-- MODE PARAMETERS -->
 		<!-- asc_rail_w   -841.1623 -->

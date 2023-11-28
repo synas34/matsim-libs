@@ -1,0 +1,111 @@
+package PlansCreator;
+
+import org.geotools.geometry.DirectPosition2D;
+import org.geotools.referencing.CRS;
+import org.matsim.api.core.v01.Coord;
+import org.matsim.api.core.v01.Id;
+import org.matsim.api.core.v01.Scenario;
+import org.matsim.api.core.v01.population.*;
+import org.matsim.core.config.Config;
+import org.matsim.core.config.ConfigUtils;
+import org.matsim.core.scenario.ScenarioUtils;
+import org.opengis.referencing.crs.CoordinateReferenceSystem;
+import org.opengis.referencing.operation.MathTransform;
+import org.opengis.referencing.operation.TransformException;
+
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
+
+public class CsvToMatsimPlan {
+
+	public static void main(String[] args) throws IOException {
+		String csvFile = "C:\\Users\\MATSIM\\Downloads\\NoPersonDataTrips.csv"; // Replace with your CSV file path
+		String line;
+		String cvsSplitBy = ","; // CSV delimiter
+
+		// Initialize MATSim Scenario and Population
+		Config config = ConfigUtils.createConfig();
+		Scenario scenario = ScenarioUtils.createScenario(config);
+		Population population = scenario.getPopulation();
+		PopulationFactory populationFactory = population.getFactory();
+
+		try (BufferedReader br = new BufferedReader(new FileReader(csvFile))) {
+			while ((line = br.readLine()) != null) {
+				// Use comma as separator
+				String[] trip = line.split(cvsSplitBy);
+
+				String personId = trip[0].replace("\"", "");
+				String originActType = trip[1].replace("\"", "");
+				String destActType = trip[2].replace("\"", "");
+				double departureTime = convertTimeToSeconds(trip[3]);
+				double origLon = Double.parseDouble(trip[4]);
+				double origLat = Double.parseDouble(trip[5]);
+				DirectPosition2D transformedOrigin = CoordinateTransformer(origLat,origLon , "EPSG:4326", "EPSG:32654");
+				Coord origcoord = new Coord(transformedOrigin.getX(), transformedOrigin.getY());
+				double destLon = Double.parseDouble(trip[6]);
+				double destLat = Double.parseDouble(trip[7]);
+				DirectPosition2D transformedDest = CoordinateTransformer(destLat , destLon, "EPSG:4326", "EPSG:32654");
+				Coord destcoord = new Coord(transformedDest.getX(), transformedDest.getY());
+
+
+				// Create a person and plan
+				Person person = populationFactory.createPerson(Id.createPersonId(personId));
+				Plan plan = populationFactory.createPlan();
+
+				// Create and add origin activity
+				Activity originActivity = populationFactory.createActivityFromCoord(originActType, origcoord);
+				originActivity.setEndTime(departureTime);
+				plan.addActivity(originActivity);
+
+				// Create and add leg
+				Leg leg = populationFactory.createLeg("pt");
+				plan.addLeg(leg);
+
+				// Create and add destination activity
+				Activity destinationActivity = populationFactory.createActivityFromCoord(destActType, destcoord);
+				plan.addActivity(destinationActivity);
+
+				// Add plan to person and person to population
+				person.addPlan(plan);
+				population.addPerson(person);
+			}
+		} catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+
+        // Write the population to a file
+		new PopulationWriter(population).write("C:\\Users\\MATSIM\\Downloads/plansv4.xml");
+	}
+
+	private static double convertTimeToSeconds(String time) {
+		String cleanTime = time.replace("\"", "");
+		String[] parts = cleanTime.split(":");
+		int hours = Integer.parseInt(parts[0]);
+		int minutes = Integer.parseInt(parts[1]);
+		int seconds = Integer.parseInt(parts[2]);
+		return hours * 3600 + minutes * 60 + seconds;
+	}
+
+	private static double convertCoord(String time) {
+		String cleanTime = time.replace("\"", "");
+		String[] parts = cleanTime.split(":");
+		int hours = Integer.parseInt(parts[0]);
+		int minutes = Integer.parseInt(parts[1]);
+		int seconds = Integer.parseInt(parts[2]);
+		return hours * 3600 + minutes * 60 + seconds;
+	}
+	private static DirectPosition2D CoordinateTransformer(double lon, double lat, String sourceCRSCode, String targetCRSCode) throws Exception {
+		CoordinateReferenceSystem sourceCRS = CRS.decode(sourceCRSCode);
+		CoordinateReferenceSystem targetCRS = CRS.decode(targetCRSCode);
+		MathTransform transform = CRS.findMathTransform(sourceCRS, targetCRS);
+		DirectPosition2D sourcePosition = new DirectPosition2D(lon, lat);
+		DirectPosition2D transformedPosition = new DirectPosition2D();
+		transform.transform(sourcePosition, transformedPosition);
+		return transformedPosition;
+	}
+
+
+
+
+}
