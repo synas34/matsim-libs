@@ -24,11 +24,11 @@ import org.matsim.examples.ExamplesUtils;
 
 public class RunRandomSelection {
 	static public void main(String[] args) {
-		String configURL = "examples/scenarios/Odakyu3/config.xml";
+		String configURL = "examples/scenarios/Odakyu3/configbi-levelpt.xml";
 
 		Config config = ConfigUtils.loadConfig(configURL,new DiscreteModeChoiceConfigGroup());
 		config.controler().setOverwriteFileSetting(OutputDirectoryHierarchy.OverwriteFileSetting.deleteDirectoryIfExists);
-		config.controler().setOutputDirectory("examples/scenarios/Odakyu3/output");
+		config.controler().setOutputDirectory("examples/scenarios/Odakyu3/test");
 
 		Scenario scenario = ScenarioUtils.loadScenario(config);
 

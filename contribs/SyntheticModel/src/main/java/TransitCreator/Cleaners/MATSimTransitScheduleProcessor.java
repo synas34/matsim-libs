@@ -64,13 +64,39 @@ public class MATSimTransitScheduleProcessor {
 			}
 		}
 	}
+	public void updateTransportModeBasedOnStopLinkRatio(String transitSchedulePath, String outputPath) throws Exception {
+		// Load existing transit schedule
+		Scenario scenario = ScenarioUtils.createScenario(ConfigUtils.createConfig());
+		TransitScheduleReader reader = new TransitScheduleReader(scenario);
+		reader.readFile(transitSchedulePath);
+		TransitSchedule transitSchedule = scenario.getTransitSchedule();
 
+		for (TransitLine line : transitSchedule.getTransitLines().values()) {
+			for (TransitRoute route : line.getRoutes().values()) {
+				int numberOfStops = route.getStops().size();
+				int numberOfLinks = route.getRoute().getLinkIds().size();
+
+				// Check the ratio and update transport mode
+				if (numberOfStops > 0 && numberOfLinks > 0) {
+					double ratio = (double) numberOfStops / numberOfLinks;
+					if (ratio < 0.5) {
+						route.setTransportMode("express");
+					} else {
+						route.setTransportMode("local");
+					}
+				}
+			}
+		}
+
+		// Write the updated transit schedule back to the output path
+		new TransitScheduleWriter(transitSchedule).writeFile(outputPath);
+	}
 
 	public static void main(String[] args) throws Exception {
-		String inputFilePath = "examples/scenarios/Odakyu2/updated_transitschedule.xml"; // Replace with your input file path
-		String outputFilePath = "examples/scenarios/Odakyu2/updated_transitschedule2.xml"; // Replace with your output file path
+		String inputFilePath = "examples/scenarios/Odakyu3/transitschedulebilevel.xml"; // Replace with your input file path
+		String outputFilePath = "examples/scenarios/Odakyu3/transitschedulebilevel2.xml"; // Replace with your output file path
 
-		new MATSimTransitScheduleProcessor().removeSaturdayHolidayDepartures(inputFilePath, outputFilePath);
+		new MATSimTransitScheduleProcessor().updateTransportModeBasedOnStopLinkRatio(inputFilePath, outputFilePath);
 
 
 	}

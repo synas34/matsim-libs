@@ -106,7 +106,7 @@ public class PlansTransformer {
 			for (Plan plan : person.getPlans()) {
 				for (PlanElement element : plan.getPlanElements()) {
 					if (element instanceof Leg leg) {
-						leg.setMode("pt");
+						leg.setMode("walk");
 					}
 				}
 			}
@@ -118,10 +118,10 @@ public class PlansTransformer {
 	}
 
 	public static void main(String[] args) throws Exception {
-		String existingPlansPath = "C:\\Users\\MATSIM\\Downloads/output_plans.xml";
-		String outputPath = "C:\\Users\\MATSIM\\Downloads/plansv3.xml";
-//		new PlansTransformer().transformStartingMode(existingPlansPath, outputPath);
+		String existingPlansPath = "examples/scenarios/Odakyu3/plansv5.xml";
+		String outputPath = "examples/scenarios/Odakyu3/plansv56.xml";
+		new PlansTransformer().transformStartingMode(existingPlansPath, outputPath);
 
-		new PlansTransformer().transformAndSavePlans(existingPlansPath, outputPath);
+//		new PlansTransformer().transformAndSavePlans(existingPlansPath, outputPath);
 	}
 }
