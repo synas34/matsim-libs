@@ -44,6 +44,7 @@ public final class TransportMode {
 	public static final String ship = "ship";
 	public static final String airplane = "airplane";
 	public static final String drtA = "drtA";
+	public static final String drtB = "drtB";
 
 	@Deprecated // use non_network_walk
 	public static final String access_walk = "non_network_walk" ;

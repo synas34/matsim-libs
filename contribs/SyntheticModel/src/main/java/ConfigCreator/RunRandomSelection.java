@@ -46,8 +46,6 @@ public class RunRandomSelection {
 		controller.run();
 
 
-
-
 //		final String runId = scenario.getConfig().controler().getRunId();
 //		System.out.println("run ID _" + runId);
 

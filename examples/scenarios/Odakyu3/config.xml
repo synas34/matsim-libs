@@ -13,14 +13,14 @@
 	</module>
 
 	<module name="plans">
-		<param name="inputPlansFile" value="plansv4.xml" />
+		<param name="inputPlansFile" value="plansv5.xml" />
 	</module>
 
 	<module name="controler">
 		<param name="outputDirectory" value="./output" />
 		<param name="overwriteFiles" value="deleteDirectoryIfExists" />
 		<param name="firstIteration" value="0" />
-		<param name="lastIteration" value="10" />
+		<param name="lastIteration" value="20" />
 		<param name="eventsFileFormat" value="xml" />
 		<param name="mobsim" value="qsim" />
 	</module>
@@ -298,17 +298,17 @@
 			<param name="mode" value="walk" />
 		</parameterset>
 
-		<parameterset type="intermodalAccessEgress" >
-			<!-- Initial distance around a person's origin or destination within which transit stops are looked for. -->
-			<param name="initialSearchRadius" value="1500.0" />
-			<!-- Maximum distance a person is willing to walk to/from a transit stop. -->
-			<param name="maxRadius" value="2500.0" />
-			<!-- If less than 2 transit stops are found within the initial search radius,
-                 this value is added to the initial radius iteratively until transit stops are found or maxRadius is reached. -->
-			<param name="searchExtensionRadius" value="500.0" />
-			<!-- mode of transport for this parameterset is walking. -->
-			<param name="mode" value="bike" />
-		</parameterset>
+<!--		<parameterset type="intermodalAccessEgress" >-->
+<!--			&lt;!&ndash; Initial distance around a person's origin or destination within which transit stops are looked for. &ndash;&gt;-->
+<!--			<param name="initialSearchRadius" value="1500.0" />-->
+<!--			&lt;!&ndash; Maximum distance a person is willing to walk to/from a transit stop. &ndash;&gt;-->
+<!--			<param name="maxRadius" value="2500.0" />-->
+<!--			&lt;!&ndash; If less than 2 transit stops are found within the initial search radius,-->
+<!--                 this value is added to the initial radius iteratively until transit stops are found or maxRadius is reached. &ndash;&gt;-->
+<!--			<param name="searchExtensionRadius" value="500.0" />-->
+<!--			&lt;!&ndash; mode of transport for this parameterset is walking. &ndash;&gt;-->
+<!--			<param name="mode" value="bike" />-->
+<!--		</parameterset>-->
 
 <!--		&lt;!&ndash; The configuration for DRT as access/egress mode. &ndash;&gt;-->
 <!--		<parameterset type="intermodalAccessEgress" >-->
