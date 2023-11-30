@@ -20,7 +20,7 @@
 		<param name="outputDirectory" value="./output" />
 		<param name="overwriteFiles" value="deleteDirectoryIfExists" />
 		<param name="firstIteration" value="0" />
-		<param name="lastIteration" value="20" />
+		<param name="lastIteration" value="17" />
 		<param name="eventsFileFormat" value="xml" />
 		<param name="mobsim" value="qsim" />
 	</module>
@@ -29,8 +29,8 @@
 		<!-- "start/endTime" of MobSim (00:00:00 == take earliest activity time/ run as long as active vehicles exist) -->
 		<param name="startTime" value="00:00:00" />
 		<param name="endTime" value="30:00:00" />
-		<param name="flowCapacityFactor" value="0.1" />
-		<param name="storageCapacityFactor" value="0.1" />
+		<param name="flowCapacityFactor" value="0.03" />
+		<param name="storageCapacityFactor" value="0.05" />
 		<param name = "snapshotperiod"	value = "00:00:00"/> <!-- 00:00:00 means NO snapshot writing -->
 	</module>
 
