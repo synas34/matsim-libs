@@ -33,14 +33,14 @@ public class RunMatsimUnique {
 
 		Config config;
 		if ( args==null || args.length==0 || args[0]==null ){
-			config = ConfigUtils.loadConfig( "examples/scenarios/UrbanLine/Extension/zoneSuburban/config.xml", new MultiModeDrtConfigGroup(),
+			config = ConfigUtils.loadConfig( "examples/scenarios/UrbanLine/Extension/zone1/config.xml", new MultiModeDrtConfigGroup(),
 				new DvrpConfigGroup(), new OTFVisConfigGroup(),new DiscreteModeChoiceConfigGroup());
 		} else {
 			config = ConfigUtils.loadConfig( args );
 		}
 
 		config.controler().setOverwriteFileSetting( OutputDirectoryHierarchy.OverwriteFileSetting.deleteDirectoryIfExists );
-		config.controler().setOutputDirectory("examples/scenarios/UrbanLine/Extension/zoneSuburban/outputTwoFleets");
+		config.controler().setOutputDirectory("examples/scenarios/UrbanLine/Extension/zone1/output5");
 		// possibly modify config here
 		config.qsim().setSimStarttimeInterpretation(QSimConfigGroup.StarttimeInterpretation.onlyUseStarttime);
 		config.qsim().setSimEndtimeInterpretation((QSimConfigGroup.EndtimeInterpretation.onlyUseEndtime));
