@@ -37,7 +37,7 @@ import org.matsim.core.utils.misc.ArgumentParser;
  * @author mrieser
  */
 public class NetworkCleaner {
-	
+
 	private void printUsage() {
 		System.out.println();
 		System.out.println("NetworkCleaner");
@@ -55,10 +55,10 @@ public class NetworkCleaner {
 		System.out.println("2008, matsim.org");
 		System.out.println();
 	}
-	
+
 	/** Runs the network cleaning algorithms over the network read in from <code>inputNetworkFile</code>
 	 * and writes the resulting ("cleaned") network to the specified file.
-	 * 
+	 *
 	 * @param inputNetworkFile filename of the network to be handled
 	 * @param outputNetworkFile filename where to write the cleaned network to
 	 */
@@ -71,11 +71,11 @@ public class NetworkCleaner {
 
 		new NetworkWriter(network).write(outputNetworkFile);
 	}
-	
+
 	/** Runs the network cleaning algorithms over the network read in from the argument list, and
 	 * writing the resulting network out to a file again
-	 * 
-	 * @param args <code>args[0]</code> filename of the network to be handled, 
+	 *
+	 * @param args <code>args[0]</code> filename of the network to be handled,
 	 * <code>args[1]</code> filename where to write the cleaned network to
 	 */
 	public void run(final String[] args) {
@@ -109,5 +109,6 @@ public class NetworkCleaner {
 	public static void main(String[] args) {
 		new NetworkCleaner().run(args);
 	}
+
 
 }

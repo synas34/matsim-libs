@@ -9,7 +9,7 @@
 	</module>
 
 	<module name="network">
-		<param name="inputNetworkFile" value="network.xml" />
+		<param name="inputNetworkFile" value="network2.xml" />
 	</module>
 
 	<module name="plans">
@@ -20,7 +20,7 @@
 		<param name="outputDirectory" value="./output" />
 		<param name="overwriteFiles" value="deleteDirectoryIfExists" />
 		<param name="firstIteration" value="0" />
-		<param name="lastIteration" value="17" />
+		<param name="lastIteration" value="100" />
 		<param name="eventsFileFormat" value="xml" />
 		<param name="mobsim" value="qsim" />
 	</module>
@@ -32,6 +32,11 @@
 		<param name="flowCapacityFactor" value="0.03" />
 		<param name="storageCapacityFactor" value="0.05" />
 		<param name = "snapshotperiod"	value = "00:00:00"/> <!-- 00:00:00 means NO snapshot writing -->
+	</module>
+
+	<module name="linkStats">
+		<param name="writeLinkStatsInterval" value="10" />
+		<param name="averageLinkStatsOverIterations" value="5" />
 	</module>
 
 	<module name="planCalcScore">
@@ -86,6 +91,14 @@
 			<param name="constant" value="-1.9" />
 			<param name="marginalUtilityOfTraveling_util_hr" value="-5.3" />
 			<param name="monetaryDistanceRate" value="-0.01" />
+		</parameterset>
+		<parameterset type="modeParams">
+			<param name="mode" value="ride"/>
+			<param name="constant" value="-3.3" />
+			<param name="marginalUtilityOfTraveling_util_hr" value="-6.14" />
+			<param name="monetaryDistanceRate" value="-0.05" />
+			<!-- [utils] daily utility constant. default=0 to be backwards compatible -->
+			<param name="dailyUtilityConstant" value="-0.0" />
 		</parameterset>
 		<parameterset type="modeParams">
 			<param name="mode" value="drt"/>
@@ -206,7 +219,7 @@
 
 	<module name="changeMode">
 		<!-- provide a comma-separated list of leg modes -->
-		<param name="modes" value="car,walk,pt,bike" />
+		<param name="modes" value="car,walk,pt,bike,ride" />
 		<!-- Defines whether car availability is considered be considered or not. An agent has no car only if it has no license, or never access to a car. Default: true -->
 		<param name="ignoreCarAvailability" value="false" />
 	</module>
@@ -312,7 +325,20 @@
 <!--			<param name="mode" value="bike" />-->
 <!--		</parameterset>-->
 
-<!--		&lt;!&ndash; The configuration for DRT as access/egress mode. &ndash;&gt;-->
+<!--		<parameterset type="intermodalAccessEgress" >-->
+<!--			&lt;!&ndash; Initial distance around a person's origin or destination within which transit stops are looked for. &ndash;&gt;-->
+<!--			<param name="initialSearchRadius" value="1500.0" />-->
+<!--			&lt;!&ndash; Maximum distance a person is willing to walk to/from a transit stop. &ndash;&gt;-->
+<!--			<param name="maxRadius" value="2500.0" />-->
+<!--			&lt;!&ndash; If less than 2 transit stops are found within the initial search radius,-->
+<!--                 this value is added to the initial radius iteratively until transit stops are found or maxRadius is reached. &ndash;&gt;-->
+<!--			<param name="searchExtensionRadius" value="500.0" />-->
+<!--			&lt;!&ndash; mode of transport for this parameterset is walking. &ndash;&gt;-->
+<!--			<param name="mode" value="ride" />-->
+<!--		</parameterset>-->
+
+
+		<!--		&lt;!&ndash; The configuration for DRT as access/egress mode. &ndash;&gt;-->
 <!--		<parameterset type="intermodalAccessEgress" >-->
 <!--			&lt;!&ndash; Initial distance around a person's origin or destination within which transit stops are looked for when using DRT. &ndash;&gt;-->
 <!--			<param name="initialSearchRadius" value="3000.0" />-->
@@ -367,7 +393,7 @@
 		<param name="tourEstimator" value="Cumulative" />
 
 		<parameterset type="modeAvailability:Car">
-			<param name="availableModes" value="pt, car, walk, bike" />
+			<param name="availableModes" value="pt, car, walk, ride, bike" />
 		</parameterset>
 
 	</module>
