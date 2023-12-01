@@ -49,11 +49,16 @@ public class CsvToMatsimPlan {
 				DirectPosition2D transformedDest = CoordinateTransformer(destLat , destLon, "EPSG:4326", "EPSG:32654");
 				Coord destcoord = new Coord(transformedDest.getX(), transformedDest.getY());
 				String carAvail = trip[9].replace("\"", ""); // Assuming the car_avail is the 9th column (index 8)
+				String bikeAvail = trip[10].replace("\"", "");
+				String license = trip[11].replace("\"", "");
 
 				// Create a person and plan
 				Person person = populationFactory.createPerson(Id.createPersonId(personId));
 				Plan plan = populationFactory.createPlan();
 				PersonUtils.setCarAvail(person, carAvail);
+				PersonUtils.setLicence(person, license);
+				person.getAttributes().putAttribute("hasBike",bikeAvail);
+//				person.getCustomAttributes().put("hasBike",bikeAvail);
 
 				// Create and add origin activity
 				Activity originActivity = populationFactory.createActivityFromCoord(originActType, origcoord);
