@@ -56,19 +56,20 @@ public class MATSimTransitNetworkProcessor {
 	}
 
 	private double determineNewSpeed(double currentSpeed) {
-		if (currentSpeed == 4.166666666666667) return 8.333333333333334;
-		if (currentSpeed == 8.333333333333334) return 11.11111111111111;
-		if (currentSpeed == 1.11111111111111) return 12.5;
-		if (currentSpeed == 12.5) return 13.88888888888889;
-		if (currentSpeed == 13.88888888888889) return 20;
-		if (currentSpeed == 22.22222222222222) return 25.0;
+		if (currentSpeed == 6.333333333333334 ) return 4.1111111111111;
+//		if (currentSpeed == 11.11111111111111) return 8.333333333333334;
+//		if (currentSpeed == 12.5) return 11.11111111111111;
+//		if (currentSpeed == 13.88888888888889) return 12.5;
+//		if (currentSpeed == 22.22222222222222) return 13.88888888888889;
+//		if (currentSpeed == 25) return 20.0;
+
 
 		return currentSpeed; // Default case, no change
 	}
 
 	public static void main(String[] args) throws Exception {
-		String inputFilePath = "examples/scenarios/Odakyu3/network2.xml"; // Replace with your input file path
-		String outputFilePath = "examples/scenarios/Odakyu3/network2.xml"; // Replace with your output file path
+		String inputFilePath = "examples/scenarios/Odakyu3/network3.xml"; // Replace with your input file path
+		String outputFilePath = "examples/scenarios/Odakyu3/network3.xml"; // Replace with your output file path
 
 		new MATSimTransitNetworkProcessor().updatePtLinkSpeed(inputFilePath, outputFilePath);
 

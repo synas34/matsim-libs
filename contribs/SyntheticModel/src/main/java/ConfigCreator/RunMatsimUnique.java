@@ -33,14 +33,14 @@ public class RunMatsimUnique {
 
 		Config config;
 		if ( args==null || args.length==0 || args[0]==null ){
-			config = ConfigUtils.loadConfig( "examples/scenarios/UrbanLine/Extension/zone1/config.xml", new MultiModeDrtConfigGroup(),
+			config = ConfigUtils.loadConfig( "examples/scenarios/Odakyu4/configSAV.xml", new MultiModeDrtConfigGroup(),
 				new DvrpConfigGroup(), new OTFVisConfigGroup(),new DiscreteModeChoiceConfigGroup());
 		} else {
 			config = ConfigUtils.loadConfig( args );
 		}
 
 		config.controler().setOverwriteFileSetting( OutputDirectoryHierarchy.OverwriteFileSetting.deleteDirectoryIfExists );
-		config.controler().setOutputDirectory("examples/scenarios/UrbanLine/Extension/zone1/output5");
+		config.controler().setOutputDirectory("examples/scenarios/Odakyu4/test");
 		// possibly modify config here
 		config.qsim().setSimStarttimeInterpretation(QSimConfigGroup.StarttimeInterpretation.onlyUseStarttime);
 		config.qsim().setSimEndtimeInterpretation((QSimConfigGroup.EndtimeInterpretation.onlyUseEndtime));
@@ -49,14 +49,9 @@ public class RunMatsimUnique {
 
 		// Add Discrete Choice Module
 		controller.addOverridingModule(new DiscreteModeChoiceModule());
-		controller.addOverridingModule(new NDMCExtension());
+		controller.addOverridingModule(new NasirSAVDMCExtension());
 		DiscreteModeChoiceConfigurator.configureAsModeChoiceInTheLoop(config);
 
-		// Add Tour Length Filter Module
-		TourLengthFilterConfigGroup filterConfig = new TourLengthFilterConfigGroup("tourFilter", "TourLengthFilter");
-		filterConfig.setMaximumLength(10);
-		config.addModule(filterConfig);
-		TourLengthFilter tourLengthFilter = new TourLengthFilter(filterConfig.getMaximumLength());
 
 		// Run the simulation
 		controller.run();

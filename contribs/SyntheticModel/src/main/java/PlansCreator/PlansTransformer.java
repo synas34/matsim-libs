@@ -118,8 +118,8 @@ public class PlansTransformer {
 	}
 
 	public static void main(String[] args) throws Exception {
-		String existingPlansPath = "examples/scenarios/Odakyu3/plansv5.xml";
-		String outputPath = "examples/scenarios/Odakyu3/plansv56.xml";
+		String existingPlansPath = "examples/scenarios/Odakyu4/plans.xml";
+		String outputPath = "examples/scenarios/Odakyu4/plansv5.xml";
 		new PlansTransformer().transformStartingMode(existingPlansPath, outputPath);
 
 //		new PlansTransformer().transformAndSavePlans(existingPlansPath, outputPath);
