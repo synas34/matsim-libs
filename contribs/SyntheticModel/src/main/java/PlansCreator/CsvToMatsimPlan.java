@@ -51,7 +51,10 @@ public class CsvToMatsimPlan {
 				String carAvail = trip[9].replace("\"", ""); // Assuming the car_avail is the 9th column (index 8)
 				String bikeAvail = trip[10].replace("\"", "");
 				String license = trip[11].replace("\"", "");
+				String choice = trip[12].replace("\"", "");
+				String access = trip[13].replace("\"", "");
 				String InScope = trip[14].replace("\"", "");
+				String EndScope = trip[15].replace("\"", "");
 
 				// Create a person and plan
 				Person person = populationFactory.createPerson(Id.createPersonId(personId));
@@ -60,7 +63,10 @@ public class CsvToMatsimPlan {
 				PersonUtils.setLicence(person, license);
 				person.getAttributes().putAttribute("hasBike",bikeAvail);
 //				person.getCustomAttributes().put("hasBike",bikeAvail);
+				person.getAttributes().putAttribute("MainModeChoice",choice);
+				person.getAttributes().putAttribute("AccessModeChoice",access);
 				person.getAttributes().putAttribute("InScope",InScope);
+				person.getAttributes().putAttribute("EndScope",EndScope);
 
 				// Create and add origin activity
 				Activity originActivity = populationFactory.createActivityFromCoord(originActType, origcoord);
