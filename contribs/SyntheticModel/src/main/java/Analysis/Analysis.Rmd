@@ -126,10 +126,10 @@ ggplot(combined_data, aes(x = Category, y = Count, fill = longest_distance_mode)
 result_df1 <- result_df %>%
     #  filter(SimulatedTimeMinutes <= 100) %>%
     # filter(ActualTimeMinutes <= 100) %>%
-   filter(longest_distance_mode == "pt" )
+   filter(longest_distance_mode == "drt" )
 
 # Fit a linear model
-lm_model <- lm(time.r ~ SimulatedTimeMinutes, data = result_df1)
+lm_model <- lm(time.s ~ SimulatedTimeMinutes, data = result_df1)
 
 # Calculate R-squared value
 lm_summary <- summary(lm_model)
@@ -139,7 +139,7 @@ r_squared <- lm_summary$r.squared
 mse <- mean(lm_model$residuals^2)
 
 # Plot with R-squared annotation
-ggplot(result_df1, aes(x = SimulatedTimeMinutes, y = time.r, color = modes)) +
+ggplot(result_df1, aes(x = SimulatedTimeMinutes, y = time.s, color = modes)) +
   geom_point(alpha = 0.5) +
   geom_abline(intercept = 0, slope = 1, color = "blue", linetype = "dashed") +
   geom_smooth(method = "lm", color = "red") +
@@ -164,7 +164,7 @@ result_df1 <- result_df1 %>%
 
 # Create a bar chart with fill based on "Category2"
 ggplot(result_df1, aes(x = modes   , fill = CHOICE_FAC)) +
-  geom_bar(position = "fill") +
+  geom_bar() +
   labs(
     x = "Category1",
     y = "Count",
