@@ -40,7 +40,7 @@ public class RunMatsimUnique {
 		}
 
 		config.controler().setOverwriteFileSetting( OutputDirectoryHierarchy.OverwriteFileSetting.deleteDirectoryIfExists );
-		config.controler().setOutputDirectory("examples/scenarios/Odakyu4/outputDec3SAVFMLMURBANEMPHASIS");
+		config.controler().setOutputDirectory("examples/scenarios/Odakyu4/test2");
 		// possibly modify config here
 		config.qsim().setSimStarttimeInterpretation(QSimConfigGroup.StarttimeInterpretation.onlyUseStarttime);
 		config.qsim().setSimEndtimeInterpretation((QSimConfigGroup.EndtimeInterpretation.onlyUseEndtime));
@@ -57,6 +57,31 @@ public class RunMatsimUnique {
 		controller.run();
 
 		Desktop.getDesktop().open(new File(config.controler().getOutputDirectory() + "/modestats.txt"));
+
+		if ( args==null || args.length==0 || args[0]==null ){
+			config = ConfigUtils.loadConfig( "examples/scenarios/Odakyu4/configSAVnoride2.xml", new MultiModeDrtConfigGroup(),
+				new DvrpConfigGroup(), new OTFVisConfigGroup(),new DiscreteModeChoiceConfigGroup());
+		} else {
+			config = ConfigUtils.loadConfig( args );
+		}
+
+		config.controler().setOverwriteFileSetting( OutputDirectoryHierarchy.OverwriteFileSetting.deleteDirectoryIfExists );
+		config.controler().setOutputDirectory("examples/scenarios/Odakyu4/test3");
+		// possibly modify config here
+		config.qsim().setSimStarttimeInterpretation(QSimConfigGroup.StarttimeInterpretation.onlyUseStarttime);
+		config.qsim().setSimEndtimeInterpretation((QSimConfigGroup.EndtimeInterpretation.onlyUseEndtime));
+
+		controller = DrtControlerCreator.createControler(config, false);
+
+		// Add Discrete Choice Module
+		controller.addOverridingModule(new DiscreteModeChoiceModule());
+		controller.addOverridingModule(new NasirSAVDMCExtension());
+		DiscreteModeChoiceConfigurator.configureAsModeChoiceInTheLoop(config);
+
+		// Run the simulation
+		controller.run();
+
+
 
 	}
 }
