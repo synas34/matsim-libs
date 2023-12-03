@@ -19,6 +19,8 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.Random;
+import java.util.Iterator;
 
 public class SAVVehiclefileCreator {
 	public static void addVehicles(List<DvrpVehicleSpecification> vehicles, int count, Id<Link> linkId, int size, int seats, double operationStartTime, double operationEndTime, Network network) {
@@ -34,6 +36,26 @@ public class SAVVehiclefileCreator {
 		}
 	}
 
+
+	public static void removeAndWriteReducedFile(List<DvrpVehicleSpecification> vehicles, String outputReducedFile, double proportionToRemove) {
+		int numToRemove = (int) (vehicles.size() * proportionToRemove);
+		if (numToRemove <= 0) {
+			return; // No vehicles to remove
+		}
+
+		Random random = new Random();
+		List<DvrpVehicleSpecification> vehiclesToRemove = new ArrayList<>();
+
+		for (int i = 0; i < numToRemove; i++) {
+			int indexToRemove = random.nextInt(vehicles.size());
+			vehiclesToRemove.add(vehicles.get(indexToRemove));
+			vehicles.remove(indexToRemove);
+		}
+
+		new FleetWriter(vehicles.stream()).write(outputReducedFile);
+	}
+
+
 	public static void main(String[] args) {
 		Scenario scenario = ScenarioUtils.createScenario(ConfigUtils.createConfig());
 		double operationStartTime = 0.;
@@ -42,9 +64,9 @@ public class SAVVehiclefileCreator {
 		int count = 0;
 		String xmlFilePath = "examples/scenarios/Odakyu4/network.xml";  // adjust path accordingly
 		String outputDirectory = "examples/scenarios/Odakyu4/output";
-		String drtsFile = outputDirectory + "drts" + count + "S" + seats + ".xml";
+		String drtsFile = outputDirectory + "drts" + count + "S" + seats + "HighFS.xml";
 
-		String csvFilePath = "examples/scenarios/Odakyu4/selected_line_idsDec3.csv"; // Replace with your CSV file path
+		String csvFilePath = "examples/scenarios/Odakyu4/selected_line_idHighFS.csv"; // Replace with your CSV file path
 		Set<String> uniqueLinkIds = new HashSet<>();
 		try (BufferedReader br = new BufferedReader(new FileReader(csvFilePath))) {
 			String line;
@@ -68,5 +90,10 @@ public class SAVVehiclefileCreator {
 
 		System.out.println(drtsFile);
 		new FleetWriter(vehicles.stream()).write(drtsFile);
+//
+
+//		double proportionToRemove = 0.50; // Adjust this proportion as needed (e.g., 0.5 for half)
+//		String reducedDrtsFile = outputDirectory + "reduced_drts" + proportionToRemove + "S" + seats + ".xml";
+//		removeAndWriteReducedFile(vehicles, reducedDrtsFile, proportionToRemove);
 	}
 }

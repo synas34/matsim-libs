@@ -20,7 +20,7 @@
 		<param name="outputDirectory" value="./output" />
 		<param name="overwriteFiles" value="deleteDirectoryIfExists" />
 		<param name="firstIteration" value="0" />
-		<param name="lastIteration" value="7" />
+		<param name="lastIteration" value="15" />
 		<param name="eventsFileFormat" value="xml" />
 		<param name="mobsim" value="qsim" />
 	</module>
@@ -314,14 +314,11 @@
 
 
 <!--		<parameterset type="intermodalAccessEgress" >-->
-<!--			&lt;!&ndash; Initial distance around a person's origin or destination within which transit stops are looked for. &ndash;&gt;-->
 <!--			<param name="initialSearchRadius" value="1500.0" />-->
-<!--			&lt;!&ndash; Maximum distance a person is willing to walk to/from a transit stop. &ndash;&gt;-->
 <!--			<param name="maxRadius" value="2500.0" />-->
-<!--			&lt;!&ndash; If less than 2 transit stops are found within the initial search radius,-->
-<!--                 this value is added to the initial radius iteratively until transit stops are found or maxRadius is reached. &ndash;&gt;-->
 <!--			<param name="searchExtensionRadius" value="500.0" />-->
-<!--			&lt;!&ndash; mode of transport for this parameterset is walking. &ndash;&gt;-->
+<!--			<param name="personFilterAttribute" value="hasBike" />-->
+<!--			<param name="personFilterValue" value="yes" />-->
 <!--			<param name="mode" value="bike" />-->
 <!--		</parameterset>-->
 

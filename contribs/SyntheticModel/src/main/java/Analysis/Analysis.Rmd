@@ -1,0 +1,221 @@
+---
+title: "Analysis"
+output: html_document
+date: "2023-11-25"
+---
+
+```{r}
+library(tidyverse)
+library(ggplot2)
+library(readr)
+library(broom)
+
+output_trips <- read_delim("output_trips.csv", 
+    delim = ";", escape_double = FALSE, trim_ws = TRUE)
+
+output_legs <- read_delim("output_legs.csv", 
+    delim = ";", escape_double = FALSE, trim_ws = TRUE)
+
+drt_customer_stats_drt <- read_delim("drt_customer_stats_drt.csv", 
+    delim = ";", escape_double = FALSE, trim_ws = TRUE)
+drt_detailed_distanceStats_drt <- read_delim("drt_detailed_distanceStats_drt.csv", 
+    delim = ";", escape_double = FALSE, trim_ws = TRUE)
+drt_vehicle_stats_drt <- read_delim("drt_vehicle_stats_drt.csv", 
+    delim = ";", escape_double = FALSE, trim_ws = TRUE)
+database <- read_csv("C:/Users/MATSIM/Downloads/database.csv")
+ValidationTrips <- read_csv("Nov26ValidationTrips.csv")
+database <- database[database$ind_tripID %in% ValidationTrips$ind_tripID, ]
+
+df <- select(database, ind_tripID,  id_ind, tripDurationMin, CHOICE, CHOICE_FAC, origin , destination, time.wk, time.s,time.in.traffic.s, time.bk, time, access_time.w, depart_time.w)
+df$time.r = (df$time + df$access_time.w + df$depart_time.w)/60
+df$time.wk = (df$time.wk)/60
+df$time.bk = (df$time.bk)/60
+df$time.s = (df$time.s)/60
+df$time.in.traffic.s = (df$time.in.traffic.s)/60
+
+df <- df %>%
+  rename(person  = ind_tripID)
+
+result_df <- inner_join(df, output_trips, by = "person")
+result_df <- result_df %>%
+  mutate(SimulatedTimeMinutes = as.integer(substr(trav_time, 1, 2)) * 60 + as.integer(substr(trav_time, 4, 5))) %>%
+  rename(ActualTimeMinutes  = tripDurationMin) 
+
+outliers <- result_df %>%
+    filter(ActualTimeMinutes >= 150 |SimulatedTimeMinutes >= 250)
+
+
+result_df <- result_df %>%
+    filter(ActualTimeMinutes <= 150) %>%
+    filter(SimulatedTimeMinutes <= 250)
+
+# result_df <- result_df %>%
+#     # filter(SimulatedTimeMinutes <= 100) %>%
+#     # filter(time.s <= 6000) %>%
+#     filter(longest_distance_mode == "car" )
+
+# 
+# result_df <- result_df %>%
+#     filter(ActualTimeMinutes <= 60) %>%
+#     filter(SimulatedTimeMinutes <= 60)
+
+# Plot actual vs simulated travel times with CHOICE_FAC coloring
+ggplot(result_df, aes(x = SimulatedTimeMinutes, y = ActualTimeMinutes, color = CHOICE_FAC)) +
+  geom_point(alpha = 0.5) +  # Set transparency to see overlapping points
+  geom_abline(intercept = 0, slope = 1, color = "blue", linetype = "dashed") +  # Line of equality
+  geom_smooth(method = "lm", color = "red") +  # Linear model fit line
+  labs(
+    x = "Simulated Travel Time",
+    y = "Actual Travel Time",
+    color = "Choice Factor"
+  ) +
+  ggtitle("Comparison of Actual vs Simulated Travel Times") +
+  theme_minimal() +
+  scale_fill_brewer(palette = "Set3") +
+  theme(
+    plot.title = element_text(hjust = 0.5),  # Center the plot title
+    legend.position = "bottom"  # Adjust legend position
+  )
+
+
+# Count the occurrences of each mode
+data_longest <- result_df %>%
+  group_by(longest_distance_mode) %>%
+  summarise(Count = n())
+data_choice <- result_df %>%
+  group_by(CHOICE_FAC) %>%
+  summarise(Count = n())
+data_choice$CHOICE_FAC[7] <- "other"
+
+data_longest$longest_distance_mode <- factor(data_longest$longest_distance_mode,
+                                             levels = c("walk", "bike", "car", "pt", "ride", "drt"))
+data_choice$CHOICE_FAC <- factor(data_choice$CHOICE_FAC,
+                                 levels = c("Walk", "Bike", "Car", "Train_walk", "Train_bike", "Train_car", "other"))
+# Rename levels to match: Match 'Train_*' with 'pt'
+levels(data_choice$CHOICE_FAC)[levels(data_choice$CHOICE_FAC) == "Train_walk"] <- "pt"
+levels(data_choice$CHOICE_FAC)[levels(data_choice$CHOICE_FAC) == "Train_bike"] <- "pt"
+levels(data_choice$CHOICE_FAC)[levels(data_choice$CHOICE_FAC) == "Train_car"] <- "pt"
+levels(data_choice$CHOICE_FAC)[levels(data_choice$CHOICE_FAC) == "Bike"] <- "bike"
+levels(data_choice$CHOICE_FAC)[levels(data_choice$CHOICE_FAC) == "Walk"] <- "walk"
+levels(data_choice$CHOICE_FAC)[levels(data_choice$CHOICE_FAC) == "Car"] <- "car"
+
+# Combine the two datasets
+combined_data <- bind_rows(
+  mutate(data_longest, Category = "SimulatedModeShare"),
+  mutate(data_choice, Category = "ActualModeShare"))
+combined_data$longest_distance_mode <- factor(combined_data$longest_distance_mode,
+                                             levels = c("bike", "car", "drt", "pt", "ride", "walk", "other"))
+# combined_data$longest_distance_mode[5] <- combined_data$CHOICE_FAC[5]
+combined_data$longest_distance_mode[6] <- combined_data$CHOICE_FAC[6]
+combined_data$longest_distance_mode[7] <- combined_data$CHOICE_FAC[7]
+combined_data$longest_distance_mode[8] <- combined_data$CHOICE_FAC[8]
+combined_data$longest_distance_mode[9] <- combined_data$CHOICE_FAC[9]
+combined_data$longest_distance_mode[10] <- combined_data$CHOICE_FAC[9]
+combined_data$longest_distance_mode[11] <- combined_data$CHOICE_FAC[11]
+combined_data$longest_distance_mode[12] <- combined_data$CHOICE_FAC[12]
+# combined_data$longest_distance_mode[13] <- combined_data$CHOICE_FAC[13]
+
+
+ggplot(combined_data, aes(x = Category, y = Count, fill = longest_distance_mode)) +
+  geom_bar(stat = "identity", position = position_dodge(width = 0.7)) +
+  scale_y_continuous(labels = scales::comma) +
+  labs(title = "Mode Share of Simulation vs Actual (SAV as Car Utility)", x = "Category", y = "Count") +
+  scale_fill_brewer(palette = "Set3") +
+  theme_minimal()
+
+result_df1 <- result_df %>%
+    #  filter(SimulatedTimeMinutes <= 100) %>%
+    # filter(ActualTimeMinutes <= 100) %>%
+   filter(longest_distance_mode == "pt" )
+
+# Fit a linear model
+lm_model <- lm(time.r ~ SimulatedTimeMinutes, data = result_df1)
+
+# Calculate R-squared value
+lm_summary <- summary(lm_model)
+r_squared <- lm_summary$r.squared
+
+# Calculate Mean Squared Error
+mse <- mean(lm_model$residuals^2)
+
+# Plot with R-squared annotation
+ggplot(result_df1, aes(x = SimulatedTimeMinutes, y = time.r, color = modes)) +
+  geom_point(alpha = 0.5) +
+  geom_abline(intercept = 0, slope = 1, color = "blue", linetype = "dashed") +
+  geom_smooth(method = "lm", color = "red") +
+  labs(
+    x = "Simulated Travel Time",
+    y = "Actual Travel Time",
+    color = "Choice Factor"
+  ) +
+  ggtitle("Comparison of Actual vs Simulated Travel Times") +
+  theme_minimal() +
+  scale_fill_brewer(palette = "Set3") +
+  theme(
+    plot.title = element_text(hjust = 0.5),
+    legend.position = "bottom"
+  ) +
+  annotate("text", x = Inf, y = Inf, hjust = 1.1, vjust = 2,
+           label = sprintf("R² = %.2f, MSE = %.2f", r_squared, mse),
+           color = "black", size = 3.5)
+
+result_df1 <- result_df1 %>%
+  mutate(CHOICE_FAC = if_else(is.na(CHOICE_FAC), "Other", CHOICE_FAC))
+
+# Create a bar chart with fill based on "Category2"
+ggplot(result_df1, aes(x = modes   , fill = CHOICE_FAC)) +
+  geom_bar(position = "fill") +
+  labs(
+    x = "Category1",
+    y = "Count",
+    title = "Access/Egress Modes for transit (SAV as Car utility)"
+  ) +
+  scale_fill_brewer(palette = "Set3") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+# Filter the data frame
+filtered_df <- result_df1 %>%
+  filter(SimulatedTimeMinutes <= 300)
+
+# Now create the boxplot with the filtered data
+ggplot(filtered_df, aes(x = modes, y = SimulatedTimeMinutes)) + 
+  geom_boxplot() +
+  labs(x = "Mode of Transport", y = "Travel Time (minutes)") +
+  theme_minimal()+
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+
+```
+
+
+
+
+```{r}
+# 
+# X100_drt_alightments_drt <- read_delim("30.drt_alightments_drt.csv", 
+#     delim = ";", escape_double = FALSE, trim_ws = TRUE)
+# X100_drt_boardings_drt <- read_delim("30.drt_boardings_drt.csv", 
+#     delim = ";", escape_double = FALSE, trim_ws = TRUE)
+# X100_drt_detours_drt <- read_delim("30.drt_detours_drt.csv", 
+#     delim = ";", escape_double = FALSE, trim_ws = TRUE)
+
+x20_vehicleDistanceStats_drt <- read_delim("20.vehicleDistanceStats_drt.csv", 
+    delim = ";", escape_double = FALSE, trim_ws = TRUE)
+x20_waitStats_drt <- read_delim("20.waitStats_drt.csv", 
+    delim = ";", escape_double = FALSE, trim_ws = TRUE)
+X20_waitTimeComparison_drt <- read_delim("20.waitTimeComparison_drt.csv", 
+    delim = ";", escape_double = FALSE, trim_ws = TRUE)
+x20_drt_idleVehiclesPerZoneXY <- read_delim("20.drt_idleVehiclesPerZoneXY.csv", 
+    delim = ";", escape_double = FALSE, trim_ws = TRUE)
+x20_waitStats_drt_zonal <- read_delim("20.waitStats_drt_zonal.csv", 
+    delim = ";", escape_double = FALSE, trim_ws = TRUE)
+x20_drt_legs_drt <- read_delim("20.drt_legs_drt.csv", 
+    delim = ";", escape_double = FALSE, trim_ws = TRUE)
+x20_drt_idleVehiclesPerZoneXY <- read_delim("20.drt_idleVehiclesPerZoneXY.csv", 
+    delim = ";", escape_double = FALSE, trim_ws = TRUE)
+```
+
+
+
+

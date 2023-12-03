@@ -106,7 +106,7 @@ public class PlansTransformer {
 			for (Plan plan : person.getPlans()) {
 				for (PlanElement element : plan.getPlanElements()) {
 					if (element instanceof Leg leg) {
-						leg.setMode("walk");
+						leg.setMode("pt");
 					}
 				}
 			}

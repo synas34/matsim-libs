@@ -219,7 +219,7 @@
 
 	<module name="changeMode">
 		<!-- provide a comma-separated list of leg modes -->
-		<param name="modes" value="car,walk,pt,bike,ride, drt" />
+		<param name="modes" value="car,walk,pt,bike, drt" />
 		<!-- Defines whether car availability is considered be considered or not. An agent has no car only if it has no license, or never access to a car. Default: true -->
 		<param name="ignoreCarAvailability" value="false" />
 	</module>
@@ -252,7 +252,7 @@
 			<!-- Beta parameter for max travel time estimation. This value in seconds will be added to the estimated travel time. -->
 			<param name="maxTravelTimeBeta" value="1200"/>
 			<param name="drtServiceAreaShapeFile" value="Shapefiles/EntireOdakyuCorridorUTM54N.shp"/>
-			<param name="vehiclesFile" value="outputreduced_drts0.5S4.xml"/>
+			<param name="vehiclesFile" value="outputdrts0S4URBANEMPHASIS.xml"/>
 
 			<parameterset type="zonalSystem">
 				<!-- Specifies how the zones are generated. Here, it's based on a grid derived from the network. -->
@@ -274,15 +274,15 @@
 
 			<parameterset type="drtfare">
 				<!-- Base fare for a DRT trip. -->
-				<param name="basefare" value="2.0"/>
+				<param name="basefare" value="0.0"/>
 				<!-- Daily subscription fee for using the DRT service. -->
 				<param name="dailySubscriptionFee" value="0.0"/>
 				<!-- Fare per meter of travel. -->
-				<param name="distanceFare_m" value="0.07"/>
+				<param name="distanceFare_m" value="0.05"/>
 				<!-- Fare per hour of travel. -->
 				<param name="timeFare_h" value="0"/>
 				<!-- Minimum fare charged per DRT trip. -->
-				<param name="minFarePerTrip" value="2.50"/>
+				<param name="minFarePerTrip" value="0.50"/>
 			</parameterset>
 		</parameterset>
 	</module>
@@ -290,7 +290,7 @@
 
 	<module name="swissRailRaptor" >
 		<!-- Sets whether intermodal access and egress modes are selected by least cost (default) or randomly chosen out of the available access / egress modes. -->
-		<param name="intermodalAccessEgressModeSelection" value="RandomSelectOneModePerRoutingRequestAndDirection" />
+		<param name="intermodalAccessEgressModeSelection" value="CalcLeastCostModePerStop" />
 		<param name="useIntermodalAccessEgress" value="true" />
 		<param name="useRangeQuery" value="true" />
 		<param name="scoringParameters" value="Default" />
@@ -341,6 +341,7 @@
 
 				<!-- The configuration for DRT as access/egress mode. -->
 		<parameterset type="intermodalAccessEgress" >
+			<param name="mode" value="drt" />
 			<!-- Initial distance around a person's origin or destination within which transit stops are looked for when using DRT. -->
 			<param name="initialSearchRadius" value="3000.0" />
 			<!-- If specific link IDs are to be used for DRT, they would be specified by an attribute.
@@ -348,13 +349,12 @@
 			<param name="linkIdAttribute" value="null" />
 			<!-- Maximum distance a person is willing to travel using DRT to/from a transit stop. -->
 			<param name="maxRadius" value="4000.0" />
-			<param name="mode" value="drt" />
 			<!-- Specific agent attributes  considered for DRT access/egress. -->
 			<param name="personFilterAttribute" value="null" />
 			<param name="personFilterValue" value="null" />
 			<!-- Similar to walking, if fewer transit stops are found,
                  this value is added to the initial radius until stops are found or maxRadius is reached. -->
-			<param name="searchExtensionRadius" value="1000.0" />
+			<param name="searchExtensionRadius" value="3000.0" />
 			<!-- If sharing of DRT vehicles is considered, this defines the maximum search radius for potential ride-sharing opportunities.
                  Here, it's set to infinity, meaning there's no limit. -->
 			<param name="shareTripSearchRadius" value="Infinity" />
@@ -365,8 +365,8 @@
 		</parameterset>
 
 		<parameterset type="rangeQuerySettings" >
-			<param name="maxEarlierDeparture_sec" value="1200" />
-			<param name="maxLaterDeparture_sec" value="1200" />
+			<param name="maxEarlierDeparture_sec" value="300" />
+			<param name="maxLaterDeparture_sec" value="300" />
 		</parameterset>
 		<parameterset type="routeSelector" >
 			<param name="betaDepartureTime" value="0.0" />
@@ -394,7 +394,7 @@
 		<param name="tourEstimator" value="Cumulative" />
 
 		<parameterset type="modeAvailability:Car">
-			<param name="availableModes" value="pt, car, walk, ride, bike, drt" />
+			<param name="availableModes" value="pt, car, walk, bike, drt" />
 		</parameterset>
 	</module>
 
