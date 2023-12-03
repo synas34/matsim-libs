@@ -21,7 +21,7 @@ import java.io.IOException;
 public class CsvToMatsimPlan {
 
 	public static void main(String[] args) throws IOException {
-		String csvFile = "C:\\Users\\Public\\Documents\\RStudio\\noSAVNLv1\\Nov28_Trips.csv"; // Replace with your CSV file path
+		String csvFile = "C:\\Users\\Public\\Documents\\RStudio\\noSAVNLv1\\Dec04_Trips.csv"; // Replace with your CSV file path
 		String line;
 		String cvsSplitBy = ","; // CSV delimiter
 
@@ -51,6 +51,7 @@ public class CsvToMatsimPlan {
 				String carAvail = trip[9].replace("\"", ""); // Assuming the car_avail is the 9th column (index 8)
 				String bikeAvail = trip[10].replace("\"", "");
 				String license = trip[11].replace("\"", "");
+				String InScope = trip[14].replace("\"", "");
 
 				// Create a person and plan
 				Person person = populationFactory.createPerson(Id.createPersonId(personId));
@@ -59,6 +60,7 @@ public class CsvToMatsimPlan {
 				PersonUtils.setLicence(person, license);
 				person.getAttributes().putAttribute("hasBike",bikeAvail);
 //				person.getCustomAttributes().put("hasBike",bikeAvail);
+				person.getAttributes().putAttribute("InScope",InScope);
 
 				// Create and add origin activity
 				Activity originActivity = populationFactory.createActivityFromCoord(originActType, origcoord);
