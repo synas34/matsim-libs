@@ -6,6 +6,6 @@ public class Dec4DMCExtension extends AbstractDiscreteModeChoiceExtension {
 	@Override
 	public void installExtension() {
 
-		bindTripEstimator("MyEstimatorName").to(Dec4TripEstimator.class);
+		bindTripEstimator("NasirEstimatorName").to(Dec4TripEstimator.class);
 	}
 }

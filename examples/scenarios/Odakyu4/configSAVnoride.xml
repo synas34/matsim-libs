@@ -13,7 +13,7 @@
 	</module>
 
 	<module name="plans">
-		<param name="inputPlansFile" value="plans.xml" />
+		<param name="inputPlansFile" value="plansv6.xml" />
 	</module>
 
 	<module name="controler">
@@ -252,7 +252,7 @@
 			<!-- Beta parameter for max travel time estimation. This value in seconds will be added to the estimated travel time. -->
 			<param name="maxTravelTimeBeta" value="1200"/>
 			<param name="drtServiceAreaShapeFile" value="Shapefiles/EntireOdakyuCorridorUTM54N.shp"/>
-			<param name="vehiclesFile" value="outputdrts0S4URBANEMPHASIS(3).xml"/>
+			<param name="vehiclesFile" value="outputdrts0S4(200).xml"/>
 
 			<parameterset type="zonalSystem">
 				<!-- Specifies how the zones are generated. Here, it's based on a grid derived from the network. -->
@@ -394,7 +394,7 @@
 		<param name="tourEstimator" value="Cumulative" />
 
 		<parameterset type="modeAvailability:Car">
-			<param name="availableModes" value="pt, car, walk, bike, drt" />
+			<param name="availableModes" value="pt, car, walk, bike,  drt" />
 		</parameterset>
 	</module>
 

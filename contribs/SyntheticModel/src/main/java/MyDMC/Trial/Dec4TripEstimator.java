@@ -50,6 +50,7 @@ public class Dec4TripEstimator extends AbstractTripRouterEstimator {
 		boolean carAlwaysAvailable = isCarAlwaysAvailable(person);
 		boolean nextActivityIsWork = isNextActivityWork(trip);
 			// Compute mode-specific utility based on car availability
+//		if (person.getAttributes().getAttribute("InScope") == "yes" & person.getAttributes().getAttribute("EndScope") == "yes") {
 			if (nextActivityIsWork) {
 				// Utility calculations when the next activity is work
 				utility = calculateUtilityForWorkActivity(mode, totalTravelTime, totalTravelDistance, carAlwaysAvailable);
@@ -57,6 +58,9 @@ public class Dec4TripEstimator extends AbstractTripRouterEstimator {
 				// Standard utility calculations
 				utility = calculateStandardUtility(mode, totalTravelTime, totalTravelDistance, carAlwaysAvailable);
 			}
+//		} else {
+//			utility = OutOfScopeActivity(mode, totalTravelTime, totalTravelDistance, carAlwaysAvailable);
+//		}
 		return utility;
 	}
 

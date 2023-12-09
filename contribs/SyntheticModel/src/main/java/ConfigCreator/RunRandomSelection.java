@@ -4,6 +4,7 @@ import Analysis.GzipExtractor;
 import MyDMC.NDMCExtension;
 import MyDMC.NasirDMCExtension;
 import MyDMC.PrimaryModeDMCExtension;
+import MyDMC.Trial.Dec4DMCExtension;
 import org.apache.commons.io.IOUtils;
 import org.hibernate.validator.constraints.URL;
 import org.matsim.analysis.CalcLinkStats;
@@ -28,11 +29,11 @@ import org.matsim.examples.ExamplesUtils;
 
 public class RunRandomSelection {
 	static public void main(String[] args) {
-		String configURL = "examples/scenarios/Odakyu4/configbi-level.xml";
+		String configURL = "examples/scenarios/Odakyu3/configbi-level.xml";
 
 		Config config = ConfigUtils.loadConfig(configURL,new DiscreteModeChoiceConfigGroup());
 		config.controler().setOverwriteFileSetting(OutputDirectoryHierarchy.OverwriteFileSetting.deleteDirectoryIfExists);
-		config.controler().setOutputDirectory("examples/scenarios/Odakyu4/test");
+		config.controler().setOutputDirectory("examples/scenarios/Odakyu3/test");
 
 		Scenario scenario = ScenarioUtils.loadScenario(config);
 

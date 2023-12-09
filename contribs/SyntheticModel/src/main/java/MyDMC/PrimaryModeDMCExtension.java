@@ -6,6 +6,6 @@ public class PrimaryModeDMCExtension extends AbstractDiscreteModeChoiceExtension
 	@Override
 	public void installExtension() {
 
-		bindTripEstimator("MyEstimatorName").to(PrimaryModeTripEstimator.class);
+		bindTripEstimator("NasirEstimatorName").to(PrimaryModeTripEstimator.class);
 	}
 }

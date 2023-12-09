@@ -9,11 +9,11 @@
 	</module>
 
 	<module name="network">
-		<param name="inputNetworkFile" value="network3.xml" />
+		<param name="inputNetworkFile" value="network2.xml" />
 	</module>
 
 	<module name="plans">
-		<param name="inputPlansFile" value="plansv5.xml" />
+		<param name="inputPlansFile" value="plansv6.xml" />
 	</module>
 
 	<module name="controler">

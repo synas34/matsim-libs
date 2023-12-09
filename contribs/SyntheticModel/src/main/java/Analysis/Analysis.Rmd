@@ -25,8 +25,24 @@ drt_vehicle_stats_drt <- read_delim("drt_vehicle_stats_drt.csv",
 database <- read_csv("C:/Users/MATSIM/Downloads/database.csv")
 ValidationTrips <- read_csv("Nov26ValidationTrips.csv")
 database <- database[database$ind_tripID %in% ValidationTrips$ind_tripID, ]
+# Update the "choice" column based on conditions
+Mesh <- read.csv("Mesh.csv")
+database <- merge(database, Mesh, by = "ind_tripID", all = FALSE)
 
-df <- select(database, ind_tripID,  id_ind, tripDurationMin, CHOICE, CHOICE_FAC, origin , destination, time.wk, time.s,time.in.traffic.s, time.bk, time, access_time.w, depart_time.w)
+database <- database %>% 
+  mutate(UrbanIndex = case_when(
+    PC1 > 4.91 ~ "CBD",
+    PC1 < 4.91 & PC1 > 1.57 ~ "Urban",
+    PC1 < 1.57 & PC1 > -2.35 ~ "Suburban",
+    PC1 < -2.35  ~ "Rural",
+    TRUE ~ NA
+  ))
+
+database$CHOICE_FAC <- ifelse(database$repMode_type3_fac == "bus", "bus", 
+                    ifelse(database$repMode_type3_fac == "car" & database$car_driver_fac == "passenger", "ride", database$CHOICE_FAC))
+
+
+df <- select(database, ind_tripID,  id_ind, tripDurationMin, CHOICE, CHOICE_FAC, origin , destination, time.wk, time.s,time.in.traffic.s, time.bk, time, access_time.w, depart_time.w, UrbanIndex)
 df$time.r = (df$time + df$access_time.w + df$depart_time.w)/60
 df$time.wk = (df$time.wk)/60
 df$time.bk = (df$time.bk)/60
@@ -47,8 +63,11 @@ outliers <- result_df %>%
 
 result_df <- result_df %>%
     filter(ActualTimeMinutes <= 150) %>%
-    filter(SimulatedTimeMinutes <= 250)
-
+    filter(SimulatedTimeMinutes <= 250) %>%
+  mutate(longest_distance_mode = case_when(
+    longest_distance_mode == NA ~ "other",
+    TRUE ~ longest_distance_mode
+  ))
 # result_df <- result_df %>%
 #     # filter(SimulatedTimeMinutes <= 100) %>%
 #     # filter(time.s <= 6000) %>%
@@ -85,12 +104,14 @@ data_longest <- result_df %>%
 data_choice <- result_df %>%
   group_by(CHOICE_FAC) %>%
   summarise(Count = n())
-data_choice$CHOICE_FAC[7] <- "other"
+data_choice$CHOICE_FAC[9] <- "other"
 
 data_longest$longest_distance_mode <- factor(data_longest$longest_distance_mode,
                                              levels = c("walk", "bike", "car", "pt", "ride", "drt"))
+# data_longest$longest_distance_mode <- factor(data_longest$longest_distance_mode,
+#                                              levels = c("walk", "bike", "car", "pt", "ride"))
 data_choice$CHOICE_FAC <- factor(data_choice$CHOICE_FAC,
-                                 levels = c("Walk", "Bike", "Car", "Train_walk", "Train_bike", "Train_car", "other"))
+                                 levels = c("Walk", "Bike", "Car", "Train_walk", "Train_bike", "Train_car", "ride", "bus","other"))
 # Rename levels to match: Match 'Train_*' with 'pt'
 levels(data_choice$CHOICE_FAC)[levels(data_choice$CHOICE_FAC) == "Train_walk"] <- "pt"
 levels(data_choice$CHOICE_FAC)[levels(data_choice$CHOICE_FAC) == "Train_bike"] <- "pt"
@@ -104,32 +125,89 @@ combined_data <- bind_rows(
   mutate(data_longest, Category = "SimulatedModeShare"),
   mutate(data_choice, Category = "ActualModeShare"))
 combined_data$longest_distance_mode <- factor(combined_data$longest_distance_mode,
-                                             levels = c("bike", "car", "drt", "pt", "ride", "walk", "other"))
+                                             levels = c("bike", "car", "drt", "pt", "ride", "walk", "other", "bus"))
+# combined_data$longest_distance_mode <- factor(combined_data$longest_distance_mode,
+#                                              levels = c("bike", "car", "pt", "ride", "walk", "other", "bus"))
 # combined_data$longest_distance_mode[5] <- combined_data$CHOICE_FAC[5]
-combined_data$longest_distance_mode[6] <- combined_data$CHOICE_FAC[6]
+# combined_data$longest_distance_mode[6] <- combined_data$CHOICE_FAC[6]
 combined_data$longest_distance_mode[7] <- combined_data$CHOICE_FAC[7]
 combined_data$longest_distance_mode[8] <- combined_data$CHOICE_FAC[8]
 combined_data$longest_distance_mode[9] <- combined_data$CHOICE_FAC[9]
 combined_data$longest_distance_mode[10] <- combined_data$CHOICE_FAC[9]
 combined_data$longest_distance_mode[11] <- combined_data$CHOICE_FAC[11]
 combined_data$longest_distance_mode[12] <- combined_data$CHOICE_FAC[12]
-# combined_data$longest_distance_mode[13] <- combined_data$CHOICE_FAC[13]
+combined_data$longest_distance_mode[13] <- combined_data$CHOICE_FAC[13]
+combined_data$longest_distance_mode[14] <- combined_data$CHOICE_FAC[14]
+combined_data$longest_distance_mode[15] <- combined_data$CHOICE_FAC[15]
+# combined_data$Count[2] <- 6795
 
+combined_data <- subset(combined_data, !(rownames(combined_data) == 15))
+combined_data <- subset(combined_data, !(rownames(combined_data) == 13))
 
 ggplot(combined_data, aes(x = Category, y = Count, fill = longest_distance_mode)) +
-  geom_bar(stat = "identity", position = position_dodge(width = 0.7)) +
+  geom_bar(stat = "identity", position = "fill") +
   scale_y_continuous(labels = scales::comma) +
-  labs(title = "Mode Share of Simulation vs Actual (SAV as Car Utility)", x = "Category", y = "Count") +
+  labs(title = "Actual Mode Share vs Simulated Mode Share(SAV as Car Utility)", x = "Category", y = "Count") +
   scale_fill_brewer(palette = "Set3") +
   theme_minimal()
+
+order_longest_distance_mode <- c("walk", "bike", "ride", "car", "pt", "bus", "drt", "other")
+order_CHOICE_FAC <- c("Walk", "Bike", "ride", "Car", "Train_walk", "Train_bike", "Train_car", "bus","other")
+
+result_df$longest_distance_mode <- factor(
+  result_df$longest_distance_mode,
+  levels = order_longest_distance_mode
+)
+
+result_df$CHOICE_FAC <- factor(
+  result_df$CHOICE_FAC,
+  levels = order_CHOICE_FAC
+)
+
+result_df <- result_df %>%
+  filter(!is.na(CHOICE_FAC)) %>%
+  filter(!is.na(UrbanIndex)) %>%
+  mutate(UrbanIndex = factor(UrbanIndex, levels = c("CBD", "Urban", "Suburban", "Rural")))
+
+ggplot(result_df, aes(x = UrbanIndex, fill = CHOICE_FAC)) +
+  geom_bar(position = "fill") +
+  labs(title = "Actual Mode Share vs Simulated Mode Share (SAV as Car Utility)", 
+       x = "Category", y = "Proportion") +
+  scale_fill_brewer(palette = "Set1") +
+  theme_minimal()
+ggplot(result_df %>% filter(!is.na(longest_distance_mode)), aes(x = UrbanIndex, fill = longest_distance_mode)) +
+  geom_bar(position = "fill") +
+  labs(title = "Actual Mode Share vs Simulated Mode Share (SAV as Car Utility)", x = "Category", y = "Proportion") +
+  scale_fill_brewer(palette = "Set3") +
+  theme_minimal()
+ggplot(result_df %>% filter(!is.na(longest_distance_mode)), aes(x = UrbanIndex, y = euclidean_distance, fill = longest_distance_mode)) +
+  geom_bar(stat = "identity") +
+  scale_y_continuous(labels = scales::comma) +
+  labs(title = "Actual Mode Share vs Simulated Mode Share(SAV as Car Utility)", x = "Category", y = "Count") +
+  scale_fill_brewer(palette = "Set3") +
+  theme_minimal()
+ggplot(result_df , aes(x = UrbanIndex, y = euclidean_distance, fill = CHOICE_FAC)) +
+  geom_bar(stat = "identity") +
+  scale_y_continuous(labels = scales::comma) +
+  labs(title = "Actual Mode Share vs Simulated Mode Share(SAV as Car Utility)", x = "Category", y = "Count") +
+  scale_fill_brewer(palette = "Set1") +
+  theme_minimal()
+
 
 result_df1 <- result_df %>%
     #  filter(SimulatedTimeMinutes <= 100) %>%
     # filter(ActualTimeMinutes <= 100) %>%
    filter(longest_distance_mode == "drt" )
 
+ggplot(result_df1, aes(x = UrbanIndex, y = euclidean_distance, fill = longest_distance_mode)) +
+  geom_bar(stat = "identity") +
+  scale_y_continuous(labels = scales::comma) +
+  labs(title = "Actual Mode Share vs Simulated Mode Share(SAV as Car Utility)", x = "Category", y = "Count") +
+  scale_fill_brewer(palette = "Set1") +
+  theme_minimal()
+
 # Fit a linear model
-lm_model <- lm(time.s ~ SimulatedTimeMinutes, data = result_df1)
+lm_model <- lm(time.r ~ SimulatedTimeMinutes, data = result_df1)
 
 # Calculate R-squared value
 lm_summary <- summary(lm_model)
@@ -139,7 +217,7 @@ r_squared <- lm_summary$r.squared
 mse <- mean(lm_model$residuals^2)
 
 # Plot with R-squared annotation
-ggplot(result_df1, aes(x = SimulatedTimeMinutes, y = time.s, color = modes)) +
+ggplot(result_df1, aes(x = SimulatedTimeMinutes, y = time.r, color = modes)) +
   geom_point(alpha = 0.5) +
   geom_abline(intercept = 0, slope = 1, color = "blue", linetype = "dashed") +
   geom_smooth(method = "lm", color = "red") +
@@ -185,6 +263,46 @@ ggplot(filtered_df, aes(x = modes, y = SimulatedTimeMinutes)) +
   theme_minimal()+
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
 
+accessdrttrps <- result_df %>%
+  filter(modes == "walk-drt-walk-pt-walk" | modes == "walk-drt-walk-pt-walk-pt-walk" | modes == "walk-pt-walk" | modes == "walk-pt-walk" | modes == "walk-pt-walk-pt-walk" )
+
+
+ggplot(accessdrttrps, aes(x = modes   , fill = CHOICE_FAC)) +
+  geom_bar(position = "fill") +
+  labs(
+    x = "Category1",
+    y = "Count",
+    title = "Access/Egress Modes for transit (SAV as Car utility)"
+  ) +
+  scale_fill_brewer(palette = "Set3") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+
+ggplot(accessdrttrps, aes(x = UrbanIndex, y = time.wk, fill = CHOICE_FAC)) +
+  geom_bar(stat = "identity", position = "fill") +
+  scale_y_continuous(labels = scales::comma) +
+  labs(title = "Actual Mode Share vs Simulated Mode Share(SAV as Car Utility)", x = "Category", y = "Count") +
+  scale_fill_brewer(palette = "Set1") +
+  theme_minimal()
+ggplot(accessdrttrps, aes(x = UrbanIndex, y = time.wk, fill = longest_distance_mode)) +
+  geom_bar(stat = "identity", position = "fill") +
+  scale_y_continuous(labels = scales::comma) +
+  labs(title = "Actual Mode Share vs Simulated Mode Share(SAV as Car Utility)", x = "Category", y = "Count") +
+  scale_fill_brewer(palette = "Set3") +
+  theme_minimal()
+ggplot(accessdrttrps, aes(x = UrbanIndex, y = euclidean_distance, fill = longest_distance_mode)) +
+  geom_bar(stat = "identity") +
+  scale_y_continuous(labels = scales::comma) +
+  labs(title = "Actual Mode Share vs Simulated Mode Share(SAV as Car Utility)", x = "Category", y = "Count") +
+  scale_fill_brewer(palette = "Set3") +
+  theme_minimal()
+ggplot(accessdrttrps, aes(x = UrbanIndex, y = euclidean_distance, fill = CHOICE_FAC)) +
+  geom_bar(stat = "identity") +
+  scale_y_continuous(labels = scales::comma) +
+  labs(title = "Actual Mode Share vs Simulated Mode Share(SAV as Car Utility)", x = "Category", y = "Count") +
+  scale_fill_brewer(palette = "Set1") +
+  theme_minimal()
 
 ```
 
@@ -214,6 +332,9 @@ x20_drt_legs_drt <- read_delim("20.drt_legs_drt.csv",
     delim = ";", escape_double = FALSE, trim_ws = TRUE)
 x20_drt_idleVehiclesPerZoneXY <- read_delim("20.drt_idleVehiclesPerZoneXY.csv", 
     delim = ";", escape_double = FALSE, trim_ws = TRUE)
+
+drtdemand <- sum(x20_waitStats_drt_zonal$nRequests)
+
 ```
 
 
