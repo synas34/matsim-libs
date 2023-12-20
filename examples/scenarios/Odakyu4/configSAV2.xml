@@ -20,7 +20,7 @@
 		<param name="outputDirectory" value="./output" />
 		<param name="overwriteFiles" value="deleteDirectoryIfExists" />
 		<param name="firstIteration" value="0" />
-		<param name="lastIteration" value="25" />
+		<param name="lastIteration" value="2" />
 		<param name="eventsFileFormat" value="xml" />
 		<param name="mobsim" value="qsim" />
 	</module>
@@ -124,8 +124,9 @@
 			<param name="monetaryDistanceRate" value="0.0" />
 		</parameterset>
 		<parameterset type="modeParams">
-			<param name="constant" value="-1.5" />
-			<param name="marginalUtilityOfTraveling_util_hr" value="-5.8" />
+			<param name="constant" value="-100.5" />
+			<param name="marginalUtilityOfDistance_util_m" value="-50.8" />
+			<param name="monetaryDistanceRate" value="-30.03" />
 			<param name="mode" value="bike" />
 			<param name="monetaryDistanceRate" value="0.0" />
 		</parameterset>
@@ -252,7 +253,7 @@
 			<!-- Beta parameter for max travel time estimation. This value in seconds will be added to the estimated travel time. -->
 			<param name="maxTravelTimeBeta" value="1200"/>
 			<param name="drtServiceAreaShapeFile" value="Shapefiles/EntireOdakyuCorridorUTM54N.shp"/>
-			<param name="vehiclesFile" value="outputdrts0S4(200).xml"/>
+			<param name="vehiclesFile" value="outputdrts0S1(200).xml"/>
 
 			<parameterset type="zonalSystem">
 				<!-- Specifies how the zones are generated. Here, it's based on a grid derived from the network. -->
@@ -291,9 +292,9 @@
 	<module name="swissRailRaptor" >
 		<!-- Sets whether intermodal access and egress modes are selected by least cost (default) or randomly chosen out of the available access / egress modes. -->
 		<param name="intermodalAccessEgressModeSelection" value="CalcLeastCostModePerStop" />
-		<param name="useIntermodalAccessEgress" value="false" />
+		<param name="useIntermodalAccessEgress" value="true" />
 		<param name="useRangeQuery" value="true" />
-		<param name="scoringParameters" value="Default" />
+		<param name="scoringParameters" value="Individual" />
 		<param name="transferPenaltyBaseCost" value="200" />
 		<param name="transferPenaltyCostPerTravelTimeHour" value="200" />
 		<param name="transferPenaltyMaxCost" value="700" />
