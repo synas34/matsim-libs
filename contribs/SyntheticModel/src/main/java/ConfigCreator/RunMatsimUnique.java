@@ -52,14 +52,6 @@ public class RunMatsimUnique {
 		config.qsim().setSimStarttimeInterpretation(QSimConfigGroup.StarttimeInterpretation.onlyUseStarttime);
 		config.qsim().setSimEndtimeInterpretation((QSimConfigGroup.EndtimeInterpretation.onlyUseEndtime));
 
-		// Create an instance of RaptorParameters
-		SwissRailRaptorConfigGroup raptorConfig = (SwissRailRaptorConfigGroup) config.getModules().get("raptor");
-		RaptorParameters raptorParameters = new RaptorParameters(raptorConfig);
-
-		// Set the marginal utility of travel time for different travel modes
-		raptorParameters.setMarginalUtilityOfTravelTime_utl_s("bike", -50000000);
-
-
 		Controler controller = DrtControlerCreator.createControler(config, false);
 
 		// Add Discrete Choice Module

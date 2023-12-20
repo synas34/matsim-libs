@@ -32,11 +32,13 @@ public class DefaultRaptorIntermodalAccessEgress implements RaptorIntermodalAcce
                 OptionalTime travelTime = ((Leg) pe).getTravelTime();
                 if (travelTime.isDefined()) {
                     tTime += travelTime.seconds();
-					if (mode.equals("bike")) {
-						disutility += travelTime.seconds() * (-params.getMarginalUtilityOfTravelTime_utl_s(mode) * 40.5);
-					} else {
-						disutility += travelTime.seconds() * -params.getMarginalUtilityOfTravelTime_utl_s(mode);
-					}                }
+					disutility += travelTime.seconds() * -params.getMarginalUtilityOfTravelTime_utl_s(mode);
+//					if (mode.equals("transit_walk")) {
+//						disutility += travelTime.seconds() * (-params.getMarginalUtilityOfTravelTime_utl_s(mode) * 40.5);
+//					} else {
+//						disutility += travelTime.seconds() * -params.getMarginalUtilityOfTravelTime_utl_s(mode);
+//					}
+				}
             }
             else if (pe instanceof Activity) {
             	if (((Activity) pe).getMaximumDuration().isDefined()) {
