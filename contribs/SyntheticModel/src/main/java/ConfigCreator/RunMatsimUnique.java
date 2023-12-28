@@ -2,8 +2,6 @@ package ConfigCreator;
 
 import MyDMC.*;
 import MyDMC.Trial.SAVasRideDMCExtension;
-import ch.sbb.matsim.config.SwissRailRaptorConfigGroup;
-import ch.sbb.matsim.routing.pt.raptor.RaptorParameters;
 import org.matsim.api.core.v01.Scenario;
 import org.matsim.contrib.drt.extension.preplanned.run.PreplannedDrtModeModule;
 import org.matsim.contrib.drt.run.*;
@@ -29,25 +27,21 @@ import org.matsim.pt.transitSchedule.api.TransitSchedule;
 import java.awt.Desktop;
 import java.io.File;
 import java.io.IOException;
-import java.util.TreeMap;
 
 
 public class RunMatsimUnique {
 
 
-	public static void main(String[] args) throws IOException {
+	public static void RunSAVSimulation (String configpath, String outputpath, AbstractDiscreteModeChoiceExtension DMCExtension) throws IOException {
+
 
 		Config config;
-		if ( args==null || args.length==0 || args[0]==null ){
-			config = ConfigUtils.loadConfig( "examples/scenarios/Odakyu4/configSAV2.xml", new MultiModeDrtConfigGroup(),
-				new DvrpConfigGroup(), new OTFVisConfigGroup(),new DiscreteModeChoiceConfigGroup(), new SwissRailRaptorConfigGroup());
-		} else {
-			config = ConfigUtils.loadConfig( args );
-		}
+			config = ConfigUtils.loadConfig( configpath, new MultiModeDrtConfigGroup(),
+				new DvrpConfigGroup(), new OTFVisConfigGroup(),new DiscreteModeChoiceConfigGroup());
 
 
 		config.controler().setOverwriteFileSetting( OutputDirectoryHierarchy.OverwriteFileSetting.deleteDirectoryIfExists );
-		config.controler().setOutputDirectory("examples/scenarios/Odakyu4/outputDec14(200)NewUtil-1seatSAV");
+		config.controler().setOutputDirectory(outputpath);
 		// possibly modify config here
 		config.qsim().setSimStarttimeInterpretation(QSimConfigGroup.StarttimeInterpretation.onlyUseStarttime);
 		config.qsim().setSimEndtimeInterpretation((QSimConfigGroup.EndtimeInterpretation.onlyUseEndtime));
@@ -56,13 +50,75 @@ public class RunMatsimUnique {
 
 		// Add Discrete Choice Module
 		controller.addOverridingModule(new DiscreteModeChoiceModule());
-		controller.addOverridingModule(new NasirSAVDMCExtension());
+		controller.addOverridingModule(DMCExtension);
 		DiscreteModeChoiceConfigurator.configureAsModeChoiceInTheLoop(config);
 
 
 		// Run the simulation
 		controller.run();
+
 		Desktop.getDesktop().open(new File(config.controler().getOutputDirectory() + "/modestats.txt"));
+
+
+
+	}
+
+	public static void main(String[] args) throws IOException {
+
+		Config config;
+		if ( args==null || args.length==0 || args[0]==null ){
+			config = ConfigUtils.loadConfig( "examples/scenarios/Odakyu4/configSAV2.xml", new MultiModeDrtConfigGroup(),
+				new DvrpConfigGroup(), new OTFVisConfigGroup(),new DiscreteModeChoiceConfigGroup());
+		} else {
+			config = ConfigUtils.loadConfig( args );
+		}
+
+		config.controler().setOverwriteFileSetting( OutputDirectoryHierarchy.OverwriteFileSetting.deleteDirectoryIfExists );
+		config.controler().setOutputDirectory("examples/scenarios/Odakyu4/output(200)Dec5-HighFare");
+		// possibly modify config here
+		config.qsim().setSimStarttimeInterpretation(QSimConfigGroup.StarttimeInterpretation.onlyUseStarttime);
+		config.qsim().setSimEndtimeInterpretation((QSimConfigGroup.EndtimeInterpretation.onlyUseEndtime));
+
+		Controler controller = DrtControlerCreator.createControler(config, false);
+
+		// Add Discrete Choice Module
+		controller.addOverridingModule(new DiscreteModeChoiceModule());
+		controller.addOverridingModule(new NDMCExtensionHighFare());
+		DiscreteModeChoiceConfigurator.configureAsModeChoiceInTheLoop(config);
+
+		// Run the simulation
+		controller.run();
+		Desktop.getDesktop().open(new File(config.controler().getOutputDirectory() + "/modestats.txt"));
+
+
+
+
+
+		if ( args==null || args.length==0 || args[0]==null ){
+			config = ConfigUtils.loadConfig( "examples/scenarios/Odakyu4/configSAV2.xml", new MultiModeDrtConfigGroup(),
+				new DvrpConfigGroup(), new OTFVisConfigGroup(),new DiscreteModeChoiceConfigGroup());
+		} else {
+			config = ConfigUtils.loadConfig( args );
+		}
+
+		config.controler().setOverwriteFileSetting( OutputDirectoryHierarchy.OverwriteFileSetting.deleteDirectoryIfExists );
+		config.controler().setOutputDirectory("examples/scenarios/Odakyu4/output(200)Dec5-LowFare");
+		// possibly modify config here
+		config.qsim().setSimStarttimeInterpretation(QSimConfigGroup.StarttimeInterpretation.onlyUseStarttime);
+		config.qsim().setSimEndtimeInterpretation((QSimConfigGroup.EndtimeInterpretation.onlyUseEndtime));
+
+		controller = DrtControlerCreator.createControler(config, false);
+
+		// Add Discrete Choice Module
+		controller.addOverridingModule(new DiscreteModeChoiceModule());
+		controller.addOverridingModule(new NDMCExtensionLowFare());
+		DiscreteModeChoiceConfigurator.configureAsModeChoiceInTheLoop(config);
+
+		// Run the simulation
+		controller.run();
+
+		Desktop.getDesktop().open(new File(config.controler().getOutputDirectory() + "/modestats.txt"));
+
 
 	}
 }
