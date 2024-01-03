@@ -4,7 +4,9 @@ import Analysis.GzipExtractor;
 import MyDMC.NDMCExtension;
 import MyDMC.NasirDMCExtension;
 import MyDMC.PrimaryModeDMCExtension;
+import MyDMC.Trial.Dec28DMCExtension;
 import MyDMC.Trial.Dec4DMCExtension;
+import MyDMC.Trial.Jan02DMCExtension;
 import org.apache.commons.io.IOUtils;
 import org.hibernate.validator.constraints.URL;
 import org.matsim.analysis.CalcLinkStats;
@@ -39,7 +41,7 @@ public class RunRandomSelection {
 
 		Controler controller = new Controler(scenario);
 		controller.addOverridingModule(new DiscreteModeChoiceModule());
-		controller.addOverridingModule(new NasirDMCExtension());
+		controller.addOverridingModule(new Jan02DMCExtension());
 		DiscreteModeChoiceConfigurator.configureAsModeChoiceInTheLoop(config);
 
 		controller.run();
