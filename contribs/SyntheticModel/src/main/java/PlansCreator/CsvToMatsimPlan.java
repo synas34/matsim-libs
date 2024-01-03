@@ -21,7 +21,7 @@ import java.io.IOException;
 public class CsvToMatsimPlan {
 
 	public static void main(String[] args) throws IOException {
-		String csvFile = "contribs/SyntheticModel/test/Jan02Trips(col_null).csv"; // Replace with your CSV file path
+		String csvFile = "contribs/SyntheticModel/test/Jan03Trips(col_null).csv"; // Replace with your CSV file path
 		String line;
 		String cvsSplitBy = ","; // CSV delimiter
 
