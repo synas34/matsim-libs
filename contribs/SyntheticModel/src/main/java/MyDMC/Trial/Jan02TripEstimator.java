@@ -89,14 +89,14 @@ public class Jan02TripEstimator extends AbstractTripRouterEstimator {
 		double bikeFactor = 0;
 
 		if (totalTravelDistance <= 3) {
-			walkFactor = -5.68 * totalTravelTime;
+			walkFactor =  -5.68 * totalTravelTime;
 			bikeFactor = -1.38 - 4.78 * totalTravelTime ;
 		} else if (totalTravelDistance > 3 && totalTravelDistance <= 7) {
-			walkFactor = dummyvalue * totalTravelTime;
+			walkFactor = dummyvalue + dummyvalue * totalTravelTime;
 			bikeFactor = -1.38 - 4.78 * totalTravelTime;
 		} else {
-			walkFactor = dummyvalue * totalTravelTime;
-			bikeFactor = dummyvalue * totalTravelTime;		}
+			walkFactor = dummyvalue + dummyvalue * totalTravelTime;
+			bikeFactor = dummyvalue + dummyvalue * totalTravelTime;		}
 
 		switch (mode) {
 			case TransportMode.walk: utility = walkFactor    ;break;
@@ -118,11 +118,11 @@ public class Jan02TripEstimator extends AbstractTripRouterEstimator {
 			walkFactor = -7.56 * totalTravelTime;
 			bikeFactor = -1.15 - 6.67 * totalTravelTime;
 		} else if (totalTravelDistance > 3 && totalTravelDistance <= 7) {
-			walkFactor = dummyvalue * totalTravelTime;
+			walkFactor = dummyvalue + dummyvalue * totalTravelTime;
 			bikeFactor = -1.15 - 6.67 * totalTravelTime;
 		} else {
-			walkFactor = dummyvalue * totalTravelTime;
-			bikeFactor = dummyvalue * totalTravelTime;		}
+			walkFactor = dummyvalue + dummyvalue * totalTravelTime;
+			bikeFactor = dummyvalue + dummyvalue * totalTravelTime;		}
 
 		switch (mode) {
 			case TransportMode.walk: utility = walkFactor    ;break;
@@ -144,11 +144,11 @@ public class Jan02TripEstimator extends AbstractTripRouterEstimator {
 			walkFactor = -5.26 * totalTravelTime;
 			bikeFactor = -1.67 - 3.80 * totalTravelTime;
 		} else if (totalTravelDistance > 3 && totalTravelDistance <= 7) {
-			walkFactor = dummyvalue * totalTravelTime;
+			walkFactor = dummyvalue + dummyvalue * totalTravelTime;
 			bikeFactor = -1.67 - 3.80 * totalTravelTime;
 		} else {
-			walkFactor = dummyvalue * totalTravelTime;
-			bikeFactor = dummyvalue * totalTravelTime;		}
+			walkFactor = dummyvalue + dummyvalue * totalTravelTime;
+			bikeFactor = dummyvalue + dummyvalue * totalTravelTime;		}
 
 		switch (mode) {
 			case TransportMode.walk: utility = walkFactor     ;break;
@@ -170,11 +170,11 @@ public class Jan02TripEstimator extends AbstractTripRouterEstimator {
 			walkFactor = -7.35 * totalTravelTime;
 			bikeFactor = -2.53 - 5.71 * totalTravelTime;
 		} else if (totalTravelDistance > 3 && totalTravelDistance <= 7) {
-			walkFactor = dummyvalue * totalTravelTime;
+			walkFactor = dummyvalue + dummyvalue * totalTravelTime;
 			bikeFactor = -2.53 - 5.71 * totalTravelTime;
 		} else {
 			walkFactor = dummyvalue * totalTravelTime;
-			bikeFactor = dummyvalue * totalTravelTime;		}
+			bikeFactor = dummyvalue + dummyvalue * totalTravelTime;		}
 
 		switch (mode) {
 			case TransportMode.walk: utility = walkFactor    ;break;
@@ -197,8 +197,8 @@ public class Jan02TripEstimator extends AbstractTripRouterEstimator {
 			walkFactor = dummyvalue * totalTravelTime;
 			bikeFactor = -2.53 - 6.53 * totalTravelTime;
 		} else {
-			walkFactor = dummyvalue * totalTravelTime;
-			bikeFactor = dummyvalue * totalTravelTime;		}
+			walkFactor = dummyvalue + dummyvalue * totalTravelTime;
+			bikeFactor = dummyvalue + dummyvalue * totalTravelTime;		}
 
 		switch (mode) {
 			case TransportMode.walk: utility = walkFactor    ;break;
@@ -219,11 +219,11 @@ public class Jan02TripEstimator extends AbstractTripRouterEstimator {
 			walkFactor = -7.48 * totalTravelTime;
 			bikeFactor = -1.47 - 5.28 * totalTravelTime;
 		} else if (totalTravelDistance > 3 && totalTravelDistance <= 7) {
-			walkFactor = dummyvalue * totalTravelTime;
+			walkFactor = dummyvalue + dummyvalue * totalTravelTime;
 			bikeFactor = -1.47 - 5.28 * totalTravelTime;
 		} else {
-			walkFactor = dummyvalue * totalTravelTime;
-			bikeFactor = dummyvalue * totalTravelTime;		}
+			walkFactor = dummyvalue + dummyvalue * totalTravelTime;
+			bikeFactor = dummyvalue + dummyvalue * totalTravelTime;		}
 
 		switch (mode) {
 			case TransportMode.walk: utility = walkFactor    ;break;
@@ -248,8 +248,8 @@ public class Jan02TripEstimator extends AbstractTripRouterEstimator {
 			walkFactor = dummyvalue * totalTravelTime;
 			bikeFactor = -1.24 - 5.83 * totalTravelTime ;
 		} else {
-			walkFactor = dummyvalue * totalTravelTime;
-			bikeFactor = dummyvalue * totalTravelTime;		}
+			walkFactor = dummyvalue + dummyvalue * totalTravelTime;
+			bikeFactor = dummyvalue + dummyvalue * totalTravelTime;		}
 
 		switch (mode) {
 			case TransportMode.walk: utility = walkFactor    ;break;
