@@ -19,7 +19,7 @@ import java.util.List;
 public class Jan02TripEstimator extends AbstractTripRouterEstimator {
 	@Inject
 	public Jan02TripEstimator(TripRouter tripRouter, ActivityFacilities facilities,
-                              TimeInterpretation timeInterpretation) {
+							  TimeInterpretation timeInterpretation) {
 		super(tripRouter, facilities, timeInterpretation, createPreroutedModes());
 	}
 
