@@ -101,7 +101,7 @@ public class Jan02TripEstimator extends AbstractTripRouterEstimator {
 		switch (mode) {
 			case TransportMode.walk: utility = walkFactor    ;break;
 			case TransportMode.bike: utility = bikeFactor 	;break;
-			case TransportMode.car: utility = -3.56 - 1.36 * totalTravelTime - 0.0063 * (totalTravelDistance * 10); break;
+			case TransportMode.car: utility = -3.56 - 1.36 * totalTravelTime - 0.0013 * (totalTravelDistance * 10); break;
 			case TransportMode.ride: utility = -5.19 - 4.92 * totalTravelTime;break;
 			case TransportMode.pt: utility = -0.40 - 1.03 * totalTravelTime - 0.0013 * (totalTravelDistance * 16) ;break;     }
 
@@ -127,7 +127,7 @@ public class Jan02TripEstimator extends AbstractTripRouterEstimator {
 		switch (mode) {
 			case TransportMode.walk: utility = walkFactor    ;break;
 			case TransportMode.bike: utility = bikeFactor ;break;
-			case TransportMode.car: utility = -3.07 - 4.64 * totalTravelTime - 0.0050 * (totalTravelDistance * 10); break;
+			case TransportMode.car: utility = -3.07 - 4.64 * totalTravelTime - 0.0013 * (totalTravelDistance * 10); break;
 			case TransportMode.ride: utility = -4.09 - 7.21 * totalTravelTime;break;
 			case TransportMode.pt: utility = -1.13 - 0.93 * totalTravelTime - 0.0013 * (totalTravelDistance * 16) ;break;		}
 
@@ -153,7 +153,7 @@ public class Jan02TripEstimator extends AbstractTripRouterEstimator {
 		switch (mode) {
 			case TransportMode.walk: utility = walkFactor     ;break;
 			case TransportMode.bike: utility = bikeFactor 	  ;break;
-			case TransportMode.car: utility = -1.20 - 4.35 * totalTravelTime - 0.0045 * (totalTravelDistance * 10); break;
+			case TransportMode.car: utility = -1.20 - 4.35 * totalTravelTime - 0.0013 * (totalTravelDistance * 10); break;
 			case TransportMode.ride: utility = -3.61 - 6.24 * totalTravelTime;break;
 			case TransportMode.pt: utility = -0.44 - 0.96 * totalTravelTime - 0.0013 * (totalTravelDistance * 16) ;break;		}
 
@@ -179,7 +179,7 @@ public class Jan02TripEstimator extends AbstractTripRouterEstimator {
 		switch (mode) {
 			case TransportMode.walk: utility = walkFactor    ;break;
 			case TransportMode.bike: utility = bikeFactor 	 ;break;
-			case TransportMode.car: utility = -1.15 - 4.77 * totalTravelTime - 0.0039 * (totalTravelDistance * 10); break;
+			case TransportMode.car: utility = -1.15 - 4.77 * totalTravelTime - 0.0013 * (totalTravelDistance * 10); break;
 			case TransportMode.ride: utility = -2.76 - 6.47 * totalTravelTime;break;
 			case TransportMode.pt: utility = -0.98 - 1.21 * totalTravelTime - 0.0013 * (totalTravelDistance * 16) ;break;		}
 		return utility;
