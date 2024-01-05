@@ -389,7 +389,7 @@
 		<param name="selector" value="MultinomialLogit" />
 		<param name="tourConstraints" value="VehicleContinuity,SubtourMode" />
 		<param name="tourFinder" value="PlanBased" />
-		<param name="tripEstimator" value="NasirEstimatorName" />
+		<param name="tripEstimator" value="MyEstimatorName" />
 		<param name="tourEstimator" value="Cumulative" />
 
 		<parameterset type="modeAvailability:Car">
