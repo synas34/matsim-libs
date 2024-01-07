@@ -261,13 +261,13 @@ public final class PlansCalcRouteConfigGroup extends ConfigGroup {
 		acceptModeParamsWithoutClearing = true;
 		{
 			final ModeRoutingParams bike = new ModeRoutingParams( TransportMode.bike );
-			bike.setTeleportedModeSpeed( 10.0 / 3.6 ); // 15.0 km/h --> m/s
+			bike.setTeleportedModeSpeed( 8.7 / 3.6 ); // 15.0 km/h --> m/s
 			addParameterSet( bike );
 		}
 
 		{
 			final ModeRoutingParams walk = new ModeRoutingParams( TransportMode.walk );
-			walk.setTeleportedModeSpeed( 5.0 / 3.6 ); // 3.0 km/h --> m/s
+			walk.setTeleportedModeSpeed( 4.7 / 3.6 ); // 3.0 km/h --> m/s
 			addParameterSet( walk );
 		}
 
@@ -311,7 +311,7 @@ public final class PlansCalcRouteConfigGroup extends ConfigGroup {
 
 				{
 			final ModeRoutingParams transit_walk = new ModeRoutingParams( TransportMode.transit_walk ) ;
-			transit_walk.setTeleportedModeSpeed( 5.2 / 3.6 ); // 3.0 km/h --> m/s
+			transit_walk.setTeleportedModeSpeed( 3.0 / 3.6 ); // 3.0 km/h --> m/s
 			addParameterSet( transit_walk );
 		}
 		// one might add the above but it was not added in the original design.  Not sure about the reason. kai, feb'15
