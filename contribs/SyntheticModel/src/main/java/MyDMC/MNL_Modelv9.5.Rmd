@@ -1,0 +1,1037 @@
+---
+title: "ML Models"
+author: "Nasir"
+date: "2023-11-31"
+output:
+  html_document: default
+  pdf_document: default
+---
+
+```{r setup, include=FALSE}
+
+
+#*******************************************************************************
+#*******************************************************************************
+#*MODE CHOICE MODEL V6 - SPATIALY SEGMENTED MODEL
+#*in japan only car and walking modes are available
+#*Author: Nasir
+#*Start Date:   2023/11/29
+#*R version 4.2.2 (2022-10-31 ucrt) -- "Innocent and Trusting"
+#*Serenity now!
+#*Store of data cleaning steps:
+#* Read selected trips extracted from 2018 Tokyo Person Trip Survey data
+#* Full Data set stored in NEWPTdata.csv
+#* First Holdback in holdback.csv
+#* second holdback in secondholdback.csv
+#* 10k crossvalidation on remaining training data
+#  Trips were selected from a narrowed scope around the Odakyu Odawara Line to reduce computation time
+#  Origins within 3km and then Destinations within 5km 
+#  avg. walk speed is 4.7 km/h or 1.3 m/s
+#  avg. bike speed is 8.7 km/h or 2.41 m/s
+#  bicycle travel time is 8.7/4.7 * walk travel time
+#  avg japanese gasoline prices is 150 y/L / avg fuel consumption: 20 km/L
+#  car cost is distance.c / avg fuel consumption * avg gasoline price
+#*******************************************************************************
+#*******************************************************************************
+
+
+#  missing some manual jorudan stations, change bike estimation to be lower of walk or drive distances
+# need to expand travel time estimation since some trips that were assumed out of bound used excluded modes
+
+#SEGMENTED BY URBANISATION INDEX: CBD, URBAN, SUBURBAN, RURAL
+#IN THE PC1 COLUMN, PRINCIPAL COMPONENT OF VARIOUS URBANISATION VARIABLES
+#SEGMENTED BY WORK AND OTHER
+#ANALYSED BASED ON DISTANCE TO STATION
+#10 different models, based on urban index and purpose segmentation
+#SEGMENT OUT OF SCOPE TRIPS INTO 3: CENTRAL TOKYO, KANAGAWA, AND OTHER
+#assume mode choice is the same going to these areas as coming back from them.
+#big issue is that large no of out of bound trips are not classified by origin x urban index.
+
+#Adding household or trip-specific variables 
+#PURPOSE - work, school, Leisure, Shopping, return home
+#AGE - child, young adult, adult, senior
+#TIME - o_departHour, or PEAK(AM), PEAK(PM)
+#GENDER - 
+#INCOME - hh_income
+# VEHICLES - hh_myCar, hh_carNum, hh_bikeNum
+
+```
+
+
+#### REMOVE CAR COST AND AMALGAMATE WALKING AND RIDING TIME INTO A SINGLE TIME FACTOR FOR PT
+```{r message = FALSE,warning=TRUE,echo=FALSE, results='hide'}
+
+### Load Apollo library｜パッケージをロードする
+library(apollo)
+library(tidyverse)
+library(readr)
+
+### read data|データを読み込む
+database1 = read.csv("UrbanContextTrainingData.csv",header=TRUE)
+Mesh = read.csv("Nov30TripsbyUrbanisationArea.csv",header=TRUE)
+Mesh <- Mesh %>%
+  select(ind_tripID, StationDist, PC1, Area)
+
+database = database1
+
+database <- database %>%
+  mutate(CHOICE = ifelse(repMode_type2 == 6, 1,
+               ifelse(repMode_type2 == 5, 2,
+               ifelse(repMode_type2 == 3 & car_driver == 1, 3,
+               ifelse(repMode_type2 == 3 & car_driver == 2 & hh_license == 1 & (hh_myCar == 1 | hh_myCar == 2), 4,
+               ifelse(repMode_type2 == 3 & car_driver == 2 & (hh_license == 2 | hh_license == 3 |hh_myCar == 3), 5,
+               ifelse(repMode_type2 == 1 & mt_Board_tripEndMode == 1, 6,
+               ifelse(repMode_type2 == 1 & mt_Board_tripEndMode == 2, 7,
+               ifelse(repMode_type2 == 1 & mt_Board_tripEndMode == 10 & car_driver == 1, 8,
+               ifelse(repMode_type2 == 1 & mt_Board_tripEndMode == 10 & car_driver == 2 & hh_license == 1& (hh_myCar == 1 | hh_myCar == 2), 9,
+               ifelse(repMode_type2 == 1 & mt_Board_tripEndMode == 10 & car_driver == 2 & (hh_license == 2 | hh_license == 3|hh_myCar == 3), 10,
+               NA_integer_
+               )))))))))))
+
+database <- database %>%
+  mutate(CHOICE_FAC = ifelse(
+    CHOICE == 1, "walk",
+    ifelse(CHOICE == 2, "bike",
+    ifelse(CHOICE == 3, "car_dr",
+    ifelse(CHOICE == 4, "car_pass1",
+    ifelse(CHOICE == 5, "car_pass2",
+    ifelse(CHOICE == 6, "rail_w",
+    ifelse(CHOICE == 7, "rail_b",
+    ifelse(CHOICE == 8, "rail_cd",
+    ifelse(CHOICE == 9, "rail_cp1",
+    ifelse(CHOICE == 10, "rail_cp2",
+    NA)))))))))))
+
+### Import Urbanisation Index and label by area
+# database$StationDist <- Mesh$StationDist
+# database$Area <- Mesh$Area
+# database$PC1 <- Mesh$PC1
+# database <- database %>%
+#   mutate(UrbanIndex = case_when(
+#       PC1 > 4.91 ~ 'CBD',
+#       PC1 > 1.57 & PC1 <= 4.91 ~ 'Urban',
+#       PC1 > -2.35 & PC1 <= 1.57 ~ 'Suburban',
+#       PC1 <= -2.35 ~ 'Rural',
+#     TRUE ~ "NA"
+#   ))
+
+time_parameters <- c("time",  "time.wk", "time.bk", "time.s", "time.in.traffic.s", "access_time.w", "access_time.b", "access_time.c", "depart_time.w","depart_time.b", "depart_time.c" )  # Specify the columns to filter
+
+database <- database %>%
+  mutate(across(all_of(time_parameters), ~ ./3600)) %>%
+  mutate(car_av = case_when(
+    hh_license == 1 ~ 1,
+    CHOICE == 3 ~ 1,  # If mode is bike, set choice value as 2
+    TRUE ~ 0   # For any other cases, set choice value as 7
+  ))  %>%
+    mutate(carp1_av = case_when(
+    hh_license == 1 & (hh_myCar == 1 | hh_myCar == 2) ~ 1,
+    CHOICE == 4 ~ 1,  # If mode is bike, set choice value as 2
+    TRUE ~ 0   # For any other cases, set choice value as 7
+  ))  %>%
+    mutate(carp2_av = case_when(
+    hh_license == 2 ~ 1,
+    hh_license == 3 ~ 1,
+    hh_myCar == 3 ~ 1,
+    CHOICE == 5 ~ 1,  # If mode is bike, set choice value as 2
+    TRUE ~ 0   # For any other cases, set choice value as 7
+  ))  %>%
+    mutate(train_car_av = case_when(
+    (origin_station != dest_station & hh_license == 1) ~ 1,
+    CHOICE == 8 ~ 1,  # If mode is bike, set choice value as 2
+    TRUE ~ 0   # For any other cases, set choice value as 7
+  ))  %>%
+    mutate(train_carp1_av = case_when(
+    (origin_station != dest_station & hh_license == 1 & (hh_myCar == 1 | hh_myCar == 2|hh_myCar == 3)) ~ 1,
+    CHOICE == 9 ~ 1,  # If mode is bike, set choice value as 2
+    TRUE ~ 0   # For any other cases, set choice value as 7
+  ))  %>%
+    mutate(train_carp2_av = case_when(
+    (origin_station != dest_station & (hh_license == 2 | hh_license == 3 )) ~ 1,
+    CHOICE == 10 ~ 1,  # If mode is bike, set choice value as 2
+    TRUE ~ 0   # For any other cases, set choice value as 7
+  ))  %>%
+  mutate(walk_av = case_when(
+    walk_av == 1 ~ 1,
+    CHOICE == 1 ~ 1,  # If mode is walk, set choice value as 1
+    TRUE ~ 0   # For any other cases, set choice value as 0
+  ))  %>%
+    mutate(bike_av = case_when(
+    (bike_av == 1 & mt_bikeNum >= 1) ~ 1,
+    CHOICE == 2 ~ 1,  # If mode is bike, set choice value as 2
+    TRUE ~ 0   # For any other cases, set choice value as 0
+  ))  %>%
+    mutate(car_av = case_when(
+    car_av == 1 ~ 1,
+    CHOICE == 3 ~ 1,  # If mode is bike, set choice value as 2
+    TRUE ~ 0   # For any other cases, set choice value as 7
+  ))  %>%
+    mutate(train_walk_av = case_when(
+    train_walk_av == 1 ~ 1,
+    CHOICE == 6 ~ 1,  # If mode is bike, set choice value as 2
+    TRUE ~ 0   # For any other cases, set choice value as 7
+  ))  %>%
+    mutate(train_bike_av = case_when(
+    train_bike_av == 1 ~ 1,
+    CHOICE == 7 ~ 1,  # If mode is bike, set choice value as 2
+    TRUE ~ 0   # For any other cases, set choice value as 7
+  ))  %>%
+    mutate(train_car_av = case_when(
+    train_car_av == 1 ~ 1,
+    CHOICE == 8 ~ 1,  # If mode is bike, set choice value as 2
+    TRUE ~ 0   # For any other cases, set choice value as 7
+  ))  
+
+### 
+
+database <- database %>%
+  mutate(
+    time.wk = replace_na(time.wk, 0),
+    time.bk = replace_na(time.bk, 0),
+    time.s = replace_na(time.s, 0),
+    costCAR = replace_na(costCAR, 0),
+    costIC = replace_na(costIC, 0),
+    time = replace_na(time, 0),
+    access_time.w = replace_na(access_time.w, 0),
+    access_time.b = replace_na(access_time.b, 0),
+    access_time.c = replace_na(access_time.c, 0),
+    depart_time.w = replace_na(depart_time.w, 0),
+    depart_time.b = replace_na(depart_time.b, 0),
+    depart_time.c = replace_na(depart_time.c, 0),
+    costCAR.A = replace_na(costCAR.A, 0), 
+    costCAR.D = replace_na(costCAR.D, 0), ) %>%
+  filter(!is.na(database$CHOICE))
+
+# write.csv(Mesh, file = "Mesh.csv")
+
+databasei <- database
+```
+
+```{r message = FALSE,warning=FALSE,echo=FALSE, results='hide'}
+#databasei <- database
+
+database <- database %>%
+  mutate(CHOICE_FAC = ifelse(
+    CHOICE == 1, "walk",
+    ifelse(CHOICE == 2, "bike",
+    ifelse(CHOICE == 3, "car_dr",
+    ifelse(CHOICE == 4, "car_pass",
+    ifelse(CHOICE == 5, "car_pass",
+    ifelse(CHOICE == 6, "rail_w",
+    ifelse(CHOICE == 7, "rail_w",
+    ifelse(CHOICE == 8, "rail_w",
+    ifelse(CHOICE == 9, "rail_w",
+    ifelse(CHOICE == 10, "rail_w",
+    NA)))))))))))
+database <- database %>%
+  mutate(CHOICE = ifelse(
+    CHOICE == 1, 1,
+    ifelse(CHOICE == 2, 2,
+    ifelse(CHOICE == 3, 3,
+    ifelse(CHOICE == 4, 4,
+    ifelse(CHOICE == 5, 4,
+    ifelse(CHOICE == 6, 6,
+    ifelse(CHOICE == 7, 6,
+    ifelse(CHOICE == 8, 6,
+    ifelse(CHOICE == 9, 6,
+    ifelse(CHOICE == 10, 6,
+    NA)))))))))))
+database <- database %>%
+    mutate(train_walk_av = case_when(
+    train_walk_av == 1 ~ 1,
+    train_bike_av == 1 ~ 1,
+    train_car_av == 1 ~ 1,
+    train_carp1_av == 1 ~ 1,
+    train_carp2_av == 1 ~ 1,
+    CHOICE == 6 ~ 1,  
+    TRUE ~ 0   
+  ))  
+database <- database %>%
+    mutate(carp_av = case_when(
+    carp1_av == 1 ~ 1,
+    carp2_av == 1 ~ 1,
+    CHOICE == 4 ~ 1,  
+    TRUE ~ 0   
+  ))  
+distinct_values <- table(database[["purpose_type3_fac"]])
+column_summary <- summary(database[["purpose_type3_fac"]])
+print(distinct_values)
+
+TripsEndinginOdakyuScope <- read_csv("TripsEndinginOdakyuScope.csv")
+databaseO <- database[database$ind_tripID %in% TripsEndinginOdakyuScope$ind_tripID, ]
+
+
+databaseCBD <- database %>%
+  filter(UrbanContext == "CBD" ) 
+
+databaseU <- database %>%
+  filter(UrbanContext == "Urban") 
+
+databaseS <- database %>%
+  filter(UrbanContext == "Suburban")  
+
+databaseR <- database %>%
+  filter(UrbanContext == "Rural") 
+
+
+#filter by purpose
+databaseCBDW <- databaseCBD %>%
+  filter((purpose_type3_fac == "work commute" | purpose_type3_fac == "business" | purpose_type3_fac == "school commute"))
+
+databaseCBDO <- databaseCBD %>%
+  filter(!(purpose_type3_fac == "work commute" | purpose_type3_fac == "business" | purpose_type3_fac == "school commute"))
+
+databaseUW <- databaseU %>%
+  filter((purpose_type3_fac == "work commute" | purpose_type3_fac == "business" | purpose_type3_fac == "school commute"))
+databaseSW <- databaseS %>%
+  filter((purpose_type3_fac == "work commute" | purpose_type3_fac == "business" | purpose_type3_fac == "school commute"))
+
+databaseRW <- databaseR %>%
+  filter((purpose_type3_fac == "work commute" | purpose_type3_fac == "business" | purpose_type3_fac == "school commute"))
+
+databaseUO <- databaseU %>%
+  filter(!(purpose_type3_fac == "work commute" | purpose_type3_fac == "business" | purpose_type3_fac == "school commute"))
+
+databaseSO <- databaseS %>%
+  filter(!(purpose_type3_fac == "work commute" | purpose_type3_fac == "business" | purpose_type3_fac == "school commute"))
+
+
+databaseP <- database %>%
+  filter(purpose_type3_fac == "personal" )
+
+databaseR <- database %>%
+  filter(purpose_type3_fac == "return home")
+
+databaseB <- database %>%
+  filter(purpose_type3_fac == "business")
+
+database <- database %>%
+  filter(!is.na(CHOICE_FAC)) %>%
+  filter(!is.na(UrbanContext)) %>%
+  mutate(UrbanContext = factor(UrbanContext, levels = c("CBD", "Urban", "Suburban", "Rural")))
+
+
+ggplot(database %>% filter(!is.na(CHOICE_FAC)), aes(x = UrbanContext, fill = CHOICE_FAC)) +
+  geom_bar(position = "fill") +
+  labs(title = "Actual Mode Share vs Simulated Mode Share ", x = "Category", y = "Proportion") +
+  scale_fill_brewer(palette = "Set3") +
+  theme_minimal()
+ggplot(database %>% filter(!is.na(CHOICE_FAC)), aes(x = UrbanContext, fill = CHOICE_FAC)) +
+  geom_bar() +
+  labs(title = "Actual Mode Share vs Simulated Mode Share ", x = "Category", y = "Proportion") +
+  scale_fill_brewer(palette = "Set3") +
+  theme_minimal()
+
+```
+
+#This has two models, the first one with different cost variables and a simpler one with only one cost variable. Then I segment it by Purpose and calculate Value of Time
+## Initial Multinomial Model
+
+$V^{walk} = ASC_{walk} + \beta_{t\_w}TIME_{walk}$
+
+$V^{bike} = ASC_{bike} + \beta_{t\_b}TIME_{bike} \quad$
+
+$V^{car} = ASC_{car}+\beta_{t\_c}TIME_{car} + \beta_{c\_car}COST_{car}$
+
+$V^{pass1} = ASC_{pass1}+\beta_{t\_c}TIME_{car} + \beta_{c\_pass}COST_{car}$
+
+$V^{pass2} = ASC_{pass2}+\beta_{t\_c}TIME_{car} + \beta_{c\_pass}COST_{car}$
+
+$V^{rail_w} = ASC_{rail\_w}+\beta_{t\_r}TIME_{rail} + \beta_{c\_rail}COST_{rail} + \beta_{t\_w}TIME_{walk}$
+
+$V^{rail_b} = ASC_{rail\_b}+\beta_{t\_r}TIME_{rail} + \beta_{c\_rail}COST_{rail} + \beta_{t\_b}TIME_{bike}$
+
+$V^{rail\_c} = ASC_{rail\_c}+\beta_{t\_r}TIME_{rail} + \beta_{c\_rail}COST_{rail} +\beta_{t\_c}TIME_{car} + \beta_{c\_car}COST_{car}$
+
+$V^{rail\_p1} = ASC_{rail\_p1}+\beta_{t\_r}TIME_{rail} + \beta_{c\_rail}COST_{rail} +\beta_{t\_p1}TIME_{car} + \beta_{c\_pass}COST_{car}$
+
+$V^{rail\_p2} = ASC_{rail\_p2}+\beta_{t\_r}TIME_{rail} + \beta_{c\_rail}COST_{rail} +\beta_{t\_p2}TIME_{car} + \beta_{c\_pass}COST_{car}$
+
+
+```{r message = FALSE,warning=FALSE,echo=FALSE, results='hide'}
+### Import database
+database = databasei
+estimates <- list()
+
+database <- database %>%
+  mutate(CHOICE_FAC = ifelse(
+    CHOICE == 1, "walk",
+    ifelse(CHOICE == 2, "bike",
+    ifelse(CHOICE == 3, "car_dr",
+    ifelse(CHOICE == 4, "car_pass",
+    ifelse(CHOICE == 5, "car_pass",
+    ifelse(CHOICE == 6, "rail_w",
+    ifelse(CHOICE == 7, "rail_w",
+    ifelse(CHOICE == 8, "rail_w",
+    ifelse(CHOICE == 9, "rail_w",
+    ifelse(CHOICE == 10, "rail_w",
+    NA)))))))))))
+database <- database %>%
+  mutate(CHOICE = ifelse(
+    CHOICE == 1, 1,
+    ifelse(CHOICE == 2, 2,
+    ifelse(CHOICE == 3, 3,
+    ifelse(CHOICE == 4, 4,
+    ifelse(CHOICE == 5, 4,
+    ifelse(CHOICE == 6, 6,
+    ifelse(CHOICE == 7, 6,
+    ifelse(CHOICE == 8, 6,
+    ifelse(CHOICE == 9, 6,
+    ifelse(CHOICE == 10, 6,
+    NA)))))))))))
+database <- database %>%
+    mutate(train_walk_av = case_when(
+    train_walk_av == 1 ~ 1,
+    train_bike_av == 1 ~ 1,
+    train_car_av == 1 ~ 1,
+    train_carp1_av == 1 ~ 1,
+    train_carp2_av == 1 ~ 1,
+    CHOICE == 6 ~ 1,  
+    TRUE ~ 0   
+  ))  
+database <- database %>%
+    mutate(carp_av = case_when(
+    carp1_av == 1 ~ 1,
+    carp2_av == 1 ~ 1,
+    CHOICE == 4 ~ 1,  
+    TRUE ~ 0   
+  ))  
+database <- database %>%
+  filter(!(is.na(CHOICE)))
+         
+### Initialise code｜コードを初期化する
+apollo_initialise()
+
+### Set core controls｜コア項目を設定する（モデル名、モデルの説明、個人IDの変数設定）
+apollo_control = list(
+  modelName  ="Apollo_example_1",
+  modelDescr ="Initial MNL model on mode choice RP data",
+  indivID    ="ind_tripID"
+)
+# DEFINE MODEL PARAMETERS
+apollo_beta1=c(asc_walk   = 0,
+              asc_bike   = 0,
+              asc_car   = 0,
+              asc_pass   = 0,
+              asc_rail_w   = 0,
+              b_tt_w  = 0,
+              b_tt_b  = 0,
+              b_tt_c  = 0,
+              b_tt_p  = 0,
+              b_tt_r  = 0,
+              b_co = 0)
+
+apollo_beta = apollo_beta1
+
+apollo_fixed = c("asc_walk")
+
+#GROUP AND VALIDATE INPUTS
+apollo_inputs = apollo_validateInputs()
+
+# DEFINE MODEL AND LIKELIHOOD FUNCTION
+apollo_probabilities1=function(apollo_beta, apollo_inputs, functionality="estimate"){
+  
+  ### Attach inputs and detach after function exit
+  apollo_attach(apollo_beta, apollo_inputs)
+  on.exit(apollo_detach(apollo_beta, apollo_inputs))
+  
+  ### Create list of probabilities P｜確率のリストを作成する
+  P = list()
+  
+  ### List of utilities: these must use the same names as in mnl_settings, order is irrelevant
+  ### 効用関数のリスト：選択肢の名義は以下の「mnl_settings」と同じでなければならない（順番は関係ない）
+  V = list()
+  V[['walk']]  = asc_walk  + b_tt_w  * time.wk
+  V[['bike']]  = asc_bike  + b_tt_b  * time.bk
+  V[['car']]  = asc_car  + b_tt_c  * time.in.traffic.s
+  V[['pass']]  = asc_pass  + b_tt_p  * time.in.traffic.s + b_co * costCAR
+  V[['rail_w']]  = asc_rail_w  + b_tt_r  * time + b_co * costIC + b_tt_w  * access_time.w + b_tt_w  * depart_time.w
+  
+  ### Define settings for MNL model component
+  ###　MNLモデル項目を設定する
+  mnl_settings = list(
+    alternatives  = c(walk=1, bike=2, car=3, pass = 4, rail_w=6),
+    avail        = list(walk=walk_av, bike=bike_av, car=car_av, pass=carp_av, rail_w=train_walk_av),
+    choiceVar    = CHOICE,
+    V             = V
+  )
+  
+  ### Compute probabilities using MNL model
+  ### MNLを用いて選択確率を求める
+  P[['model']] = apollo_mnl(mnl_settings, functionality)
+
+  
+  ### Prepare and return outputs of function
+  ### アウトプットを整理して返す  
+  P = apollo_prepareProb(P, apollo_inputs, functionality)
+  return(P)
+}
+
+model1 = apollo_estimate(apollo_beta1, apollo_fixed, apollo_probabilities1, apollo_inputs)
+
+estimates[[1]] <- model1$estimate
+
+## Model Performance, Goodness of fit
+Result <- as.data.frame(apollo_modelOutput(model1))
+
+predictions <- as.data.frame(apollo_prediction(model1, apollo_probabilities1, apollo_inputs))
+mL01 <- model1$LL0
+mLL1 <- model1$LLout
+mRho1 <- (mL01-mLL1)/mL01
+parameters <- model1$estimate
+maRho1 <- (mL01-(mLL1-length(parameters)))/mL01
+```
+
+
+```{r}
+knitr::kable(Result,format = "markdown", caption = "Estimation Results")
+Performance <- data.frame(matrix(1, ncol = 2, nrow = 4))
+rownames(Performance) <- c("Initial Likelihood", "Final likelihood", "Rho_square", "Adjusted Rho-square")
+colnames(Performance) <- c("Simplified Model")
+Performance[1,1] <- mL01
+Performance[2,1] <- mLL1
+Performance[3,1] <- mRho1
+Performance[4,1] <- maRho1
+knitr::kable(Performance,format = "markdown", digits = 3, caption = "Model Performance")
+```
+
+
+
+### Segmenting Second Model by Purpose & Calculating VoT
+```{r message = FALSE,warning=FALSE,echo=FALSE, results='hide'}
+et <- list()
+Result <- as.data.frame(apollo_modelOutput(model1))
+
+et[[1]] <- model1$estimate### Switch database to Work
+database <- databaseCBD
+apollo_inputs = apollo_validateInputs() ### Rerun predictions with the new data
+model1 = apollo_estimate(apollo_beta1, apollo_fixed, apollo_probabilities1, apollo_inputs)
+predictions_new = apollo_prediction(model1, apollo_probabilities1, apollo_inputs)
+et[[2]] <- model1$estimate
+ResultCBD <- as.data.frame(apollo_modelOutput(model1))
+
+predictions <- as.data.frame(apollo_prediction(model1, apollo_probabilities1, apollo_inputs))
+mL01 <- model1$LL0
+mLL1 <- model1$LLout
+mRho1 <- (mL01-mLL1)/mL01
+parameters <- model1$estimate
+maRho1 <- (mL01-(mLL1-length(parameters)))/mL01
+
+### Switch database to Other trips
+database <- databaseU
+apollo_inputs = apollo_validateInputs() ### Rerun predictions with the new data
+model1 = apollo_estimate(apollo_beta1, apollo_fixed, apollo_probabilities1, apollo_inputs)
+predictions_new = apollo_prediction(model1, apollo_probabilities1, apollo_inputs)
+et[[3]] <- model1$estimate
+ResultU <- as.data.frame(apollo_modelOutput(model1))
+model2 <- model1
+predictions <- as.data.frame(apollo_prediction(model2, apollo_probabilities1, apollo_inputs))
+mL02 <- model2$LL0
+mLL2 <- model2$LLout
+mRho2 <- (mL02-mLL2)/mL02
+parameters <- model2$estimate
+maRho2 <- (mL02-(mLL2-length(parameters)))/mL02
+
+### Switch database to Business trips
+database <- databaseS
+apollo_inputs = apollo_validateInputs() ### Rerun predictions with the new data
+model1 = apollo_estimate(apollo_beta1, apollo_fixed, apollo_probabilities1, apollo_inputs)
+predictions_new = apollo_prediction(model1, apollo_probabilities1, apollo_inputs)
+et[[4]] <- model1$estimate
+ResultS <- as.data.frame(apollo_modelOutput(model1))
+
+### Switch database to personal
+database <- databaseR
+apollo_inputs = apollo_validateInputs() ### Rerun predictions with the new data
+model1 = apollo_estimate(apollo_beta1, apollo_fixed, apollo_probabilities1, apollo_inputs)
+predictions_new = apollo_prediction(model1, apollo_probabilities1, apollo_inputs)
+et[[5]] <- model1$estimate
+ResultR <- as.data.frame(apollo_modelOutput(model1))
+
+### Switch database to return trips
+database <- databaseUW
+apollo_inputs = apollo_validateInputs() ### Rerun predictions with the new data
+model1 = apollo_estimate(apollo_beta1, apollo_fixed, apollo_probabilities1, apollo_inputs)
+predictions_new = apollo_prediction(model1, apollo_probabilities1, apollo_inputs)
+et[[6]] <- model1$estimate
+ResultUW <- as.data.frame(apollo_modelOutput(model1))
+
+### Switch database to return trips
+database <- databaseUO
+apollo_inputs = apollo_validateInputs() ### Rerun predictions with the new data
+model1 = apollo_estimate(apollo_beta1, apollo_fixed, apollo_probabilities1, apollo_inputs)
+predictions_new = apollo_prediction(model1, apollo_probabilities1, apollo_inputs)
+et[[7]] <- model1$estimate
+ResultUO <- as.data.frame(apollo_modelOutput(model1))
+
+### Switch database to return trips
+database <- databaseSW
+apollo_inputs = apollo_validateInputs() ### Rerun predictions with the new data
+model1 = apollo_estimate(apollo_beta1, apollo_fixed, apollo_probabilities1, apollo_inputs)
+predictions_new = apollo_prediction(model1, apollo_probabilities1, apollo_inputs)
+et[[8]] <- model1$estimate
+ResultSW <- as.data.frame(apollo_modelOutput(model1))
+
+### Switch database to return trips
+database <- databaseSO
+apollo_inputs = apollo_validateInputs() ### Rerun predictions with the new data
+model1 = apollo_estimate(apollo_beta1, apollo_fixed, apollo_probabilities1, apollo_inputs)
+predictions_new = apollo_prediction(model1, apollo_probabilities1, apollo_inputs)
+et[[9]] <- model1$estimate
+ResultSO <- as.data.frame(apollo_modelOutput(model1))
+
+
+ets <- as.data.frame(t(do.call(rbind, et)))
+colnames(ets) <- c("All Trips", "CBD", "URBAN", "SUBURBAN", "RURAL", "URBAN.WORK", "URBAN.OTHER", "SUBURB.WORK", "SUBURB.OTHER")
+
+VOT <- data.frame(matrix(1, ncol = 9, nrow = 6))
+rownames(VOT) <- c("Walk VoT",  "Bike VoT", "Car VoT", "Pass. VoT", "Rail1 VoT", "Rail2 VoT" )
+colnames(VOT) <- c("All Trips", "CBD", "URBAN", "SUBURBAN", "RURAL", "URBAN.WORK", "URBAN.OTHER", "SUBURB.WORK", "SUBURB.OTHER")
+VOT[1,1] <- (ets[6,1]/60)/ets[11,1]
+VOT[1,2] <- (ets[6,2]/60)/ets[11,2]
+VOT[1,3] <- (ets[6,3]/60)/ets[11,3]
+VOT[1,4] <- (ets[6,4]/60)/ets[11,4]
+VOT[1,5] <- (ets[6,5]/60)/ets[11,5]
+VOT[1,6] <- (ets[6,6]/60)/ets[11,6]
+VOT[1,7] <- (ets[6,7]/60)/ets[11,7]
+VOT[1,8] <- (ets[6,8]/60)/ets[11,8]
+VOT[1,9] <- (ets[6,9]/60)/ets[11,9]
+
+VOT[2,1] <- (ets[7,1]/60)/ets[11,1]
+VOT[2,2] <- (ets[7,2]/60)/ets[11,2]
+VOT[2,3] <- (ets[7,3]/60)/ets[11,3]
+VOT[2,4] <- (ets[7,4]/60)/ets[11,4]
+VOT[2,5] <- (ets[7,5]/60)/ets[11,5]
+VOT[2,6] <- (ets[7,6]/60)/ets[11,6]
+VOT[2,7] <- (ets[7,7]/60)/ets[11,7]
+VOT[2,8] <- (ets[7,8]/60)/ets[11,8]
+VOT[2,9] <- (ets[7,9]/60)/ets[11,9]
+
+VOT[3,1] <- (ets[8,1]/60)/ets[11,1]
+VOT[3,2] <- (ets[8,2]/60)/ets[11,2]
+VOT[3,3] <- (ets[8,3]/60)/ets[11,3]
+VOT[3,4] <- (ets[8,4]/60)/ets[11,4]
+VOT[3,5] <- (ets[8,5]/60)/ets[11,5]
+VOT[3,6] <- (ets[8,6]/60)/ets[11,6]
+VOT[3,7] <- (ets[8,7]/60)/ets[11,7]
+VOT[3,8] <- (ets[8,8]/60)/ets[11,8]
+VOT[3,9] <- (ets[8,9]/60)/ets[11,9]
+
+VOT[4,1] <- (ets[9,1]/60)/ets[11,1]
+VOT[4,2] <- (ets[9,2]/60)/ets[11,2]
+VOT[4,3] <- (ets[9,3]/60)/ets[11,3]
+VOT[4,4] <- (ets[6,4]/60)/ets[11,4]
+VOT[4,5] <- (ets[9,5]/60)/ets[11,5]
+VOT[4,6] <- (ets[9,6]/60)/ets[11,6]
+VOT[4,7] <- (ets[9,7]/60)/ets[11,7]
+VOT[4,8] <- (ets[9,8]/60)/ets[11,8]
+VOT[4,9] <- (ets[9,9]/60)/ets[11,9]
+
+VOT[5,1] <- (ets[10,1]/60)/ets[11,1]
+VOT[5,2] <- (ets[10,2]/60)/ets[11,2]
+VOT[5,3] <- (ets[10,3]/60)/ets[11,3]
+VOT[5,4] <- (ets[10,4]/60)/ets[11,4]
+VOT[5,5] <- (ets[10,5]/60)/ets[11,5]
+VOT[5,6] <- (ets[10,6]/60)/ets[11,6]
+VOT[5,7] <- (ets[10,7]/60)/ets[11,7]
+VOT[5,8] <- (ets[10,8]/60)/ets[11,8]
+VOT[5,9] <- (ets[10,9]/60)/ets[11,9]
+
+VOT[6,1] <- (ets[10,1]/60)/ets[12,1]
+VOT[6,2] <- (ets[10,2]/60)/ets[12,2]
+VOT[6,3] <- (ets[10,3]/60)/ets[12,3]
+VOT[6,4] <- (ets[10,4]/60)/ets[11,4]
+VOT[6,5] <- (ets[10,5]/60)/ets[12,5]
+VOT[6,6] <- (ets[10,6]/60)/ets[12,6]
+VOT[6,7] <- (ets[10,7]/60)/ets[11,7]
+VOT[6,8] <- (ets[10,8]/60)/ets[11,8]
+VOT[6,9] <- (ets[10,9]/60)/ets[11,9]
+
+Performance <- data.frame(matrix(1, ncol = 2, nrow = 4))
+rownames(Performance) <- c("Initial Likelihood", "Final likelihood", "Rho_square", "Adjusted Rho-square")
+colnames(Performance) <- c("Work Model", "Other Model")
+Performance[1,1] <- mL01
+Performance[2,1] <- mLL1
+Performance[3,1] <- mRho1
+Performance[4,1] <- maRho1
+Performance[1,2] <- mL02
+Performance[2,2] <- mLL2
+Performance[3,2] <- mRho2
+Performance[4,2] <- maRho2
+knitr::kable(Performance,format = "markdown", digits = 3, caption = "Model Performance")
+```
+
+```{r}
+knitr::kable(ets,format = "markdown", caption = "Estimation Results")
+knitr::kable(VOT,format = "markdown", digits = 3, caption = "Value of Time")
+
+```
+```{r}
+knitr::kable(ResultCBD,format = "markdown", caption = "Estimation Results - CBD Trips")
+knitr::kable(ResultU,format = "markdown", caption = "Estimation Results - Urban Trips")
+knitr::kable(ResultS,format = "markdown", caption = "Estimation Results - Suburban Trips")
+knitr::kable(ResultR,format = "markdown", caption = "Estimation Results - Rural Trips")
+knitr::kable(ResultUW,format = "markdown", caption = "Estimation Results - Urban.Work Trips")
+knitr::kable(ResultUO,format = "markdown", caption = "Estimation Results - Urban.Other Trips")
+knitr::kable(ResultSW,format = "markdown", caption = "Estimation Results - Suburban.Work Trips")
+knitr::kable(ResultSO,format = "markdown", caption = "Estimation Results - Suburban.Other Trips")
+
+```
+
+```{r message = FALSE,warning=FALSE,echo=FALSE, results='hide'}
+# ### Change database
+# database = databasei
+# 
+# ### Initialise code｜コードを初期化する
+# apollo_initialise()
+# 
+# ### Set core controls｜コア項目を設定する（モデル名、モデルの説明、個人IDの変数設定）
+# apollo_control = list(
+#   modelName  ="MNL_Modelv4",
+#   modelDescr ="Simple MNL model ",
+#   indivID    ="ind_tripID"
+# )
+# 
+# # DEFINE MODEL PARAMETERS
+# apollo_beta2=c(asc_walk   = 0,
+#               asc_bike   = 0,
+#               asc_car   = 0,
+#               asc_pass1   = 0,
+#               asc_pass2   = 0,
+#               asc_rail_w   = 0,
+#               asc_rail_b   = 0,
+#               asc_rail_c   = 0,
+#               asc_rail_p1   = 0,
+#               asc_rail_p2   = 0,
+#               b_tt_w  = 0,
+#               b_tt_b  = 0,
+#               b_tt_c  = 0,
+#               b_tt_p1  = 0,
+#               b_tt_p2  = 0,
+#               b_tt_r  = 0,
+#               b_co = 0)
+# 
+# apollo_beta = apollo_beta2
+# 
+# apollo_fixed = c("asc_walk")
+# 
+# #GROUP AND VALIDATE INPUTS
+# apollo_inputs = apollo_validateInputs()
+# 
+# # DEFINE MODEL AND LIKELIHOOD FUNCTION
+# apollo_probabilities2=function(apollo_beta, apollo_inputs, functionality="estimate"){
+#   
+#   ### Attach inputs and detach after function exit
+#   apollo_attach(apollo_beta, apollo_inputs)
+#   on.exit(apollo_detach(apollo_beta, apollo_inputs))
+#   
+#   ### Create list of probabilities P｜確率のリストを作成する
+#   P = list()
+#   ### List of utilities: these must use the same names as in mnl_settings, order is irrelevant
+#   V = list()
+#   V[['walk']]= asc_walk  + b_tt_w  * time.wk 
+#   V[['bike']]= asc_bike  + b_tt_b  * time.bk 
+#   V[['car']]= asc_car  + b_tt_c  * time.in.traffic.s + b_co * costCAR 
+#   V[['pass1']]= asc_pass1  + b_tt_p1 * time.in.traffic.s + b_co * costCAR 
+#   V[['pass2']]= asc_pass2  + b_tt_p2 * time.in.traffic.s + b_co * costCAR 
+#   V[['rail_w']]= asc_rail_w  + b_tt_r * time + b_co * costIC + b_tt_w *(access_time.w + depart_time.w)
+#   V[['rail_b']]= asc_rail_b  + b_tt_r * time + b_co * costIC + b_tt_b *(access_time.b + depart_time.b)
+#   V[['rail_c']]= asc_rail_c  + b_tt_r  * time + b_tt_c  * (access_time.c + depart_time.c) + b_co * (costCAR.A + costCAR.D + costIC)
+#   V[['rail_p1']]= asc_rail_p1  + b_tt_r  * time + b_tt_p1  *(access_time.c+depart_time.c) + b_co * (costCAR.A + costCAR.D + costIC)
+#   V[['rail_p2']]= asc_rail_p2  + b_tt_r  * time + b_tt_p2  *(access_time.c+depart_time.c) + b_co * (costCAR.A + costCAR.D + costIC)
+# 
+#   mnl_settings = list(
+#     alternatives  = c(walk=1, bike=2, car=3, pass1 = 4, pass2 = 5, rail_w=6, rail_b=7, rail_c=8, rail_p1 = 9, rail_p2 = 10),
+#     avail        = list(walk=walk_av, bike=bike_av, car=car_av, pass1=carp1_av, pass2=carp2_av, rail_w=train_walk_av, rail_b=train_bike_av, rail_c=train_car_av, rail_p1=train_carp1_av,rail_p2=train_carp2_av ),
+#     choiceVar    = CHOICE,
+#     V             = V
+#   )
+#   
+#   P[['model']] = apollo_mnl(mnl_settings, functionality)
+#   P = apollo_prepareProb(P, apollo_inputs, functionality)
+#   return(P)
+# }
+# 
+# model2 = apollo_estimate(apollo_beta, apollo_fixed, apollo_probabilities2, apollo_inputs)
+# 
+# estimates[[2]] <- model2$estimate
+# 
+# ## Model Performance, Goodness of fit
+# Result <- as.data.frame(apollo_modelOutput(model2))
+# 
+# predictions <- as.data.frame(apollo_prediction(model2, apollo_probabilities2, apollo_inputs))
+# mL02 <- model2$LL0
+# mLL2 <- model2$LLout
+# mRho2 <- (mL02-mLL2)/mL02
+# parameters <- model2$estimate
+# maRho2 <- (mL02-(mLL2-length(parameters)))/mL02
+```
+
+
+```{r message = FALSE,warning=FALSE,echo=FALSE, results='hide'}
+# ### Change database
+# database = databasei
+# 
+# database <- database %>%
+#   mutate(CHOICE = ifelse(
+#     CHOICE == 1, 1,
+#     ifelse(CHOICE == 2, 2,
+#     ifelse(CHOICE == 3, 3,
+#     ifelse(CHOICE == 4, 4,
+#     ifelse(CHOICE == 5, 5,
+#     ifelse(CHOICE == 6, 6,
+#     ifelse(CHOICE == 7, 6,
+#     ifelse(CHOICE == 8, 8,
+#     ifelse(CHOICE == 9, 8,
+#     ifelse(CHOICE == 10, 8,
+#     NA)))))))))))
+# 
+# database <- database %>%
+#     mutate(train_car_av = case_when(
+#     (train_carp1_av == 1) ~ 1,
+#     (train_carp2_av == 1) ~ 1,
+#     train_car_av == 1 ~ 1,  
+#     TRUE ~ 0
+#   ))  %>%
+#     mutate(train_walk_av = case_when(
+#     train_walk_av == 1 ~ 1,
+#     train_bike_av == 1 ~ 1,
+#     CHOICE == 6 ~ 1,  
+#     TRUE ~ 0   
+#   ))  
+# 
+# ### Initialise code
+# apollo_initialise()
+# 
+# ### Set core controls
+# apollo_control = list(
+#   modelName  = "MNL_Modelv5", # Change from v4 to v5
+#   modelDescr = "Simple MNL model without rail_p1 and rail_p2",
+#   indivID    = "ind_tripID"
+# )
+# 
+# # DEFINE MODEL PARAMETERS
+# apollo_beta3 = c(asc_walk   = 0,
+#                  asc_bike   = 0,
+#                  asc_car    = 0,
+#                  asc_pass1  = 0,
+#                  asc_pass2  = 0,
+#                  asc_rail_w = 0,
+#                  asc_rail_c = 0,
+#                  b_tt_w     = 0,
+#                  b_tt_b     = 0,
+#                  b_tt_c     = 0,
+#                  b_tt_p1    = 0,
+#                  b_tt_p2    = 0,
+#                  b_tt_r     = 0,
+#                  b_co       = 0)
+# 
+# apollo_beta = apollo_beta3
+# 
+# apollo_fixed = c("asc_walk")
+# 
+# #GROUP AND VALIDATE INPUTS
+# apollo_inputs = apollo_validateInputs()
+# 
+# # DEFINE MODEL AND LIKELIHOOD FUNCTION
+# apollo_probabilities3 = function(apollo_beta, apollo_inputs, functionality="estimate") {
+#   ### Attach inputs and detach after function exit
+#   apollo_attach(apollo_beta, apollo_inputs)
+#   on.exit(apollo_detach(apollo_beta, apollo_inputs))
+#   
+#   ### Create list of probabilities P
+#   P = list()
+#   ### List of utilities
+#   V = list()
+#   V[['walk']]   = asc_walk + b_tt_w * time.wk 
+#   V[['bike']]   = asc_bike + b_tt_b * time.bk 
+#   V[['car']]    = asc_car + b_tt_c * time.in.traffic.s + b_co * costCAR 
+#   V[['pass1']]  = asc_pass1 + b_tt_p1 * time.in.traffic.s + b_co * costCAR 
+#   V[['pass2']]  = asc_pass2 + b_tt_p2 * time.in.traffic.s + b_co * costCAR 
+#   V[['rail_w']] = asc_rail_w + b_tt_r * time + b_co * costIC + b_tt_w * (access_time.w + depart_time.w)
+#   V[['rail_c']] = asc_rail_c + b_tt_r * time + b_tt_c * (access_time.c + depart_time.c) + b_co * (costCAR.A + costCAR.D + costIC)
+# 
+#   mnl_settings = list(
+#     alternatives  = c(walk=1, bike=2, car=3, pass1=4, pass2=5, rail_w=6, rail_c=8),
+#     avail         = list(walk=walk_av, bike=bike_av, car=car_av, pass1=carp1_av, pass2=carp2_av, rail_w=train_walk_av, rail_c=train_car_av),
+#     choiceVar     = CHOICE,
+#     V             = V
+#   )
+#   
+#   P[['model']] = apollo_mnl(mnl_settings, functionality)
+#   P = apollo_prepareProb(P, apollo_inputs, functionality)
+#   return(P)
+# }
+# 
+# model3 = apollo_estimate(apollo_beta, apollo_fixed, apollo_probabilities3, apollo_inputs)
+# 
+# estimates[[3]] <- model3$estimate
+# 
+# ## Model Performance, Goodness of fit
+# Result3 <- as.data.frame(apollo_modelOutput(model3))
+# 
+# predictions <- as.data.frame(apollo_prediction(model3, apollo_probabilities3, apollo_inputs))
+# mL03 <- model3$LL0
+# mLL3 <- model3$LLout
+# maRho3 <- (mL03-mLL3)/mL03
+# parameters <- model3$estimate
+# maRho3 <- (mL03-(mLL3-length(parameters)))/mL03
+```
+
+```{r}
+# knitr::kable(Result3,format = "markdown", caption = "Estimation Results - Work Trips")
+
+
+```
+
+
+```{r message = FALSE}
+# database <- databasei
+# # Add a column for the maximum probability
+# predictions$max_prob <- apply(predictions[,3:12], 1, max)
+# 
+# # Add a column for the predicted mode
+# 
+# predictions$predicted_mode <- apply(predictions[,3:12], 1, function(x) names(x)[which.max(x)])
+# 
+# predictions$choice_n <- ifelse(predictions$predicted_mode == "walk", 1,
+#                         ifelse(predictions$predicted_mode == "bike", 2,
+#                         ifelse(predictions$predicted_mode == "car",3,
+#                         ifelse(predictions$predicted_mode == "pass1",4,
+#                         ifelse(predictions$predicted_mode == "pass2", 5,
+#                         ifelse(predictions$predicted_mode == "rail_w", 6,
+#                         ifelse(predictions$predicted_mode == "rail_b", 7,
+#                         ifelse(predictions$predicted_mode == "rail_c", 8,
+#                         ifelse(predictions$predicted_mode == "rail_p1", 9,
+#                         ifelse(predictions$predicted_mode == "rail_p2", 10,NA))))))))))
+# 
+# # Calculate the percentage of correct predictions
+# pcMNL <- mean(predictions$choice_n == database$CHOICE)
+# 
+# 
+#  ### Percentage Clearly Correct
+# 
+# # t is picked to be 2/3 since it is double that of c^-1, where c is choice set size of 3
+# # t is carried forward from previous model, that only had 3 choices, 0.66 is pretty high ngl
+# t = 0.66
+# 
+# 
+# predictions$clearly_correct <- ifelse(predictions$chosen > t, 1, 0)
+# pccMNL <- mean(predictions$clearly_correct)
+# 
+#  ### Percentage Clearly Wrong
+# 
+# predictions$clearly_wrong <- ifelse(predictions$max_prob != predictions$chosen & predictions$max_prob > t, 1, 0)
+# pcwMNL <- mean(predictions$clearly_wrong)
+# 
+#  ### Fitting factor - mean of the estimated choice probs
+# 
+# ffMNL <- mean(predictions$chosen)
+# 
+#  ### Brier Score
+# 
+# # Create a matrix of binary indicators for each mode
+# brier_guide <- data.frame(c(predictions$ID))
+# brier_guide$walk <- ifelse(database$CHOICE == 1, 1, 0)
+# brier_guide$bike <- ifelse(database$CHOICE == 2, 1, 0)
+# brier_guide$car <- ifelse(database$CHOICE == 3, 1, 0)
+# brier_guide$pass1 <- ifelse(database$CHOICE == 4, 1, 0)
+# brier_guide$pass2 <- ifelse(database$CHOICE == 5, 1, 0)
+# brier_guide$rail_w <- ifelse(database$CHOICE == 6, 1, 0)
+# brier_guide$rail_b <- ifelse(database$CHOICE == 7, 1, 0)
+# brier_guide$rail_c <- ifelse(database$CHOICE == 8, 1, 0)
+# brier_guide$rail_p1 <- ifelse(database$CHOICE == 9, 1, 0)
+# brier_guide$rail_p2 <- ifelse(database$CHOICE == 10, 1, 0)
+# 
+# # Calculate the Brier score
+# predictions$brier_score <-((predictions$walk - brier_guide$walk)^2 +
+#                            (predictions$bike - brier_guide$bike)^2 +
+#                            (predictions$car - brier_guide$car)^2 +
+#                            (predictions$pass1 - brier_guide$pass1)^2 +
+#                            (predictions$pass2 - brier_guide$pass2)^2 +
+#                            (predictions$rail_w - brier_guide$rail_w)^2 +
+#                            (predictions$rail_b - brier_guide$rail_b)^2 +
+#                            (predictions$rail_c - brier_guide$rail_c)^2 + 
+#                            (predictions$rail_p1 - brier_guide$rail_p1)^2 +
+#                            (predictions$rail_p2 - brier_guide$rail_p2)^2 )
+# 
+# brMNL <- mean(predictions$brier_score)
+# 
+# 
+# ### 1.3 Calculate the aggregate probabilities for NL model
+# 
+#   ## Market share of walk
+#   MN_Walk <- sum(predictions$walk)/nrow(database)
+#   ## Market share of bike
+#   MN_Bike <- sum(predictions$bike)/nrow(database)
+#   ## Market share of Car
+#   MN_Car <- sum(predictions$car)/nrow(database)
+#   ## Market share of pass1
+#   MN_Pass1 <- sum(predictions$pass1)/nrow(database)
+#   ## Market share of pass2
+#   MN_Pass2 <- sum(predictions$pass2)/nrow(database)
+#   ## Market share of Train-walk
+#   MN_Rail.W <- sum(predictions$rail_w)/nrow(database)
+#   ## Market share of train-bike
+#   MN_Rail.B <- sum(predictions$rail_b)/nrow(database)
+#   ## Market share of train-Car
+#   MN_Rail.C <- sum(predictions$rail_c)/nrow(database)
+#   ## Market share of train-pass1
+#   MN_Rail.P1 <- sum(predictions$pass1)/nrow(database)
+#   ## Market share of train-pass2
+#   MN_Rail.P2 <- sum(predictions$pass2)/nrow(database)
+# 
+# 
+# ## 3. Print the output
+#   M_aggregate <- data.frame()
+#   M_aggregate[1,1] <- sum(database$CHOICE == 1)/nrow(database)
+#   M_aggregate[2,1] <- sum(database$CHOICE == 2)/nrow(database)
+#   M_aggregate[3,1] <- sum(database$CHOICE == 3)/nrow(database)
+#   M_aggregate[4,1] <- sum(database$CHOICE == 4)/nrow(database)
+#   M_aggregate[5,1] <- sum(database$CHOICE == 5)/nrow(database)
+#   M_aggregate[6,1] <- sum(database$CHOICE == 6)/nrow(database)
+#   M_aggregate[7,1] <- sum(database$CHOICE == 7)/nrow(database)
+#   M_aggregate[8,1] <- sum(database$CHOICE == 8)/nrow(database)
+#   M_aggregate[9,1] <- sum(database$CHOICE == 9)/nrow(database)
+#   M_aggregate[10,1] <- sum(database$CHOICE == 10)/nrow(database)
+#   M_aggregate[1,2] <- MN_Walk
+#   M_aggregate[2,2] <- MN_Bike
+#   M_aggregate[3,2] <- MN_Car
+#   M_aggregate[4,2] <- MN_Pass1
+#   M_aggregate[5,2] <- MN_Pass2
+#   M_aggregate[6,2] <- MN_Rail.W
+#   M_aggregate[7,2] <- MN_Rail.B
+#   M_aggregate[8,2] <- MN_Rail.C
+#   M_aggregate[9,2] <- MN_Rail.P1
+#   M_aggregate[10,2] <- MN_Rail.P2
+#   rownames(M_aggregate) <- c("Walk", "Bike", "Car","Choice Passenger", "Captive Passenger", "Walk to Rail", "Bike to Rail","Car to Rail", "Pass1 to Rail", "Pass2 to Rail")
+#   colnames(M_aggregate) <- c("Observed", "MNL Model")
+#   knitr::kable(M_aggregate,format = "markdown", digits = 5, caption = "Observed vs Predicted Market Shares")
+#  ### Mean Absolute Error (MAE)
+# #the outcome measure used is market share
+# 
+# M_aggregate$MNL_error <- M_aggregate$`MNL Model` - M_aggregate$Observed
+# maeMNL <- mean(abs(M_aggregate$MNL_error))
+# 
+# 
+#  ### Root Mean Squared Error (RMSE)
+# 
+# rmseMNL <- sqrt(mean(M_aggregate$MNL_error^2))
+# 
+# 
+# 
+# # table for error comparisons
+#   P_aggregate <- data.frame(matrix(1, nrow = 3, ncol = 7))
+#   P_aggregate[1,1] <- pcMNL*100
+#   P_aggregate[1,2] <- pccMNL*100
+#   P_aggregate[1,3] <- pcwMNL*100
+#   P_aggregate[1,4] <- ffMNL
+#   P_aggregate[1,5] <- brMNL
+#   P_aggregate[1,6] <- maeMNL
+#   P_aggregate[1,7] <- rmseMNL
+#   rownames(P_aggregate) <- c("MNL Model", "Headway model", "Basic Model")
+#   colnames(P_aggregate) <- c("% Correct", "% Clearly Right", "% Clearly Wrong", "Fitting Factor", "Brier Score","Market share MAE", "Market share RMSE")
+#   knitr::kable(P_aggregate,format = "markdown", digits = 10, caption = "Cross-Validation Scores: 10-fold")
+
+```
+
