@@ -8,6 +8,7 @@ import MyDMC.Trial.Dec28DMCExtension;
 import MyDMC.Trial.Dec4DMCExtension;
 import MyDMC.Trial.Jan02DMCExtension;
 import MyDMC.Trial.Jan06DMCExtension;
+import MyDMC.UrbanIndexDMCExtension;
 import org.apache.commons.io.IOUtils;
 import org.hibernate.validator.constraints.URL;
 import org.matsim.analysis.CalcLinkStats;
@@ -32,17 +33,17 @@ import org.matsim.examples.ExamplesUtils;
 
 public class RunRandomSelection {
 	static public void main(String[] args) {
-		String configURL = "examples/scenarios/Odakyu3/configbi-level.xml";
+		String configURL = "examples/scenarios/Odakyu4/confignewbase.xml";
 
 		Config config = ConfigUtils.loadConfig(configURL,new DiscreteModeChoiceConfigGroup());
 		config.controler().setOverwriteFileSetting(OutputDirectoryHierarchy.OverwriteFileSetting.deleteDirectoryIfExists);
-		config.controler().setOutputDirectory("examples/scenarios/Odakyu3/testnewbase");
+		config.controler().setOutputDirectory("examples/scenarios/Odakyu4/testnewbase");
 
 		Scenario scenario = ScenarioUtils.loadScenario(config);
 
 		Controler controller = new Controler(scenario);
 		controller.addOverridingModule(new DiscreteModeChoiceModule());
-		controller.addOverridingModule(new Jan06DMCExtension());
+		controller.addOverridingModule(new UrbanIndexDMCExtension());
 		DiscreteModeChoiceConfigurator.configureAsModeChoiceInTheLoop(config);
 
 		controller.run();

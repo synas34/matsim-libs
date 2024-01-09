@@ -1,6 +1,7 @@
 package MyDMC.Trial;
 
 import com.google.inject.Inject;
+import org.matsim.api.core.v01.Coord;
 import org.matsim.api.core.v01.TransportMode;
 import org.matsim.api.core.v01.population.Leg;
 import org.matsim.api.core.v01.population.Person;
@@ -9,6 +10,7 @@ import org.matsim.contribs.discrete_mode_choice.components.estimators.AbstractTr
 import org.matsim.contribs.discrete_mode_choice.model.DiscreteModeChoiceTrip;
 import org.matsim.contribs.discrete_mode_choice.model.trip_based.candidates.TripCandidate;
 import org.matsim.core.router.TripRouter;
+import org.matsim.core.utils.geometry.CoordUtils;
 import org.matsim.core.utils.timing.TimeInterpretation;
 import org.matsim.facilities.ActivityFacilities;
 
@@ -47,6 +49,8 @@ public class Jan06TripEstimator extends AbstractTripRouterEstimator {
 				} else {
 					totalTransferTime += (leg.getTravelTime().seconds() / 3600.0);
 				}
+
+
 			}
 		}
 
@@ -101,7 +105,7 @@ public class Jan06TripEstimator extends AbstractTripRouterEstimator {
 
 		if (totalTravelDistance <= 3) {
 			walkFactor =  -5.56 * totalTravelTime;
-			bikeFactor = -1.36 - 4.61 * totalTravelTime ;
+			bikeFactor = -1.36 - 4.78 * totalTravelTime ;
 		} else if (totalTravelDistance > 3 && totalTravelDistance <= 7) {
 			walkFactor = dummyvalue + dummyvalue * totalTravelTime;
 			bikeFactor = -1.38 - 4.78 * totalTravelTime;
@@ -114,7 +118,7 @@ public class Jan06TripEstimator extends AbstractTripRouterEstimator {
 			case TransportMode.bike: utility = bikeFactor 	;break;
 			case TransportMode.car: utility = -3.40 - 2.65 * totalTravelTime - 0.0010 * (totalTravelDistance * 7); break;
 			case TransportMode.ride: utility = -5.23 - 4.30 * totalTravelTime;break;
-			case TransportMode.pt: utility = -0.507 - 0.76 * totalRidingTime - 5.56 * totalTransferTime - 0.0010 * (totalTravelDistance * 16) ;break;     }
+			case TransportMode.pt: utility = -0.507 - 0.30 * totalRidingTime - 5.56 * totalTransferTime - 0.0010 * (totalTravelDistance * 16) ;break;     }
 
 		return utility;
 	}
