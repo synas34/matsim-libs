@@ -1,6 +1,11 @@
 package ConfigCreator;
 
 import MyDMC.*;
+import MyDMC.Sensitivity.Jan11DMCExtension1;
+import MyDMC.Sensitivity.Jan11DMCExtension_2;
+import MyDMC.Sensitivity.Jan11DMCExtension_3;
+import MyDMC.Sensitivity.Jan11DMCExtension_4;
+import MyDMC.Trial.Jan06DMCExtension;
 import MyDMC.Trial.SAVasRideDMCExtension;
 import MyDMC.Trial.UrbanIndexSAVDMCExtension;
 import org.matsim.api.core.v01.Scenario;
@@ -18,6 +23,7 @@ import org.matsim.core.config.ConfigUtils;
 import org.matsim.core.config.groups.QSimConfigGroup;
 import org.matsim.core.controler.Controler;
 import org.matsim.core.controler.OutputDirectoryHierarchy;
+import org.matsim.core.scenario.ScenarioUtils;
 import org.matsim.pt.analysis.VehicleTracker;
 import org.matsim.vis.otfvis.OTFVisConfigGroup;
 import org.matsim.api.core.v01.Id;
@@ -32,20 +38,14 @@ import java.io.IOException;
 
 public class RunMatsimUnique {
 
+	public static void runSAVSimulation(String configFilePath, String outputFilePath, AbstractDiscreteModeChoiceExtension DMCExtension) throws IOException {
+		Config config = ConfigUtils.loadConfig(configFilePath, new MultiModeDrtConfigGroup(),
+			new DvrpConfigGroup(), new OTFVisConfigGroup(), new DiscreteModeChoiceConfigGroup());
 
-	public static void RunSAVSimulation (String configpath, String outputpath, AbstractDiscreteModeChoiceExtension DMCExtension) throws IOException {
-
-
-		Config config;
-			config = ConfigUtils.loadConfig( configpath, new MultiModeDrtConfigGroup(),
-				new DvrpConfigGroup(), new OTFVisConfigGroup(),new DiscreteModeChoiceConfigGroup());
-
-
-		config.controler().setOverwriteFileSetting( OutputDirectoryHierarchy.OverwriteFileSetting.deleteDirectoryIfExists );
-		config.controler().setOutputDirectory(outputpath);
-		// possibly modify config here
+		config.controler().setOverwriteFileSetting(OutputDirectoryHierarchy.OverwriteFileSetting.deleteDirectoryIfExists);
+		config.controler().setOutputDirectory(outputFilePath);
 		config.qsim().setSimStarttimeInterpretation(QSimConfigGroup.StarttimeInterpretation.onlyUseStarttime);
-		config.qsim().setSimEndtimeInterpretation((QSimConfigGroup.EndtimeInterpretation.onlyUseEndtime));
+		config.qsim().setSimEndtimeInterpretation(QSimConfigGroup.EndtimeInterpretation.onlyUseEndtime);
 
 		Controler controller = DrtControlerCreator.createControler(config, false);
 
@@ -54,44 +54,56 @@ public class RunMatsimUnique {
 		controller.addOverridingModule(DMCExtension);
 		DiscreteModeChoiceConfigurator.configureAsModeChoiceInTheLoop(config);
 
-
 		// Run the simulation
 		controller.run();
-
+		// Open modestats.txt in the output directory
 		Desktop.getDesktop().open(new File(config.controler().getOutputDirectory() + "/modestats.txt"));
+	}
 
+	public static void runSimulation(String configFilePath, String outputFilePath, AbstractDiscreteModeChoiceExtension DMCExtension) throws IOException {
+		Config config = ConfigUtils.loadConfig(configFilePath, new DiscreteModeChoiceConfigGroup());
 
+		config.controler().setOverwriteFileSetting(OutputDirectoryHierarchy.OverwriteFileSetting.deleteDirectoryIfExists);
+		config.controler().setOutputDirectory(outputFilePath);
 
+		Scenario scenario = ScenarioUtils.loadScenario(config);
+
+		Controler controller = new Controler(scenario);
+		controller.addOverridingModule(new DiscreteModeChoiceModule());
+		controller.addOverridingModule(DMCExtension);
+		DiscreteModeChoiceConfigurator.configureAsModeChoiceInTheLoop(config);
+
+		controller.run();
+		// Open modestats.txt in the output directory
+		Desktop.getDesktop().open(new File(config.controler().getOutputDirectory() + "/modestats.txt"));
 	}
 
 	public static void main(String[] args) throws IOException {
+		String[] configFiles = {
+			"examples/scenarios/Odakyu4/confignewSAV.xml"
+		};
 
-		Config config;
-		if ( args==null || args.length==0 || args[0]==null ){
-			config = ConfigUtils.loadConfig( "examples/scenarios/Odakyu4/confignewSAV.xml", new MultiModeDrtConfigGroup(),
-				new DvrpConfigGroup(), new OTFVisConfigGroup(),new DiscreteModeChoiceConfigGroup());
-		} else {
-			config = ConfigUtils.loadConfig( args );
+		AbstractDiscreteModeChoiceExtension[] DMCExtensions = {
+			new Jan11DMCExtension1(),
+			new Jan11DMCExtension_2(),
+			new Jan11DMCExtension_3(),
+			new Jan11DMCExtension_4()
+		};
+
+		for (String configFilePath : configFiles) {
+			for (AbstractDiscreteModeChoiceExtension DMCExtension : DMCExtensions) {
+				String outputFilePath = getOutputFilePath(configFilePath, DMCExtension);
+				runSimulation(configFilePath, outputFilePath, DMCExtension);
+			}
 		}
-
-		config.controler().setOverwriteFileSetting( OutputDirectoryHierarchy.OverwriteFileSetting.deleteDirectoryIfExists );
-		config.controler().setOutputDirectory("examples/scenarios/Odakyu4/output(200)Jan07NEWBASE");
-		// possibly modify config here
-		config.qsim().setSimStarttimeInterpretation(QSimConfigGroup.StarttimeInterpretation.onlyUseStarttime);
-		config.qsim().setSimEndtimeInterpretation((QSimConfigGroup.EndtimeInterpretation.onlyUseEndtime));
-
-		Controler controller = DrtControlerCreator.createControler(config, false);
-
-		// Add Discrete Choice Module
-		controller.addOverridingModule(new DiscreteModeChoiceModule());
-		controller.addOverridingModule(new UrbanIndexSAVDMCExtension());
-		DiscreteModeChoiceConfigurator.configureAsModeChoiceInTheLoop(config);
-
-		// Run the simulation
-		controller.run();
-		Desktop.getDesktop().open(new File(config.controler().getOutputDirectory() + "/modestats.txt"));
-
-
-
 	}
+
+	private static String getOutputFilePath(String configFilePath, AbstractDiscreteModeChoiceExtension DMCExtension) {
+		String configFileName = new File(configFilePath).getName();
+		String DMCExtensionName = DMCExtension.getClass().getSimpleName();
+		return "output_directory/" + configFileName + "_" + DMCExtensionName;
+	}
+
 }
+
+
