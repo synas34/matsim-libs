@@ -43,7 +43,7 @@ public class RunRandomSelection {
 
 		Controler controller = new Controler(scenario);
 		controller.addOverridingModule(new DiscreteModeChoiceModule());
-		controller.addOverridingModule(new Jan06DMCExtension());
+		controller.addOverridingModule(new UrbanIndexDMCExtension());
 		DiscreteModeChoiceConfigurator.configureAsModeChoiceInTheLoop(config);
 
 		controller.run();

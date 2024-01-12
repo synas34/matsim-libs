@@ -227,7 +227,7 @@
 
 
 	<module name="changeMode">
-		<param name="modes" value="car,walk,pt,bike, ride, drt" />
+		<param name="modes" value="car,walk,pt,bike,ride, drt" />
 		<!-- Defines whether car availability is considered be considered or not. An agent has no car only if it has no license, or never access to a car. Default: true -->
 		<param name="ignoreCarAvailability" value="false" />
 	</module>

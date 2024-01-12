@@ -325,7 +325,7 @@
 		<parameterset type="intermodalAccessEgress" >
 			<param name="mode" value="transit_walk" />
 			<param name="personFilterAttribute" value="hasBike" />
-			<param name="personFilterValue" value="yes" />
+			<param name="personFilterValue" value="TRUE" />
 			<!-- Initial distance around a person's origin or destination within which transit stops are looked for. -->
 			<param name="initialSearchRadius" value="1500.0" />
 			<!-- Maximum distance a person is willing to walk to/from a transit stop. -->

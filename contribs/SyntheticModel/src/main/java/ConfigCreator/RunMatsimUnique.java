@@ -5,9 +5,7 @@ import MyDMC.Sensitivity.Jan11DMCExtension1;
 import MyDMC.Sensitivity.Jan11DMCExtension_2;
 import MyDMC.Sensitivity.Jan11DMCExtension_3;
 import MyDMC.Sensitivity.Jan11DMCExtension_4;
-import MyDMC.Trial.Jan06DMCExtension;
-import MyDMC.Trial.SAVasRideDMCExtension;
-import MyDMC.Trial.UrbanIndexSAVDMCExtension;
+import MyDMC.Trial.*;
 import org.matsim.api.core.v01.Scenario;
 import org.matsim.contrib.drt.extension.preplanned.run.PreplannedDrtModeModule;
 import org.matsim.contrib.drt.run.*;
@@ -80,19 +78,20 @@ public class RunMatsimUnique {
 
 	public static void main(String[] args) throws IOException {
 		String[] configFiles = {
-			"examples/scenarios/Odakyu4/confignewSAV.xml"
+			"examples/scenarios/Odakyu4/confignewbase.xml",
 		};
 
 		AbstractDiscreteModeChoiceExtension[] DMCExtensions = {
-			new Jan11DMCExtension1(),
-			new Jan11DMCExtension_2(),
-			new Jan11DMCExtension_3(),
-			new Jan11DMCExtension_4()
+			new Jan06DMCExtension(),
 		};
 
 		for (String configFilePath : configFiles) {
+			int dmc = 1;
 			for (AbstractDiscreteModeChoiceExtension DMCExtension : DMCExtensions) {
-				String outputFilePath = getOutputFilePath(configFilePath, DMCExtension);
+//				String outputFilePath = configFilePath + "_" + dmc;
+				String outputFilePath = "examples/scenarios/Odakyu4/testnewbase_" + dmc;
+				dmc ++;
+//				runSAVSimulation(configFilePath, outputFilePath, DMCExtension);
 				runSimulation(configFilePath, outputFilePath, DMCExtension);
 			}
 		}
