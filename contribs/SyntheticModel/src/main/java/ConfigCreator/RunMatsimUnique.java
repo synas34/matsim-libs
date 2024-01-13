@@ -75,27 +75,35 @@ public class RunMatsimUnique {
 		// Open modestats.txt in the output directory
 		Desktop.getDesktop().open(new File(config.controler().getOutputDirectory() + "/modestats.txt"));
 	}
-
 	public static void main(String[] args) throws IOException {
 		String[] configFiles = {
-			"examples/scenarios/Odakyu4/confignewbase.xml",
+//			"examples/scenarios/Odakyu4/confignewbase.xml",
+			"examples/scenarios/Odakyu5/configSAV(Req%12%50).xml",
+			"examples/scenarios/Odakyu5/configSAV(Req%30%75).xml",
+			"examples/scenarios/Odakyu5/configSAV(Req%30%50).xml",
 		};
 
 		AbstractDiscreteModeChoiceExtension[] DMCExtensions = {
 			new Jan06DMCExtension(),
 		};
 
+		int cfg = 1;
 		for (String configFilePath : configFiles) {
 			int dmc = 1;
 			for (AbstractDiscreteModeChoiceExtension DMCExtension : DMCExtensions) {
-//				String outputFilePath = configFilePath + "_" + dmc;
-				String outputFilePath = "examples/scenarios/Odakyu4/testnewbase_" + dmc;
-				dmc ++;
-//				runSAVSimulation(configFilePath, outputFilePath, DMCExtension);
-				runSimulation(configFilePath, outputFilePath, DMCExtension);
+				String outputFilePath = "examples/scenarios/Odakyu5/outputJan13_" + cfg + "dmc"+ dmc;
+				try {
+					runSAVSimulation(configFilePath, outputFilePath, DMCExtension);
+				} catch (Exception e) {
+					System.err.println("Simulation failed for config file: " + configFilePath);
+					e.printStackTrace();
+				}
+				dmc++;
 			}
+			cfg++;
 		}
 	}
+
 
 	private static String getOutputFilePath(String configFilePath, AbstractDiscreteModeChoiceExtension DMCExtension) {
 		String configFileName = new File(configFilePath).getName();
