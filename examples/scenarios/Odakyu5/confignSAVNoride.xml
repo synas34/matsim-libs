@@ -20,7 +20,7 @@
 		<param name="outputDirectory" value="./output" />
 		<param name="overwriteFiles" value="deleteDirectoryIfExists" />
 		<param name="firstIteration" value="0" />
-		<param name="lastIteration" value="15" />
+		<param name="lastIteration" value="20" />
 		<param name="eventsFileFormat" value="xml" />
 		<param name="mobsim" value="qsim" />
 	</module>
@@ -228,7 +228,7 @@
 
 	<module name="changeMode">
 		<!-- provide a comma-separated list of leg modes -->
-		<param name="modes" value="car,walk,pt,bike, drt, ride" />
+		<param name="modes" value="car,walk,pt,bike, drt" />
 		<!-- Defines whether car availability is considered be considered or not. An agent has no car only if it has no license, or never access to a car. Default: true -->
 		<param name="ignoreCarAvailability" value="false" />
 	</module>
@@ -261,7 +261,7 @@
 			<!-- Beta parameter for max travel time estimation. This value in seconds will be added to the estimated travel time. -->
 			<param name="maxTravelTimeBeta" value="1200"/>
 			<param name="drtServiceAreaShapeFile" value="Shapefiles/EntireOdakyuCorridorUTM54N.shp"/>
-			<param name="vehiclesFile" value="Odakyu5drts0S4(40pc).xml"/>
+			<param name="vehiclesFile" value="Odakyu5drts0S4(40pc).xml.xml"/>
 
 			<parameterset type="zonalSystem">
 				<!-- Specifies how the zones are generated. Here, it's based on a grid derived from the network. -->
@@ -309,6 +309,7 @@
 		<param name="transferPenaltyMinCost" value="130" />
 		<param name="useModeMappingForPassengers" value="true" />
 
+		<!-- The configuration for walking as access/egress mode. -->
 		<parameterset type="intermodalAccessEgress" >
 			<param name="mode" value="walk" />
 			<!-- Initial distance around a person's origin or destination within which transit stops are looked for. -->
@@ -320,12 +321,17 @@
 			<param name="searchExtensionRadius" value="500.0" />
 		</parameterset>
 
+
 		<parameterset type="intermodalAccessEgress" >
 			<param name="mode" value="transit_walk" />
 			<param name="personFilterAttribute" value="hasBike" />
 			<param name="personFilterValue" value="TRUE" />
+			<!-- Initial distance around a person's origin or destination within which transit stops are looked for. -->
 			<param name="initialSearchRadius" value="1500.0" />
+			<!-- Maximum distance a person is willing to walk to/from a transit stop. -->
 			<param name="maxRadius" value="2500.0" />
+			<!-- If less than 2 transit stops are found within the initial search radius,
+                 this value is added to the initial radius iteratively until transit stops are found or maxRadius is reached. -->
 			<param name="searchExtensionRadius" value="500.0" />
 		</parameterset>
 
@@ -371,7 +377,6 @@
 			<param name="maxEarlierDeparture_sec" value="300" />
 			<param name="maxLaterDeparture_sec" value="300" />
 		</parameterset>
-
 		<parameterset type="routeSelector" >
 			<param name="betaDepartureTime" value="0.0" />
 			<param name="betaTransferCount" value="3000.0" />
@@ -398,7 +403,7 @@
 		<param name="tourEstimator" value="Cumulative" />
 
 		<parameterset type="modeAvailability:Car">
-			<param name="availableModes" value="pt, car, walk, bike, drt, ride" />
+			<param name="availableModes" value="pt, car, walk, bike, drt" />
 		</parameterset>
 	</module>
 

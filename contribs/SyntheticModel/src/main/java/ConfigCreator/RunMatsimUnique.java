@@ -2,6 +2,7 @@ package ConfigCreator;
 
 import MyDMC.*;
 import MyDMC.Sensitivity.*;
+import MyDMC.Sensitivity.UrbanIndexDMCExtension;
 import MyDMC.Trial.*;
 import org.matsim.api.core.v01.Scenario;
 import org.matsim.contrib.drt.run.*;
@@ -37,8 +38,8 @@ public class RunMatsimUnique {
 	}
 
 	private static String getUniqueOutputFilePath(String configFilePath, AbstractDiscreteModeChoiceExtension DMCExtension) {
-		String baseOutputPath = "output_directory/";
-		String configFileName = new File(configFilePath).getName();
+		String baseOutputPath = "examples/scenarios/Odakyu5/";
+		String configFileName = new File(configFilePath).getName().replace(".xml", "");
 		String DMCExtensionName = DMCExtension.getClass().getSimpleName();
 		String outputPath = baseOutputPath + configFileName + "_" + DMCExtensionName;
 
@@ -50,6 +51,7 @@ public class RunMatsimUnique {
 		}
 		return outputPath;
 	}
+
 
 	public static void runSimulation(SimulationConfig simConfig) throws IOException {
 		Config config = ConfigUtils.loadConfig(simConfig.configFilePath, new DiscreteModeChoiceConfigGroup());
@@ -66,12 +68,12 @@ public class RunMatsimUnique {
 		Desktop.getDesktop().open(new File(simConfig.outputFilePath + "/modestats.txt"));
 	}
 
-	public static void runSAVSimulation(String configFilePath, String outputFilePath, AbstractDiscreteModeChoiceExtension DMCExtension) throws IOException {
-		Config config = ConfigUtils.loadConfig(configFilePath, new MultiModeDrtConfigGroup(),
+	public static void runSAVSimulation(SimulationConfig simConfig) throws IOException {
+		Config config = ConfigUtils.loadConfig(simConfig.configFilePath, new MultiModeDrtConfigGroup(),
 			new DvrpConfigGroup(), new OTFVisConfigGroup(), new DiscreteModeChoiceConfigGroup());
 
 		config.controler().setOverwriteFileSetting(OutputDirectoryHierarchy.OverwriteFileSetting.deleteDirectoryIfExists);
-		config.controler().setOutputDirectory(outputFilePath);
+		config.controler().setOutputDirectory(simConfig.outputFilePath);
 		config.qsim().setSimStarttimeInterpretation(QSimConfigGroup.StarttimeInterpretation.onlyUseStarttime);
 		config.qsim().setSimEndtimeInterpretation(QSimConfigGroup.EndtimeInterpretation.onlyUseEndtime);
 
@@ -79,28 +81,68 @@ public class RunMatsimUnique {
 
 		// Add Discrete Choice Module
 		controller.addOverridingModule(new DiscreteModeChoiceModule());
-		controller.addOverridingModule(DMCExtension);
+		controller.addOverridingModule(simConfig.DMCExtension);
 		DiscreteModeChoiceConfigurator.configureAsModeChoiceInTheLoop(config);
 
 		// Run the simulation
 		controller.run();
 		// Open modestats.txt in the output directory
-		Desktop.getDesktop().open(new File(config.controler().getOutputDirectory() + "/modestats.txt"));
+		Desktop.getDesktop().open(new File(simConfig.outputFilePath + "/modestats.txt"));
 	}
 
 	public static void main(String[] args) {
 
-		// Example configuration - replace with actual paths and extensions as needed
-		String configFilePath = "your_config_file_path.xml";
-		AbstractDiscreteModeChoiceExtension DMCExtension = new Jan06DMCExtension();
+		////////////////////////////////////////////////////// Example configuration - replace with actual paths and extensions as needed
+
+		String configFilePath = "examples/scenarios/Odakyu5/confignewbase.xml";
+		AbstractDiscreteModeChoiceExtension DMCExtension = new UrbanIndexDMCExtension();
 		SimulationConfig simConfig = new SimulationConfig(configFilePath, DMCExtension);
+		System.err.println("Simulation failed for output file: " + simConfig.outputFilePath );
 
 		try {
 			runSimulation(simConfig);
 		} catch (Exception e) {
 			System.err.println("Simulation failed for config file: " + configFilePath + " with DMC Extension: " + DMCExtension.getClass().getSimpleName());
-			e.printStackTrace();
-		}
+			e.printStackTrace();		}
+
+		////////////////////////////////////////////////////// Example configuration - replace with actual paths and extensions as needed
+
+		String configFilePath1 = "examples/scenarios/Odakyu5/configNoride.xml";
+		AbstractDiscreteModeChoiceExtension DMCExtension1 = new UrbanIndexDMCExtension_NORIDE();
+		SimulationConfig simConfig1 = new SimulationConfig(configFilePath1, DMCExtension1);
+			System.err.println("Simulation failed for output file: " + simConfig1.outputFilePath );
+
+		try {
+			runSimulation(simConfig1);
+		} catch (Exception e) {
+			System.err.println("Simulation failed for config file: " + configFilePath + " with DMC Extension: " + DMCExtension.getClass().getSimpleName());
+			e.printStackTrace();		}
+
+		////////////////////////////////////////////////////// Example configuration - replace with actual paths and extensions as needed
+
+		String configFilePath2 = "examples/scenarios/Odakyu5/configSAVbase.xml";
+		AbstractDiscreteModeChoiceExtension DMCExtension2 = new UrbanIndexDMCExtension();
+		SimulationConfig simConfig2 = new SimulationConfig(configFilePath2, DMCExtension2);
+			System.err.println("Simulation failed for output file: " + simConfig2.outputFilePath );
+
+		try {
+			runSAVSimulation(simConfig2);
+		} catch (Exception e) {
+			System.err.println("Simulation failed for config file: " + configFilePath + " with DMC Extension: " + DMCExtension.getClass().getSimpleName());
+			e.printStackTrace();		}
+
+		////////////////////////////////////////////////////// Example configuration - replace with actual paths and extensions as needed
+
+		String configFilePath3 = "examples/scenarios/Odakyu5/configSAVNoride.xml";
+		AbstractDiscreteModeChoiceExtension DMCExtension3 = new UrbanIndexDMCExtension_NORIDE();
+		SimulationConfig simConfig3 = new SimulationConfig(configFilePath3, DMCExtension3);
+			System.err.println("Simulation failed for output file: " + simConfig3.outputFilePath );
+
+		try {
+			runSAVSimulation(simConfig3);
+		} catch (Exception e) {
+			System.err.println("Simulation failed for config file: " + configFilePath + " with DMC Extension: " + DMCExtension.getClass().getSimpleName());
+			e.printStackTrace();		}
 
 //		AbstractDiscreteModeChoiceExtension[] DMCExtensions = {
 //			new Jan06DMCExtension(),
