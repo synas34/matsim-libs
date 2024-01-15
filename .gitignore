@@ -14,3 +14,7 @@ matsim/src/main/java/Doxyfile
 
 # ignore output directories:
 output/
+/examples/scenarios/Odakyu5/outputSAVbase1dmc1/
+/examples/scenarios/Odakyu5/outputSAVbase1dmc2/
+/examples/scenarios/Odakyu5/outputSAVbase1dmc3/
+/examples/scenarios/Odakyu5/outputSAVbase1dmc4/
