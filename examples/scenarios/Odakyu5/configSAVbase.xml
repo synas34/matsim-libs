@@ -228,7 +228,7 @@
 
 	<module name="changeMode">
 		<!-- provide a comma-separated list of leg modes -->
-		<param name="modes" value="car,walk,pt,bike, ride" />
+		<param name="modes" value="car,walk,pt,bike, drt, ride" />
 		<!-- Defines whether car availability is considered be considered or not. An agent has no car only if it has no license, or never access to a car. Default: true -->
 		<param name="ignoreCarAvailability" value="false" />
 	</module>
@@ -398,7 +398,7 @@
 		<param name="tourEstimator" value="Cumulative" />
 
 		<parameterset type="modeAvailability:Car">
-			<param name="availableModes" value="pt, car, walk, bike, ride" />
+			<param name="availableModes" value="pt, car, walk, bike, drt, ride" />
 		</parameterset>
 	</module>
 

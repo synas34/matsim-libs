@@ -30,14 +30,14 @@ public class GzipExtractor {
 	}
 
 	public static void main(String[] args) {
-		String gzipFilePath = "examples/scenarios/Odakyu5/outputJan13_1dmc1/output_legs.csv.gz";
-		String outputFilePath = "C:/Users/MATSIM/Downloads/output_legs.csv";
+		String gzipFilePath = "C:/Users/snasi/Downloads/outputJan13_3dmc3/output_trips.csv.gz";
+		String outputFilePath = "C:/Users/Public/Documents/RStudio/Analysis/trips(Req%30%50).csv";
 		extractGzipToFile(gzipFilePath, outputFilePath);
-		String gzipFilePath2 = "examples/scenarios/Odakyu5/outputJan13_1dmc1/output_trips.csv.gz";
-		String outputFilePath2 = "C:/Users/MATSIM/Downloads/output_trips.csv";
-		extractGzipToFile(gzipFilePath2, outputFilePath2);
-		String gzipFilePath3 = "examples/scenarios/Odakyu5/outputJan13_1dmc1/output_vehicles.xml.gz";
-		String outputFilePath3 = "C:/Users/MATSIM/Downloads/output_vehicles.csv";
-		extractGzipToFile(gzipFilePath3, outputFilePath3);
+//		String gzipFilePath2 = "examples/scenarios/Odakyu5/outputJan13_2dmc2/output_trips.csv.gz";
+//		String outputFilePath2 = "C:/Users/Public/Documents/RStudio/SAVMNLv1/trips(Req%30%75).csv";
+//		extractGzipToFile(gzipFilePath2, outputFilePath2);
+//		String gzipFilePath3 = "examples/scenarios/Odakyu5/outputJan13_1dmc1/output_vehicles.xml.gz";
+//		String outputFilePath3 = "C:/Users/MATSIM/Downloads/output_vehicles.csv";
+//		extractGzipToFile(gzipFilePath3, outputFilePath3);
 	}
 }
