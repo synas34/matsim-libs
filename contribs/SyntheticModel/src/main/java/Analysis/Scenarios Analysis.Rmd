@@ -1,0 +1,642 @@
+---
+title: "Analysis"
+output: html_document
+date: "2023-11-25"
+---
+
+```{r}
+library(tidyverse)
+library(ggplot2)
+library(readr)
+library(broom)
+
+trips_base <- read_delim("trips(car).csv", 
+    delim = ";", escape_double = FALSE, trim_ws = TRUE)
+trips_0_7_ <- read_delim("trips(0.7).csv", 
+    delim = ";", escape_double = FALSE, trim_ws = TRUE)
+trips_0_7tt <- read_delim("trips(0.7ttraveltime).csv", 
+    delim = ";", escape_double = FALSE, trim_ws = TRUE)
+trips_car <- read_delim("trips(base).csv", 
+    delim = ";", escape_double = FALSE, trim_ws = TRUE)
+trips_car0_7_ <- read_delim("trips(car0.7).csv", 
+    delim = ";", escape_double = FALSE, trim_ws = TRUE)
+
+
+database <- read_csv("database.csv")
+ValidationTrips <- read_csv("UrbanContextTrainingData.csv")
+# database <- database[database$ind_tripID %in% ValidationTrips$ind_tripID, ]
+# Update the "choice" column based on conditions
+Mesh <- read.csv("Mesh.csv")
+database <- merge(database, Mesh, by = "ind_tripID", all = FALSE)
+
+databse <- database %>%
+    filter(is.na(CHOICE_FAC)) 
+
+database <- database %>% 
+  mutate(UrbanIndex = case_when(
+    PC1 > 4.91 ~ "CBD",
+    PC1 < 4.91 & PC1 > 1.57 ~ "Urban",
+    PC1 < 1.57 & PC1 > -2.35 ~ "Suburban",
+    PC1 < -2.35  ~ "Rural",
+    TRUE ~ NA
+  ))
+
+database$CHOICE_FAC <- ifelse(database$repMode_type3_fac == "bus", "bus", 
+                    ifelse(database$repMode_type3_fac == "car" & database$car_driver_fac == "passenger", "ride", database$CHOICE_FAC))
+
+
+df <- select(database, ind_tripID, costIC, costCAR, repMode_type2_fac, id_ind, tripDurationMin, CHOICE, CHOICE_FAC, origin , destination, time.wk, time.s,time.in.traffic.s, time.bk, time, access_time.w, depart_time.w, PC1, UrbanIndex)
+df$time.r = (df$time + df$access_time.w + df$depart_time.w)/60
+df$time.wk = (df$time.wk)/60
+df$time.bk = (df$time.bk)/60
+df$time.s = (df$time.s)/60
+df$time.in.traffic.s = (df$time.in.traffic.s)/60
+
+df <- df %>%
+  rename(person  = ind_tripID)
+
+df_base <- inner_join(df, trips_base, by = "person")
+df_0_7_ <- inner_join(df, trips_0_7_, by = "person")
+df_0_7tt <- inner_join(df, trips_0_7tt, by = "person")
+df_car <- inner_join(df, trips_car, by = "person")
+df_car0_7_ <- inner_join(df, trips_car0_7_, by = "person")
+
+
+summ_base <- df_base %>%
+  group_by(longest_distance_mode) %>%
+  summarise(Count = n())
+summ_0_7_ <- df_0_7_ %>%
+  group_by(longest_distance_mode) %>%
+  summarise(Count = n())
+summ_0_7tt <- df_0_7tt %>%
+  group_by(longest_distance_mode) %>%
+  summarise(Count = n())
+summ_car <- df_car %>%
+  group_by(longest_distance_mode) %>%
+  summarise(Count = n())
+summ_car0_7_ <- df_car0_7_ %>%
+  group_by(longest_distance_mode) %>%
+  summarise(Count = n())
+
+combined_data <- bind_rows(
+  mutate(summ_base, Category = "base"),
+  mutate(summ_0_7_, Category = "0.7"),
+  mutate(summ_0_7tt, Category = "0.7tt"),
+  mutate(summ_car, Category = "driver"),
+  mutate(summ_car0_7_, Category = "driver0.7"))
+
+
+combined_data$longest_distance_mode <- factor(combined_data$longest_distance_mode,
+                                             levels = c("bike", "car", "drt", "pt", "ride", "walk", "other", "bus"))
+combined_data$Category <- factor(combined_data$Category,
+                                             levels = c("base", "0.7tt", "0.7", "driver", "driver0.7"))
+
+combined_df <- combined_data %>%
+  group_by(Category) %>%
+  mutate(Percentage = Count / sum(Count)) %>%
+  ungroup()
+
+ggplot(combined_df, aes(x = Category, y = Percentage, fill = longest_distance_mode)) +
+  geom_bar(stat = "identity", position = "fill") +
+  geom_text(aes(label = scales::percent(Percentage)), position = position_stack(vjust = 0.5), size = 3) +
+  scale_y_continuous(labels = scales::percent_format()) +
+  labs(title = "Actual Mode Share vs Simulated Mode Share", x = "Scenario", y = "Percentage Share") +
+  scale_fill_brewer(palette = "Set3") +
+  theme_minimal()
+
+combined_df <- combined_data %>%
+  group_by(Category) %>%
+  mutate(Percentage = Count / sum(Count)) %>%
+  ungroup()
+
+ggplot(combined_df, aes(x = Category, y = Percentage, color = longest_distance_mode, group = longest_distance_mode)) +
+  geom_line() +
+  geom_point() +
+  geom_text(
+    aes(label = scales::percent(Percentage, accuracy = 0.1)),
+    hjust = 0, vjust = 1.5,  # Adjust text position relative to points
+    size = 4,  # Increase text size for better readability
+    color = "black",  # Change text color if needed
+    check_overlap = TRUE,  # Avoid overlapping text
+    nudge_y = 0.009  # Nudge text up slightly; adjust as necessary
+  ) +
+  facet_wrap(~longest_distance_mode, scales = "free_y") +
+  labs(title = "Mode Share Percentage by SAV Parameter", x = "SAV Parameter", y = "Percentage") +
+  theme_minimal() +
+  theme(
+    legend.position = "bottom",
+    text = element_text(size = 12),  # Increase general text size
+    axis.text.x = element_text(angle = 45, hjust = 1)  # Angle x-axis text for readability
+  ) +
+  scale_color_brewer(palette = "Set1")  
+
+PT_df1 <- combined_df %>%
+  filter((longest_distance_mode == "car")) 
+ggplot(PT_df1 , aes(x = Category, y = Percentage, color = longest_distance_mode, group = longest_distance_mode)) +
+  geom_line() +
+  geom_point() +
+  geom_text(
+    aes(label = scales::percent(Percentage, accuracy = 0.1)),
+    hjust = 0, vjust = 1.5,  # Adjust text position relative to points
+    size = 4,  # Increase text size for better readability
+    color = "black",  # Change text color if needed
+    check_overlap = TRUE,  # Avoid overlapping text
+    nudge_y = 0.009  # Nudge text up slightly; adjust as necessary
+  ) +
+  labs(title = "Car Share Percentage by SAV Parameter", x = "SAV Parameter", y = "Percentage") +
+  theme_minimal() +
+  theme(
+    legend.position = "bottom",
+    text = element_text(size = 12),  # Increase general text size
+    axis.text.x = element_text(angle = 45, hjust = 1)  # Angle x-axis text for readability
+  ) +
+  scale_color_brewer(palette = "Set1")  # Use a color palette that contrasts well with the background
+
+SAVdata <- combined_data %>%
+  filter((longest_distance_mode == "drt")) 
+ggplot(SAVdata, aes(x = Category, y = Count, fill = longest_distance_mode)) +
+  geom_bar(stat = "identity") +
+  geom_text(aes(label = Count), position = position_stack(vjust = 0.5), size = 3) +  # Add count labels
+  scale_y_continuous(labels = scales::comma) +  # Use comma formatting for y-axis labels
+  labs(title = "Total Trip Count of SAV Trips", x = "Scenario(Fleet Size)", y = "Count") +
+  scale_fill_brewer(palette = "Set3") +
+  theme_minimal()
+
+
+
+```
+```{r}
+
+df_base <- inner_join(df, trips_base, by = "person")
+df1250 <- inner_join(df, trips_0_7tt, by = "person")
+df3075 <- inner_join(df, trips_0_7_, by = "person")
+df3050 <- inner_join(df, trips_car, by = "person")
+df5030 <- inner_join(df, trips_car0_7_, by = "person")
+
+df_base <- df_base %>%
+   filter(longest_distance_mode == "pt" & (modes == "walk-drt-walk-pt-walk" | modes == "walk-drt-walk-pt-walk-pt-walk" | modes == "walk-drt-walk-pt-walk-pt-walk-pt-walk" | modes == "walk-drt-walk-pt-walk-pt-walk-pt-walk") )
+df1250 <- df1250 %>%
+   filter(longest_distance_mode == "pt" & (modes == "walk-drt-walk-pt-walk" | modes == "walk-drt-walk-pt-walk-pt-walk" | modes == "walk-drt-walk-pt-walk-pt-walk-pt-walk" | modes == "walk-drt-walk-pt-walk-pt-walk-pt-walk") )
+df3075 <- df3075 %>%
+   filter(longest_distance_mode == "pt" & (modes == "walk-drt-walk-pt-walk" | modes == "walk-drt-walk-pt-walk-pt-walk" | modes == "walk-drt-walk-pt-walk-pt-walk-pt-walk" | modes == "walk-drt-walk-pt-walk-pt-walk-pt-walk") )
+df3050 <- df3050 %>%
+   filter(longest_distance_mode == "pt" & (modes == "walk-drt-walk-pt-walk" | modes == "walk-drt-walk-pt-walk-pt-walk" | modes == "walk-drt-walk-pt-walk-pt-walk-pt-walk" | modes == "walk-drt-walk-pt-walk-pt-walk-pt-walk") )
+df5030 <- df5030 %>%
+   filter(longest_distance_mode == "pt" & (modes == "walk-drt-walk-pt-walk" | modes == "walk-drt-walk-pt-walk-pt-walk" | modes == "walk-drt-walk-pt-walk-pt-walk-pt-walk" | modes == "walk-drt-walk-pt-walk-pt-walk-pt-walk") )
+
+summ_base <- df_base %>%
+  group_by(modes) %>%
+  summarise(Count = n())
+summ1250 <- df1250 %>%
+  group_by(modes) %>%
+  summarise(Count = n())
+summ3075 <- df3075 %>%
+  group_by(modes) %>%
+  summarise(Count = n())
+summ3050 <- df3050 %>%
+  group_by(modes) %>%
+  summarise(Count = n())
+summ5030 <- df5030 %>%
+  group_by(modes) %>%
+  summarise(Count = n())
+
+combined_data <- bind_rows(
+  mutate(summ_base, Category = "base"),
+  mutate(summ1250, Category = "base0.7tt"),
+  mutate(summ3075, Category = "base0.7"),
+  mutate(summ3050, Category = "driver"),
+  mutate(summ5030, Category = "driver0.7"))
+
+result_df1 <- df_base %>%
+  mutate(CHOICE_FAC = if_else(is.na(CHOICE_FAC), "Other", CHOICE_FAC))
+
+# Create a bar chart with fill based on "Category2"
+ggplot(df5030, aes(x = modes   , fill = CHOICE_FAC)) +
+  geom_bar() +
+  labs(
+    x = "Category1",
+    y = "Count",
+    title = "Access/Egress Modes for transit "
+  ) +
+  scale_fill_brewer(palette = "Set3") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+
+# combined_data$modes <- factor(combined_data$longest_distance_mode,levels = c("walk-pt-walk","walk-pt-walk-pt-walk", "walk-drt-walk-pt-walk" ,"walk-drt-walk-pt-walk-pt-walk","walk-pt-walk-pt-walk-pt-walk", "walk-drt-walk-pt-walk-pt-walk-pt-walk"))
+combined_data$Category <- factor(combined_data$Category,
+                                             levels = c("base", "base0.7tt", "base0.7", "driver", "driver0.7"))
+
+combined_df <- combined_data %>%
+  group_by(Category) %>%
+  mutate(Percentage = Count / sum(Count)) %>%
+  ungroup()
+
+ggplot(combined_data, aes(x = Category, y = Count, fill = modes)) +
+  geom_bar(stat = "identity") +
+  geom_text(aes(label = Count), position = position_stack(vjust = 0.5), size = 3) +  # Add count labels
+  scale_y_continuous(labels = scales::comma) +
+  labs(title = "Access Mode Trips Using SAV", x = "Scenario(Fleet Size)", y = "Count") +
+  scale_fill_brewer(palette = "Set3") +
+  theme_minimal()
+
+
+
+ggplot(combined_df, aes(x = Category, y = Percentage, color = modes, group = modes)) +
+  geom_line() +
+  geom_point() +
+  geom_text(
+    aes(label = scales::percent(Percentage, accuracy = 0.001)),
+    hjust = 0, vjust = 1.5,  # Adjust text position relative to points
+    size = 4,  # Increase text size for better readability
+    color = "black",  # Change text color if needed
+    check_overlap = TRUE,  # Avoid overlapping text
+    nudge_y = 0.009  # Nudge text up slightly; adjust as necessary
+  ) +
+  facet_wrap(~modes, scales = "free_y") +
+  labs(title = "Mode Share Percentage by SAV Parameter", x = "SAV Parameter", y = "Percentage") +
+  theme_minimal() +
+  theme(
+    legend.position = "bottom",
+    text = element_text(size = 12),  # Increase general text size
+    axis.text.x = element_text(angle = 45, hjust = 1)  # Angle x-axis text for readability
+  ) +
+  scale_color_brewer(palette = "Set1")  
+
+```
+
+```{r}
+
+result_df2 <- result_df %>%
+  filter(CHOICE_FAC != "bus" & CHOICE_FAC != "other") %>%
+  group_by(UrbanIndex, CHOICE_FAC) %>%
+  summarise(Count = n(), .groups = 'drop') %>%
+  ungroup() %>% # Remove the grouping
+  group_by(UrbanIndex) %>%
+  mutate(Percentage = Count / sum(Count)) %>%
+  ungroup()
+
+result_df3 <- result_df %>%
+  group_by(UrbanIndex, longest_distance_mode) %>%
+  summarise(Count = n(), .groups = 'drop') %>%
+  ungroup() %>% # Remove the grouping
+  group_by(UrbanIndex) %>%
+  mutate(Percentage = Count / sum(Count)) %>%
+  ungroup()
+
+ggplot(result_df2, aes(x = UrbanIndex, y = Count, fill = CHOICE_FAC)) +
+  geom_bar(stat = "identity", position = "fill") +
+  geom_text(aes(label = scales::percent(Percentage, accuracy = 1)),position = position_fill(vjust = 0.5),
+            size = 3, check_overlap = TRUE) +
+  scale_y_continuous(labels = scales::percent_format()) +
+  labs(title = "Actual Mode Share by Built Environment", 
+       x = "Category", y = "Proportion") +
+  scale_fill_brewer(palette = "Set1") +
+  theme_minimal()
+
+ggplot(result_df3, aes(x = UrbanIndex, y = Count, fill = longest_distance_mode)) +
+  geom_bar(stat = "identity", position = "fill") +
+  geom_text(aes(label = scales::percent(Percentage, accuracy = 1)),position = position_fill(vjust = 0.5),
+            size = 3, check_overlap = TRUE) +
+  scale_y_continuous(labels = scales::percent_format()) +
+  labs(title = "Simulated Mode Share by Built Environment", 
+       x = "Category", y = "Proportion") +
+  scale_fill_brewer(palette = "Set3") +
+  theme_minimal()
+
+```
+
+
+
+```{r}
+df_u
+df_u <- select(df_base, CHOICE_FAC, UrbanIndex)
+
+df_u <- df_u %>%
+  mutate(CHOICE_FAC = ifelse(
+    CHOICE_FAC == "Walk", "Walk",
+    ifelse(CHOICE_FAC == "Bike", "Bike",
+    ifelse(CHOICE_FAC == "ride", "Ride",
+    ifelse(CHOICE_FAC == "Car", "Car",
+    ifelse(CHOICE_FAC == "Train_walk", "PT",
+    ifelse(CHOICE_FAC == "Train_bike", "PT",
+    ifelse(CHOICE_FAC == "Train_car", "PT",
+    ifelse(CHOICE_FAC == "bus", "PT",
+    NA))))))))) 
+df_u <- df_u %>%
+  filter(!is.na(CHOICE_FAC))%>%
+  filter(!is.na(UrbanIndex))
+
+counts_df <- df_u %>%
+  group_by(UrbanIndex, CHOICE_FAC) %>%
+  summarise(Count = n(), .groups = 'drop')
+
+# Calculate the total counts for each UrbanIndex
+totals_df <- df_u %>%
+  group_by(UrbanIndex) %>%
+  summarise(Total = n(), .groups = 'drop')
+
+# Merge the counts with the totals to calculate the percentage
+percentage_df <- merge(counts_df, totals_df, by = "UrbanIndex")
+percentage_df$Percentage <- (percentage_df$Count / percentage_df$Total) * 100
+
+df_u2 <- select(df_base, longest_distance_mode, UrbanIndex) %>%
+  rename(CHOICE_FAC  = longest_distance_mode)%>%
+  mutate(CHOICE_FAC = ifelse(
+    CHOICE_FAC == "pt", "PT",
+    ifelse(CHOICE_FAC == "walk", "Walk",
+    ifelse(CHOICE_FAC == "ride", "Ride",
+    ifelse(CHOICE_FAC == "car", "Car",
+    ifelse(CHOICE_FAC == "bike", "Bike",
+    ifelse(CHOICE_FAC == "drt", "SAV",
+    NA)))))))
+
+df_u2 <- df_u2 %>%
+  filter(!is.na(CHOICE_FAC))%>%
+  filter(!is.na(UrbanIndex))
+
+counts_df2 <- df_u2 %>%
+  group_by(UrbanIndex, CHOICE_FAC) %>%
+  summarise(Count = n(), .groups = 'drop')
+totals_df2 <- df_u2 %>%
+  group_by(UrbanIndex) %>%
+  summarise(Total = n(), .groups = 'drop')
+percentage_df2 <- merge(counts_df2, totals_df2, by = "UrbanIndex")
+percentage_df2$Percentage <- (percentage_df2$Count / percentage_df2$Total) * 100
+
+percentage_df$Source <- 'Actual'
+percentage_df2$Source <- 'Simulated'
+
+# Merge the two dataframes
+combined_percentage_df <- rbind(percentage_df, percentage_df2)
+combined_percentage_df$UrbanIndex <- factor(combined_percentage_df$UrbanIndex,
+                                             levels = c("CBD", "Urban", "Suburban", "Rural"))
+# Now, we can plot the line graph with percentages
+ggplot(combined_percentage_df, aes(x = UrbanIndex, y = Percentage, group = interaction(CHOICE_FAC, Source), color = CHOICE_FAC)) +
+  geom_line(aes(linetype = Source), size = 1.2) + 
+  geom_point(size = 0.5) + 
+  geom_text(aes(label = sprintf("%.1f%%", Percentage)), position = position_dodge(width = 0.2), hjust = -0.3, vjust = -0.5, size = 4, fontface = "bold", check_overlap = TRUE) +
+  labs(title = "Mode Share Percentage by UrbanIndex", x = "UrbanIndex", y = "Percentage") +
+  scale_color_brewer(palette = "Set1") +
+  scale_linetype_manual(values = c("solid", "dotted")) + 
+  theme_minimal() +
+  theme(legend.position = "bottom", text = element_text(size = 10)) 
+
+# Show the plot
+ggsave("combined_line_graph.png", width = 10, height = 6)
+
+combined_percentage_df1 <- combined_percentage_df %>%
+  filter(!(CHOICE_FAC == "PT")) %>%
+  rename(Mode = CHOICE_FAC) 
+
+ggplot(combined_percentage_df1, aes(x = UrbanIndex, y = Percentage, group = interaction(Mode, Source), color = Mode)) +
+  geom_line(aes(linetype = Source), size = 1.2) +
+  geom_point(size = 0.5) +
+  geom_text(aes(label = sprintf("%.1f%%", Percentage)), 
+            position = position_dodge(width = 0.2), 
+            hjust = -0.1, 
+            vjust = -0.2, 
+            size = 3, 
+            fontface = "bold", 
+            check_overlap = TRUE) +
+  labs(title = "Mode Share Percentage by UrbanIndex", 
+       x = "UrbanIndex", 
+       y = "Percentage", 
+       color = "Mode") +
+  scale_color_brewer(palette = "Set1") +
+  scale_linetype_manual(values = c("solid", "dotted")) +
+  theme_minimal() +
+  theme(legend.position = "bottom", 
+        text = element_text(size = 10)) +
+  facet_wrap(~Mode, scales = "free_y") # Facet by Mode, allowing each plot to have its own y scale
+
+PT_percentage_df1 <- combined_percentage_df %>%
+  filter((CHOICE_FAC == "PT")) %>%
+  rename(Mode = CHOICE_FAC) 
+
+ggplot(PT_percentage_df1, aes(x = UrbanIndex, y = Percentage, group = interaction(Mode, Source), color = Mode)) +
+  geom_line(aes(linetype = Source), size = 1.2) +
+  geom_point(size = 0.5) +
+  geom_text(aes(label = sprintf("%.1f%%", Percentage)), 
+            position = position_dodge(width = 0.2), 
+            hjust = -0.1, 
+            vjust = -0.2, 
+            size = 3, 
+            fontface = "bold", 
+            check_overlap = TRUE) +
+  labs(title = "Mode Share Percentage by UrbanIndex", 
+       x = "UrbanIndex", 
+       y = "Percentage", 
+       color = "Mode") +
+  scale_color_brewer(palette = "Set1") +
+  scale_linetype_manual(values = c("solid", "dotted")) +
+  theme_minimal() +
+  theme(legend.position = "bottom", 
+        text = element_text(size = 10))
+```
+
+
+```{r}
+library(tidyverse)
+library(ggplot2)
+library(readr)
+library(broom)
+
+
+output_trips <- read_delim("trips(Req%12%50).csv", 
+    delim = ";", escape_double = FALSE, trim_ws = TRUE)
+
+
+database <- read_csv("database.csv")
+
+Mesh <- read.csv("TripsbyUrbanIndex.csv")
+database <- merge(database, Mesh, by = "ind_tripID", all = FALSE)
+ValidationTrips <- read_csv("UrbanContextTrainingData.csv")
+database <- database[database$ind_tripID %in% ValidationTrips$ind_tripID, ]
+database <- database %>% 
+  mutate(UrbanIndex = case_when(
+    PC1.x > 8.5 ~ "CBD",
+    PC1.x < 8.5 & PC1.x > 3.0 ~ "Urban",
+    PC1.x < 3.0 & PC1.x > -1.5  ~ "Suburban",
+    PC1.x < -1.5   ~ "Rural",
+    TRUE ~ NA
+  ))
+
+database <- database %>%
+  mutate(CHOICE_FAC = ifelse(repMode_type2 == 6, "walk",
+               ifelse(repMode_type2 == 5, "bike",
+               ifelse(repMode_type2 == 3 & car_driver == 1, "car",
+               ifelse(repMode_type2 == 3 & car_driver == 2 & hh_license == 1 & (hh_myCar == 1 | hh_myCar == 2), "ride",
+               ifelse(repMode_type2 == 3 & car_driver == 2 & (hh_license == 2 | hh_license == 3 |hh_myCar == 3), "ride",
+               ifelse(repMode_type2 == 1, "pt",
+               ifelse(repMode_type2 == 2, "bus",
+               ifelse(repMode_type1 == 9, "taxi",
+               "other"
+               )))))))))
+
+databse <- database %>%
+    filter(is.na(CHOICE_FAC)) 
+
+
+df <- select(database, ind_tripID,  repMode_type2_fac, id_ind, tripDurationMin, CHOICE_FAC,  PC1.x, UrbanIndex)
+
+df <- df %>%
+  rename(person  = ind_tripID)
+
+result_df <- inner_join(df, output_trips, by = "person")
+
+data_longest <- result_df %>%
+  group_by(longest_distance_mode) %>%
+  summarise(Count = n())
+data_choice <- result_df %>%
+  group_by(CHOICE_FAC) %>%
+  summarise(Count = n())
+data_choice$CHOICE_FAC[8] <- "other"
+
+data_longest$longest_distance_mode <- factor(data_longest$longest_distance_mode,
+                                             levels = c("walk", "bike", "car", "pt", "ride", "drt"))
+
+data_choice$CHOICE_FAC <- factor(data_choice$CHOICE_FAC,
+                                 levels = c("walk", "bike", "car", "pt", "ride", "drt", "bus", "other"))
+
+combined_data <- bind_rows(
+  mutate(data_longest, Category = "SimulatedModeShare"),
+  mutate(data_choice, Category = "ActualModeShare"))
+combined_data$longest_distance_mode <- factor(combined_data$longest_distance_mode,
+                                             levels = c("bike", "car", "drt", "pt", "ride", "walk", "other", "bus"))
+
+# combined_data$longest_distance_mode[5] <- combined_data$CHOICE_FAC[5]
+# combined_data$longest_distance_mode[6] <- combined_data$CHOICE_FAC[6]
+combined_data$longest_distance_mode[7] <- combined_data$CHOICE_FAC[7]
+combined_data$longest_distance_mode[8] <- combined_data$CHOICE_FAC[8]
+combined_data$longest_distance_mode[9] <- combined_data$CHOICE_FAC[9]
+combined_data$longest_distance_mode[10] <- combined_data$CHOICE_FAC[10]
+combined_data$longest_distance_mode[11] <- combined_data$CHOICE_FAC[11]
+combined_data$longest_distance_mode[12] <- combined_data$CHOICE_FAC[12]
+combined_data$longest_distance_mode[13] <- combined_data$CHOICE_FAC[13]
+combined_data$longest_distance_mode[14] <- combined_data$CHOICE_FAC[14]
+# combined_data$longest_distance_mode[15] <- combined_data$CHOICE_FAC[15]
+
+combined_data <- combined_data %>%
+  group_by(Category) %>%
+  mutate(Percentage = Count / sum(Count)) %>%
+  ungroup()
+
+ggplot(combined_data, aes(x = Category, y = Percentage, fill = longest_distance_mode)) +
+  geom_bar(stat = "identity", position = "fill") +
+  geom_text(aes(label = scales::percent(Percentage)), position = position_stack(vjust = 0.5), size = 3) +
+  scale_y_continuous(labels = scales::percent_format()) +
+  labs(title = "Actual Mode Share vs Simulated Mode Share", x = "Category", y = "Percentage Share") +
+  scale_fill_brewer(palette = "Set3") +
+  theme_minimal()
+
+filtered_data <- combined_data %>%
+  filter(longest_distance_mode != "bus" & longest_distance_mode != "other")
+
+filtered_data <- filtered_data %>%
+  group_by(Category) %>%
+  mutate(Percentage = Count / sum(Count)) %>%
+  ungroup()
+
+ggplot(filtered_data, aes(x = Category, y = Percentage, fill = longest_distance_mode)) +
+  geom_bar(stat = "identity", position = "fill") +
+  geom_text(aes(label = scales::percent(Percentage)), position = position_stack(vjust = 0.5), size = 3) +
+  scale_y_continuous(labels = scales::percent_format()) +
+  labs(title = "Actual Mode Share vs Simulated Mode Share", x = "Category", y = "Percentage Share") +
+  scale_fill_brewer(palette = "Set3") +
+  theme_minimal()
+
+order_ldm <- c("walk", "bike", "ride", "car", "pt", "bus", "drt", "other")
+order_CHOICE_FAC <- c("walk", "bike", "ride", "car", "pt", "bus", "drt", "other")
+
+result_df$longest_distance_mode <- factor(result_df$longest_distance_mode, levels = order_ldm)
+
+result_df$CHOICE_FAC <- factor( result_df$CHOICE_FAC, levels = order_CHOICE_FAC  )
+
+result_df <- result_df %>%
+  filter(!is.na(CHOICE_FAC)) %>%
+  filter(!is.na(UrbanIndex)) %>%
+  mutate(UrbanIndex = factor(UrbanIndex, levels = c("CBD", "Urban", "Suburban", "Rural")))
+
+result_df2 <- result_df %>%
+  filter(CHOICE_FAC != "bus" & CHOICE_FAC != "other") %>%
+  group_by(UrbanIndex, CHOICE_FAC) %>%
+  summarise(Count = n(), .groups = 'drop') %>%
+  ungroup() %>% # Remove the grouping
+  group_by(UrbanIndex) %>%
+  mutate(Percentage = Count / sum(Count)) %>%
+  ungroup()
+
+result_df3 <- result_df %>%
+  group_by(UrbanIndex, longest_distance_mode) %>%
+  summarise(Count = n(), .groups = 'drop') %>%
+  ungroup() %>% # Remove the grouping
+  group_by(UrbanIndex) %>%
+  mutate(Percentage = Count / sum(Count)) %>%
+  ungroup()
+
+ggplot(result_df2, aes(x = UrbanIndex, y = Count, fill = CHOICE_FAC)) +
+  geom_bar(stat = "identity", position = "fill") +
+  geom_text(aes(label = scales::percent(Percentage, accuracy = 1)),position = position_fill(vjust = 0.5),
+            size = 3, check_overlap = TRUE) +
+  scale_y_continuous(labels = scales::percent_format()) +
+  labs(title = "Actual Mode Share by Built Environment", 
+       x = "Category", y = "Proportion") +
+  scale_fill_brewer(palette = "Set3") +
+  theme_minimal()
+
+ggplot(result_df3, aes(x = UrbanIndex, y = Count, fill = longest_distance_mode)) +
+  geom_bar(stat = "identity", position = "fill") +
+  geom_text(aes(label = scales::percent(Percentage, accuracy = 1)),position = position_fill(vjust = 0.5),
+            size = 3, check_overlap = TRUE) +
+  scale_y_continuous(labels = scales::percent_format()) +
+  labs(title = "Simulated Mode Share by Built Environment", 
+       x = "Category", y = "Proportion") +
+  scale_fill_brewer(palette = "Set3") +
+  theme_minimal()
+
+
+
+```
+
+```{r}
+
+
+
+```
+
+
+
+
+
+```{r}
+# 
+# X100_drt_alightments_drt <- read_delim("30.drt_alightments_drt.csv", 
+#     delim = ";", escape_double = FALSE, trim_ws = TRUE)
+# X100_drt_boardings_drt <- read_delim("30.drt_boardings_drt.csv", 
+#     delim = ";", escape_double = FALSE, trim_ws = TRUE)
+# X100_drt_detours_drt <- read_delim("30.drt_detours_drt.csv", 
+#     delim = ";", escape_double = FALSE, trim_ws = TRUE)
+
+x20_vehicleDistanceStats_drt <- read_delim("20.vehicleDistanceStats_drt.csv", 
+    delim = ";", escape_double = FALSE, trim_ws = TRUE)
+x20_waitStats_drt <- read_delim("20.waitStats_drt.csv", 
+    delim = ";", escape_double = FALSE, trim_ws = TRUE)
+X20_waitTimeComparison_drt <- read_delim("20.waitTimeComparison_drt.csv", 
+    delim = ";", escape_double = FALSE, trim_ws = TRUE)
+x20_drt_idleVehiclesPerZoneXY <- read_delim("20.drt_idleVehiclesPerZoneXY.csv", 
+    delim = ";", escape_double = FALSE, trim_ws = TRUE)
+x20_waitStats_drt_zonal <- read_delim("20.waitStats_drt_zonal.csv", 
+    delim = ";", escape_double = FALSE, trim_ws = TRUE)
+x20_drt_legs_drt <- read_delim("20.drt_legs_drt.csv", 
+    delim = ";", escape_double = FALSE, trim_ws = TRUE)
+x20_drt_idleVehiclesPerZoneXY <- read_delim("20.drt_idleVehiclesPerZoneXY.csv", 
+    delim = ";", escape_double = FALSE, trim_ws = TRUE)
+
+drtdemand <- sum(x20_waitStats_drt_zonal$nRequests)
+
+```
+
+
+
+
