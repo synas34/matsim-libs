@@ -2,10 +2,10 @@ package MyDMC.Sensitivity;
 
 import org.matsim.contribs.discrete_mode_choice.modules.AbstractDiscreteModeChoiceExtension;
 
-public class UrbanIndexDMCExtension8_5 extends AbstractDiscreteModeChoiceExtension {
+public class UrbanIndexDMCExtensionTAXI extends AbstractDiscreteModeChoiceExtension {
 	@Override
 	public void installExtension() {
 
-		bindTripEstimator("MyEstimatorName").to(UrbanIndexTripEstimator8_5.class);
+		bindTripEstimator("MyEstimatorName").to(UrbanIndexTripEstimatorTAXI.class);
 	}
 }

@@ -20,7 +20,7 @@
 		<param name="outputDirectory" value="./output" />
 		<param name="overwriteFiles" value="deleteDirectoryIfExists" />
 		<param name="firstIteration" value="0" />
-		<param name="lastIteration" value="15" />
+		<param name="lastIteration" value="20" />
 		<param name="eventsFileFormat" value="xml" />
 		<param name="mobsim" value="qsim" />
 	</module>
@@ -189,7 +189,54 @@
 			<param name="closingTime"     value="20:00:00" />
 		</parameterset>
 	</module>
-
+	<module name="planscalcroute" >
+		<!-- Defines how access and egress to main mode is simulated. Either of [none, accessEgressModeToLink, walkConstantTimeToLink, accessEgressModeToLinkPlusTimeConstant], Current default=none which means no access or egress trips are simulated. -->
+		<param name="accessEgressType" value="none" />
+		<!-- Some typical teleportation routing params are set by default, such as for walk and bike.  Setting this switch to "true" will clear them.  Note that this will also clear settings for helper modes such as for non_network_walk -->
+		<param name="clearDefaultTeleportedModeParams" value="true" />
+		<!-- All the modes for which the router is supposed to generate network routes (like car) -->
+		<param name="networkModes" value="car" />
+		<!-- strength of the randomness for the utility of money in routing under toll.  Leads to Pareto-optimal route with randomly drawn money-vs-other-attributes tradeoff. Technically the width parameter of a log-normal distribution. 3.0 seems to be a good value.  -->
+		<param name="routingRandomness" value="3.0" />
+		<parameterset type="teleportedModeParameters" >
+			<param name="beelineDistanceFactor" value="1.3" />
+			<param name="mode" value="bike" />
+			<!-- Free-speed factor for a teleported mode. Travel time = teleportedModeFreespeedFactor * <freespeed car travel time>. Insert a line like this for every such mode. Please do not set teleportedModeFreespeedFactor as well as teleportedModeSpeed for the same mode, but if you do, +teleportedModeFreespeedFactor wins over teleportedModeSpeed. -->
+			<param name="teleportedModeFreespeedFactor" value="null" />
+			<!-- Speed for a teleported mode. Travel time = (<beeline distance> * beelineDistanceFactor) / teleportedModeSpeed. Insert a line like this for every such mode. -->
+			<param name="teleportedModeSpeed" value="2.4166666666666665" />
+		</parameterset>
+		<parameterset type="teleportedModeParameters" >
+			<param name="beelineDistanceFactor" value="1.3" />
+			<param name="mode" value="walk" />
+			<param name="teleportedModeFreespeedFactor" value="null" />
+			<param name="teleportedModeSpeed" value="1.3055555555555556" />
+		</parameterset>
+		<parameterset type="teleportedModeParameters" >
+			<param name="beelineDistanceFactor" value="1.3" />
+			<param name="mode" value="non_network_walk" />
+			<param name="teleportedModeFreespeedFactor" value="null" />
+			<param name="teleportedModeSpeed" value="1.3888888888888888" />
+		</parameterset>
+		<parameterset type="teleportedModeParameters" >
+			<param name="beelineDistanceFactor" value="1.3" />
+			<param name="mode" value="ride" />
+			<param name="teleportedModeFreespeedFactor" value="1.8" />
+			<param name="teleportedModeSpeed" value="null" />
+		</parameterset>
+		<parameterset type="teleportedModeParameters" >
+			<param name="beelineDistanceFactor" value="1.3" />
+			<param name="mode" value="pt" />
+			<param name="teleportedModeFreespeedFactor" value="2.0" />
+			<param name="teleportedModeSpeed" value="null" />
+		</parameterset>
+		<parameterset type="teleportedModeParameters" >
+			<param name="beelineDistanceFactor" value="1.3" />
+			<param name="mode" value="transit_walk" />
+			<param name="teleportedModeFreespeedFactor" value="null" />
+			<param name="teleportedModeSpeed" value="2.4166666666666665" />
+		</parameterset>
+	</module>
 	<module name="strategy">
 		<param name="maxAgentPlanMemorySize" value="5" /> <!-- 0 means unlimited -->
 
@@ -322,18 +369,18 @@
 		</parameterset>
 
 
-		<parameterset type="intermodalAccessEgress" >
-			<param name="mode" value="transit_walk" />
-			<param name="personFilterAttribute" value="hasBike" />
-			<param name="personFilterValue" value="TRUE" />
-			<!-- Initial distance around a person's origin or destination within which transit stops are looked for. -->
-			<param name="initialSearchRadius" value="1500.0" />
-			<!-- Maximum distance a person is willing to walk to/from a transit stop. -->
-			<param name="maxRadius" value="2500.0" />
-			<!-- If less than 2 transit stops are found within the initial search radius,
-                 this value is added to the initial radius iteratively until transit stops are found or maxRadius is reached. -->
-			<param name="searchExtensionRadius" value="500.0" />
-		</parameterset>
+<!--		<parameterset type="intermodalAccessEgress" >-->
+<!--			<param name="mode" value="transit_walk" />-->
+<!--			<param name="personFilterAttribute" value="hasBike" />-->
+<!--			<param name="personFilterValue" value="TRUE" />-->
+<!--			&lt;!&ndash; Initial distance around a person's origin or destination within which transit stops are looked for. &ndash;&gt;-->
+<!--			<param name="initialSearchRadius" value="1500.0" />-->
+<!--			&lt;!&ndash; Maximum distance a person is willing to walk to/from a transit stop. &ndash;&gt;-->
+<!--			<param name="maxRadius" value="2500.0" />-->
+<!--			&lt;!&ndash; If less than 2 transit stops are found within the initial search radius,-->
+<!--                 this value is added to the initial radius iteratively until transit stops are found or maxRadius is reached. &ndash;&gt;-->
+<!--			<param name="searchExtensionRadius" value="500.0" />-->
+<!--		</parameterset>-->
 
 <!--		<parameterset type="intermodalAccessEgress" >-->
 <!--			&lt;!&ndash; Initial distance around a person's origin or destination within which transit stops are looked for. &ndash;&gt;-->

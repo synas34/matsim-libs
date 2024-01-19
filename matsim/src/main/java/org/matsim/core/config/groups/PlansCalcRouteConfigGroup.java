@@ -299,7 +299,8 @@ public final class PlansCalcRouteConfigGroup extends ConfigGroup {
 
 		{
 			final ModeRoutingParams ride = new ModeRoutingParams( TransportMode.ride );
-			ride.setTeleportedModeFreespeedFactor(1.0);
+			ride.setTeleportedModeFreespeedFactor(0.8);
+			ride.setBeelineDistanceFactor(1.7);
 			addParameterSet( ride );
 		}
 
@@ -311,7 +312,7 @@ public final class PlansCalcRouteConfigGroup extends ConfigGroup {
 
 				{
 			final ModeRoutingParams transit_walk = new ModeRoutingParams( TransportMode.transit_walk ) ;
-			transit_walk.setTeleportedModeSpeed( 5.0 / 3.6 ); // 3.0 km/h --> m/s
+			transit_walk.setTeleportedModeSpeed( 8.7 / 3.6 ); // 3.0 km/h --> m/s
 			addParameterSet( transit_walk );
 		}
 		// one might add the above but it was not added in the original design.  Not sure about the reason. kai, feb'15

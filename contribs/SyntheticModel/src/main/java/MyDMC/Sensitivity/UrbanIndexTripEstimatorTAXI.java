@@ -16,10 +16,10 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
-public class UrbanIndexTripEstimator_NORIDE extends AbstractTripRouterEstimator {
+public class UrbanIndexTripEstimatorTAXI extends AbstractTripRouterEstimator {
 	@Inject
-	public UrbanIndexTripEstimator_NORIDE(TripRouter tripRouter, ActivityFacilities facilities,
-                                          TimeInterpretation timeInterpretation) {
+	public UrbanIndexTripEstimatorTAXI(TripRouter tripRouter, ActivityFacilities facilities,
+                                       TimeInterpretation timeInterpretation) {
 		super(tripRouter, facilities, timeInterpretation, createPreroutedModes());
 	}
 
@@ -47,14 +47,10 @@ public class UrbanIndexTripEstimator_NORIDE extends AbstractTripRouterEstimator 
 				if (leg.getMode().equals("pt")) {
 					totalRidingTime += (leg.getTravelTime().seconds() / 3600.0);
 					totalRidingDistance += leg.getRoute().getDistance() * 1e-3;
-
 				} else {
 					totalTransferTime += (leg.getTravelTime().seconds() / 3600.0);
 					totalTransferDistance += leg.getRoute().getDistance() * 1e-3;
-
 				}
-
-
 			}
 		}
 
@@ -65,32 +61,32 @@ public class UrbanIndexTripEstimator_NORIDE extends AbstractTripRouterEstimator 
 		boolean nextActivityIsWork = isNextActivityWork(trip);
 		String UrbanContext = (String) person.getAttributes().getAttribute("UrbanContext");
 		// Compute mode-specific utility based on car availability
-//		if (UrbanContext.equals("Urban")) {
-//			if (nextActivityIsWork) {
-//				// Utility calculations when the next activity is work
-//				utility = UrbanWorkUtil(mode, totalTravelTime, totalTravelDistance, totalRidingTime, totalTransferTime, totalRidingDistance, totalTransferDistance, carAlwaysAvailable);
-//			} else {
-//				// Standard utility calculations
-//				utility = UrbanWorkUtil(mode, totalTravelTime, totalTravelDistance, totalRidingTime, totalTransferTime, totalRidingDistance, totalTransferDistance, carAlwaysAvailable);
-//			}
-//		}
-//		if (UrbanContext.equals("Suburban")) {
-//			if (nextActivityIsWork) {
-//				// Utility calculations when the next activity is work
-//				utility = SuburbanWorkUtil(mode, totalTravelTime, totalTravelDistance, totalRidingTime, totalTransferTime, totalRidingDistance, totalTransferDistance, carAlwaysAvailable);
-//			} else {
-//				// Standard utility calculations
-//				utility = SuburbanWorkUtil(mode, totalTravelTime, totalTravelDistance, totalRidingTime, totalTransferTime, totalRidingDistance, totalTransferDistance, carAlwaysAvailable);
-//			}
-//		}
-//		if (UrbanContext.equals("CBD")) {
-//			utility = CBDWorkUtil(mode, totalTravelTime, totalTravelDistance, totalRidingTime, totalTransferTime, totalRidingDistance, totalTransferDistance, carAlwaysAvailable);
-//		}
-//		if (UrbanContext.equals("Rural")) {
-//			utility = RuralUtil(mode, totalTravelTime, totalTravelDistance, totalRidingTime, totalTransferTime, totalRidingDistance, totalTransferDistance, carAlwaysAvailable);
-//		}
+		if (UrbanContext.equals("Urban")) {
+			if (nextActivityIsWork) {
+				// Utility calculations when the next activity is work
+				utility = UrbanWorkUtil(mode, totalTravelTime, totalTravelDistance, totalRidingTime, totalTransferTime, totalRidingDistance, totalTransferDistance, carAlwaysAvailable);
+			} else {
+				// Standard utility calculations
+				utility = UrbanWorkUtil(mode, totalTravelTime, totalTravelDistance, totalRidingTime, totalTransferTime, totalRidingDistance, totalTransferDistance, carAlwaysAvailable);
+			}
+		}
+		if (UrbanContext.equals("Suburban")) {
+			if (nextActivityIsWork) {
+				// Utility calculations when the next activity is work
+				utility = SuburbanWorkUtil(mode, totalTravelTime, totalTravelDistance, totalRidingTime, totalTransferTime, totalRidingDistance, totalTransferDistance, carAlwaysAvailable);
+			} else {
+				// Standard utility calculations
+				utility = SuburbanWorkUtil(mode, totalTravelTime, totalTravelDistance, totalRidingTime, totalTransferTime, totalRidingDistance, totalTransferDistance, carAlwaysAvailable);
+			}
+		}
+		if (UrbanContext.equals("CBD")) {
+			utility = CBDWorkUtil(mode, totalTravelTime, totalTravelDistance, totalRidingTime, totalTransferTime, totalRidingDistance, totalTransferDistance, carAlwaysAvailable);
+		}
+		if (UrbanContext.equals("Rural")) {
+			utility = RuralUtil(mode, totalTravelTime, totalTravelDistance, totalRidingTime, totalTransferTime, totalRidingDistance, totalTransferDistance, carAlwaysAvailable);
+		}
 
-		utility = calcModeUtil(mode, totalTravelTime, totalTravelDistance, totalRidingTime, totalTransferTime, totalRidingDistance, totalTransferDistance, carAlwaysAvailable);
+//		utility = calcModeUtil(mode, totalTravelTime, totalTravelDistance, totalRidingTime, totalTransferTime, totalRidingDistance, totalTransferDistance, carAlwaysAvailable);
 
 		return utility;
 	}
@@ -110,7 +106,7 @@ public class UrbanIndexTripEstimator_NORIDE extends AbstractTripRouterEstimator 
 		double rideFactor = 0;
 		double carFactor = 0;
 
-		if (totalTravelDistance <= 4) {
+		if (totalTravelDistance <= 3) {
 			walkFactor =  -9.83 * totalTravelTime;
 			bikeFactor = -1.88 - 6.35 * totalTravelTime ;
 		} else if (totalTravelDistance > 3 && totalTravelDistance <= 7) {
@@ -120,15 +116,22 @@ public class UrbanIndexTripEstimator_NORIDE extends AbstractTripRouterEstimator 
 			walkFactor = dummyvalue + dummyvalue * totalTravelTime;
 			bikeFactor = dummyvalue + dummyvalue * totalTravelTime;		}
 
+		if (!carAlwaysAvailable) {
+			rideFactor = dummyvalue + dummyvalue * totalTravelTime;
+			carFactor = dummyvalue + dummyvalue * totalTravelTime;
+		}
+
 		switch (mode) {
 			case TransportMode.walk: utility = walkFactor    ;break;
 			case TransportMode.bike: utility = bikeFactor 	;break;
-			case TransportMode.car: utility = -2.71 - 5.50 * totalTravelTime - 0.0012 * (totalTravelDistance * 7); break;
+			case TransportMode.car: utility = carFactor -2.74 - 5.51 * totalTravelTime - 0.0011 * (totalTravelDistance * 7); break;
+			case TransportMode.ride: utility = rideFactor - 3.59 - 6.91	 * totalTravelTime;		break;
 			case TransportMode.pt: utility = -2.19 - 0.38 * totalRidingTime - 4.13 * totalTransferTime - 0.0015 * (totalRidingDistance * 16) ;break;
-			case TransportMode.drt: utility = -2.71 - 5.50 * totalTravelTime - 0.0010 * (totalTravelDistance * 70); break;    }
+			case TransportMode.drt: utility = -6.46 - 4.50 * totalTravelTime - 0.00013 * ((totalTravelDistance * 430)); break; }
 
-		return utility;
+			return utility;
 	}
+
 	private double UrbanWorkUtil(String mode, double totalTravelTime, double totalTravelDistance, double totalRidingTime, double totalTransferTime, double totalRidingDistance, double totalTransferDistance,boolean carAlwaysAvailable) {
 		double utility = 0;
 		double dummyvalue = -10000000;
@@ -137,23 +140,29 @@ public class UrbanIndexTripEstimator_NORIDE extends AbstractTripRouterEstimator 
 		double rideFactor = 0;
 		double carFactor = 0;
 
-		if (totalTravelDistance <= 4) {
-			walkFactor =  -10.1 * totalTravelTime;
-			bikeFactor = -1.69 - 6.75 * totalTravelTime ;
-		} else if (totalTravelDistance > 4 && totalTravelDistance <= 10) {
+		if (totalTravelDistance <= 3) {
+			walkFactor = -10.43 * totalTravelTime;
+			bikeFactor = -1.77 - 6.85 * totalTravelTime ;
+		} else if (totalTravelDistance > 3 && totalTravelDistance <= 7) {
 			walkFactor = dummyvalue + dummyvalue * totalTravelTime;
-			bikeFactor = -1.69 - 6.75 * totalTravelTime;
+			bikeFactor = -1.77 - 6.85 * totalTravelTime;
 		} else {
 			walkFactor = dummyvalue + dummyvalue * totalTravelTime;
 			bikeFactor = dummyvalue + dummyvalue * totalTravelTime;		}
 
 
+		if (!carAlwaysAvailable) {
+			rideFactor = dummyvalue + dummyvalue * totalTravelTime;
+			carFactor = dummyvalue + dummyvalue * totalTravelTime;
+		}
+
 		switch (mode) {
 			case TransportMode.walk: utility = walkFactor    ;break;
 			case TransportMode.bike: utility = bikeFactor 	;break;
-			case TransportMode.car: utility = -3.97 - 3.57 * totalTravelTime - 0.0037 * (totalTravelDistance * 7); break;
-			case TransportMode.pt: utility =-2.55 - 0.28 * totalRidingTime - 3.55 * totalTransferTime - 0.0015 * (totalRidingDistance * 16) ;break;
-			case TransportMode.drt: utility = -4.18 - 6.72 * totalTravelTime - 0.0010 * (totalTravelDistance * 70); break;    }
+			case TransportMode.car: utility = carFactor - 3.90 - 3.56 * totalTravelTime - 0.0045 * (totalTravelDistance * 7); break;
+			case TransportMode.ride: utility = rideFactor - 4.05 - 7.32 * totalTravelTime;break;
+			case TransportMode.pt: utility = -2.55 - 0.19 * totalRidingTime - 3.62 * totalTransferTime - 0.0018 * (totalRidingDistance * 16) ;break;
+			case TransportMode.drt: utility = -6.33 - 5.06 * totalTravelTime - 0.00010 * ((totalTravelDistance * 430)); break;    }
 
 
 		return utility;
@@ -167,21 +176,26 @@ public class UrbanIndexTripEstimator_NORIDE extends AbstractTripRouterEstimator 
 		double rideFactor = 0;
 		double carFactor = 0;
 
-		if (totalTravelDistance <= 4) {
+		if (totalTravelDistance <= 3) {
 			walkFactor = -9.12 * totalTravelTime;
 			bikeFactor = -1.83 - 5.70 * totalTravelTime;
-		} else if (totalTravelDistance > 4 && totalTravelDistance <=  8){
+		} else if (totalTravelDistance > 3 && totalTravelDistance <=  7){
 			walkFactor = dummyvalue + dummyvalue * totalTravelTime;
 			bikeFactor = -1.83 - 5.70 * totalTravelTime;
 		} else {
 			walkFactor = dummyvalue + dummyvalue * totalTravelTime;
 			bikeFactor = dummyvalue + dummyvalue * totalTravelTime;		}
 
+		if (!carAlwaysAvailable) {
+			rideFactor = dummyvalue + dummyvalue * totalTravelTime;
+			carFactor = dummyvalue + dummyvalue * totalTravelTime;
+		}
 
 		switch (mode) {
 			case TransportMode.walk: utility = walkFactor    ;break;
 			case TransportMode.bike: utility = bikeFactor ;break;
-			case TransportMode.car: utility = -1.71 - 5.71 * totalTravelTime - 0.0015 * (totalTravelDistance * 7); break;
+			case TransportMode.car: utility = carFactor - 1.71 - 5.71 * totalTravelTime - 0.0015 * (totalTravelDistance * 7); break;
+			case TransportMode.ride: utility = rideFactor - 3.22 - 6.88 * totalTravelTime;break;
 			case TransportMode.pt: utility =-2.85 - 0.89 * totalRidingTime - 2.74 * totalTransferTime - 0.0010 * (totalRidingDistance * 16) ;break;
 			case TransportMode.drt: utility = -3.22 - 6.88 * totalTravelTime - 0.0010 * (totalTravelDistance * 70); break;    }
 
@@ -196,22 +210,28 @@ public class UrbanIndexTripEstimator_NORIDE extends AbstractTripRouterEstimator 
 		double rideFactor = 0;
 		double carFactor = 0;
 
-		if (totalTravelDistance <= 4) {
-			walkFactor = -9.12 * totalTravelTime;
-			bikeFactor = -1.83 - 5.70 * totalTravelTime;
-		} else if (totalTravelDistance > 4 && totalTravelDistance <= 10) {
+		if (totalTravelDistance <= 3) {
+			walkFactor = -9.03 * totalTravelTime;
+			bikeFactor = -1.79 - 5.66 * totalTravelTime;
+		} else if (totalTravelDistance > 3 && totalTravelDistance <=  7) {
 			walkFactor = dummyvalue + dummyvalue * totalTravelTime;
-			bikeFactor = -1.83 - 5.70 * totalTravelTime;
+			bikeFactor = -1.79 - 5.66 * totalTravelTime;
 		} else {
 			walkFactor = dummyvalue + dummyvalue * totalTravelTime;
 			bikeFactor = dummyvalue + dummyvalue * totalTravelTime;		}
 
+		if (!carAlwaysAvailable) {
+			rideFactor = dummyvalue + dummyvalue * totalTravelTime;
+			carFactor = dummyvalue + dummyvalue * totalTravelTime;
+		}
+
 		switch (mode) {
 			case TransportMode.walk: utility = walkFactor    ;break;
 			case TransportMode.bike: utility = bikeFactor ;break;
-			case TransportMode.car: utility = -1.71 - 5.71 * totalTravelTime - 0.0015 * (totalTravelDistance * 7); break;
-			case TransportMode.pt: utility =-2.85 - 0.89 * totalRidingTime - 2.74 * totalTransferTime - 0.0010 * (totalRidingDistance * 16) ;break;
-			case TransportMode.drt: utility = -3.22 - 6.88 * totalTravelTime - 0.0010 * (totalTravelDistance * 70); break;    }
+			case TransportMode.car: utility = carFactor - 1.67 - 5.93 * totalTravelTime - 0.00046 * (totalTravelDistance * 7); break;
+			case TransportMode.ride: utility = rideFactor - 3.22 - 6.77 * totalTravelTime;break;
+			case TransportMode.pt: utility = -2.79 - 0.93 * totalRidingTime - 2.74 * totalTransferTime - 0.0010 * (totalRidingDistance * 16) ;break;
+			case TransportMode.drt: utility = -6.63 - 4.98 * totalTravelTime - 0.00013 * ((totalTravelDistance * 430)); break;    }
 
 
 		return utility;
@@ -225,20 +245,24 @@ public class UrbanIndexTripEstimator_NORIDE extends AbstractTripRouterEstimator 
 		double rideFactor = 0;
 		double carFactor = 0;
 
-		if (totalTravelDistance <= 4) {
+		if (totalTravelDistance <= 3) {
 			walkFactor = -6.80 * totalTravelTime;
 			bikeFactor = -1.22 - 5.74 * totalTravelTime;
-		} else if (totalTravelDistance > 4 && totalTravelDistance <=  8){
+		} else if (totalTravelDistance > 3 && totalTravelDistance <=  7){
 			walkFactor = dummyvalue + dummyvalue * totalTravelTime;
 			bikeFactor = -1.22 - 5.74 * totalTravelTime;
 		} else {
 			walkFactor = dummyvalue * totalTravelTime;
 			bikeFactor = dummyvalue + dummyvalue * totalTravelTime;		}
-
+		if (!carAlwaysAvailable) {
+			rideFactor = dummyvalue + dummyvalue * totalTravelTime;
+			carFactor = dummyvalue + dummyvalue * totalTravelTime;
+		}
 		switch (mode) {
 			case TransportMode.walk: utility = walkFactor    ;break;
 			case TransportMode.bike: utility = bikeFactor 	 ;break;
-			case TransportMode.car: utility = -1.10 - 5.69 * totalTravelTime - 0.0013 * (totalTravelDistance * 7); break;
+			case TransportMode.car: utility = carFactor - 1.10 - 5.69 * totalTravelTime - 0.0013 * (totalTravelDistance * 7); break;
+			case TransportMode.ride: utility = rideFactor - 2.79 - 6.20 * totalTravelTime;break;
 			case TransportMode.pt: utility =-1.02 - 0.95 * totalRidingTime - 6.80 * totalTransferTime - 0.0010 * (totalRidingDistance * 16) ;break;
 			case TransportMode.drt: utility = -2.79 - 6.20 * totalTravelTime - 0.0010 * (totalTravelDistance * 70); break;    }
 
@@ -252,23 +276,28 @@ public class UrbanIndexTripEstimator_NORIDE extends AbstractTripRouterEstimator 
 		double rideFactor = 0;
 		double carFactor = 0;
 
-		if (totalTravelDistance <= 4) {
-			walkFactor = -11.2 * totalTravelTime;
-			bikeFactor = -3.26 - 7.50 * totalTravelTime;
-		} else if (totalTravelDistance > 4 && totalTravelDistance <=  8){
+		if (totalTravelDistance <= 3) {
+			walkFactor = -10.53 * totalTravelTime;
+			bikeFactor = -3.90 - 6.26 * totalTravelTime;
+		} else if (totalTravelDistance > 3 && totalTravelDistance <=  7){
 			walkFactor = dummyvalue * totalTravelTime;
-			bikeFactor = -3.26 - 7.50 * totalTravelTime;
+			bikeFactor = -3.90 - 6.26 * totalTravelTime;
 		} else {
 			walkFactor = dummyvalue + dummyvalue * totalTravelTime;
 			bikeFactor = dummyvalue + dummyvalue * totalTravelTime;		}
 
+		if (!carAlwaysAvailable) {
+			rideFactor = dummyvalue + dummyvalue * totalTravelTime;
+			carFactor = dummyvalue + dummyvalue * totalTravelTime;
+		}
 
 		switch (mode) {
 			case TransportMode.walk: utility = walkFactor    ;break;
 			case TransportMode.bike: utility = bikeFactor 	 ;break;
-			case TransportMode.car: utility = -6.74 - 2.03 * totalTravelTime - 0.0014 * (totalTravelDistance * 7); break;
-			case TransportMode.pt: utility =-3.67 + 0.51 * totalRidingTime - 2.60 * totalTransferTime - 0.0006 * (totalRidingDistance * 16) ;break;
-			case TransportMode.drt: utility = -5.89 - 4.40 * totalTravelTime - 0.0010 * (totalTravelDistance * 70); break;    }
+			case TransportMode.car: utility = carFactor - 6.41 - 2.74 * totalTravelTime - 0.0013 * (totalTravelDistance * 7); break;
+			case TransportMode.ride: utility = rideFactor - 6.31 - 3.04 * totalTravelTime;break;
+			case TransportMode.pt: utility = -4.08 + 0.30 * totalRidingTime - 2.15 * totalTransferTime - 0.0010 * (totalRidingDistance * 16) ;break;
+			case TransportMode.drt: utility = -5.74 - 7.82 * totalTravelTime - 0.0000001 * ((totalTravelDistance * 430)); break;    }
 
 		return utility;
 	}
@@ -281,21 +310,26 @@ public class UrbanIndexTripEstimator_NORIDE extends AbstractTripRouterEstimator 
 		double rideFactor = 0;
 		double carFactor = 0;
 
-		if (totalTravelDistance <= 4) {
+		if (totalTravelDistance <= 3) {
 			walkFactor = -7.48 * totalTravelTime;
 			bikeFactor = -1.47 - 5.28 * totalTravelTime;
-		} else if (totalTravelDistance > 4 && totalTravelDistance <=  8){
+		} else if (totalTravelDistance > 3 && totalTravelDistance <=  7){
 			walkFactor = dummyvalue + dummyvalue * totalTravelTime;
 			bikeFactor = -1.47 - 5.28 * totalTravelTime;
 		} else {
 			walkFactor = dummyvalue + dummyvalue * totalTravelTime;
 			bikeFactor = dummyvalue + dummyvalue * totalTravelTime;		}
 
+		if (!carAlwaysAvailable) {
+			rideFactor = dummyvalue + dummyvalue * totalTravelTime;
+			carFactor = dummyvalue + dummyvalue * totalTravelTime;
+		}
 
 		switch (mode) {
 			case TransportMode.walk: utility = walkFactor    ;break;
 			case TransportMode.bike: utility = bikeFactor 	;break;
 			case TransportMode.car: utility = -1.96 - 5.3 * totalTravelTime - 0.0013 * (totalTravelDistance * 7); break;
+			case TransportMode.ride: utility = rideFactor - 3.35 - 7.65 * totalTravelTime;break;
 			case TransportMode.pt: utility =-1.50 - 0.51 * totalRidingTime - 7.31 * totalTransferTime - 0.0010 * (totalRidingDistance * 16) ;break;
 			case TransportMode.drt: utility = -3.35 - 7.65 * totalTravelTime - 0.0010 * (totalTravelDistance * 70); break;    }
 
@@ -311,24 +345,28 @@ public class UrbanIndexTripEstimator_NORIDE extends AbstractTripRouterEstimator 
 		double rideFactor = 0;
 		double carFactor = 0;
 
-		if (totalTravelDistance <= 4) {
-			walkFactor = -9.57 * totalTravelTime;
-			bikeFactor = -1.73 - 6.17 * totalTravelTime ;
-		} else if (totalTravelDistance > 4 && totalTravelDistance <=  8){
+		if (totalTravelDistance <= 3) {
+			walkFactor = -9.61 * totalTravelTime;
+			bikeFactor = -1.74 - 6.18 * totalTravelTime ;
+		} else if (totalTravelDistance > 3 && totalTravelDistance <=  7){
 			walkFactor = dummyvalue * totalTravelTime;
-			bikeFactor = -1.73 - 6.17 * totalTravelTime ;
+			bikeFactor = -1.74 - 6.18 * totalTravelTime ;
 		} else {
 			walkFactor = dummyvalue + dummyvalue * totalTravelTime;
 			bikeFactor = dummyvalue + dummyvalue * totalTravelTime;		}
 
-
+		if (!carAlwaysAvailable) {
+			rideFactor = dummyvalue + dummyvalue * totalTravelTime;
+			carFactor = dummyvalue + dummyvalue * totalTravelTime;
+		}
 
 		switch (mode) {
 			case TransportMode.walk: utility = walkFactor    ;break;
 			case TransportMode.bike: utility = bikeFactor 	 ;break;
-			case TransportMode.car: utility = -2.36 - 5.61 * totalTravelTime - 0.0020 * (totalTravelDistance * 7); break;
-			case TransportMode.pt: utility =-2.14 - 0.183 * totalRidingTime - 4.146 * totalTransferTime - 0.0011 * (totalRidingDistance * 16) ;break;
-			case TransportMode.drt: utility = -3.48 - 7.52 * totalTravelTime - 0.0010 * (totalTravelDistance * 70); break;    }
+			case TransportMode.car: utility = carFactor - 2.38 - 5.60 * totalTravelTime - 0.0020 * (totalTravelDistance * 7); break;
+			case TransportMode.ride: utility = rideFactor - 3.49 - 7.50 * totalTravelTime;break;
+			case TransportMode.pt: utility =-2.18 - 0.17 * totalRidingTime - 4.08 * totalTransferTime - 0.0011 * (totalRidingDistance * 16) ;break;
+			case TransportMode.drt: utility = -6.29 - 5.81 * totalTravelTime - 0.00013 * ((totalTravelDistance * 430)); break;    }
 
 		return utility;
 	}

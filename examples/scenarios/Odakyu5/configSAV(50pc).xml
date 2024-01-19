@@ -20,7 +20,7 @@
 		<param name="outputDirectory" value="./output" />
 		<param name="overwriteFiles" value="deleteDirectoryIfExists" />
 		<param name="firstIteration" value="0" />
-		<param name="lastIteration" value="15" />
+		<param name="lastIteration" value="20" />
 		<param name="eventsFileFormat" value="xml" />
 		<param name="mobsim" value="qsim" />
 	</module>
@@ -228,7 +228,7 @@
 
 	<module name="changeMode">
 		<!-- provide a comma-separated list of leg modes -->
-		<param name="modes" value="car,walk,pt,bike,drt, ride" />
+		<param name="modes" value="car,walk,pt,bike, drt, ride" />
 		<!-- Defines whether car availability is considered be considered or not. An agent has no car only if it has no license, or never access to a car. Default: true -->
 		<param name="ignoreCarAvailability" value="false" />
 	</module>
@@ -261,7 +261,7 @@
 			<!-- Beta parameter for max travel time estimation. This value in seconds will be added to the estimated travel time. -->
 			<param name="maxTravelTimeBeta" value="1200"/>
 			<param name="drtServiceAreaShapeFile" value="Shapefiles/EntireOdakyuCorridorUTM54N.shp"/>
-			<param name="vehiclesFile" value="Odakyu5drts0S4(Req_30_50).xml"/>
+			<param name="vehiclesFile" value="Odakyu5drts0S4(50pc).xml"/>
 
 			<parameterset type="zonalSystem">
 				<!-- Specifies how the zones are generated. Here, it's based on a grid derived from the network. -->
@@ -398,7 +398,7 @@
 		<param name="tourEstimator" value="Cumulative" />
 
 		<parameterset type="modeAvailability:Car">
-			<param name="availableModes" value="pt, car, walk, drt, bike, ride" />
+			<param name="availableModes" value="pt, car, walk, bike, drt, ride" />
 		</parameterset>
 	</module>
 
