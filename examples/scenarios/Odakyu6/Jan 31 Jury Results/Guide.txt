@@ -1,0 +1,15 @@
+Guide
+
+TAXIbase meaning base scenario with taxi modeled as a direct mode only
+
+SAV_ meaning SAV as a taxi mode using ~200 fleet size or trip requests divided by 40 for each sav in a zone. SAV acts as a dual mode serving direct and also FMLM trips.
+
+SAV(50pc) means sam as SAV_ but using the 50pc fleet size formula, meaning around 100 vehicles or one vehicle for eery 50 trips. 
+
+_DMCTAXI is the DMCExtension that uses Taxi parameters estimated from MNLmodel13. 
+
+_DMCSAV uses the DMCExtension SAVTAXI that is the same as _DMCTAXI except the cost is reduced by replacing the cost term [ - 0.00013 * (totalTravelDistance * 430) ] with [ - 0.00013 * (totalTravelDistance * 70) ]
+
+_DMCSAV_075 uses the DMCExtension SAVTAXI that is the same as _DMCSAV except the ASC constant is reduced by multiplying it by 0.75 or [ TransportMode.drt: utility = 0.75 * ASC - Beta_time * totalTravelTime - 0.00013 * (totalTravelDistance * 70) ]
+
+_DMCSAV_P uses the DMCExtension SAVTAXI that has adopted the same ASC constant of passenger trip or [ TransportMode.drt: utility =  ASC_car_pass. - Beta_time * totalTravelTime - 0.00013 * (totalTravelDistance * 70) ]

@@ -25,6 +25,8 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 
+import static Analysis.GzipExtractor.extractGzipToFile;
+
 public class RunMatsimUnique {
 
 	static class SimulationConfig {
@@ -95,15 +97,17 @@ public class RunMatsimUnique {
 	public static void runAllSimulations() {
 		List<SimulationConfig> simulationConfigs = Arrays.asList(
 //			new SimulationConfig("examples/scenarios/Odakyu5/configTAXIbase.xml", new UrbanIndexDMCExtensionTAXI()),
-//
-//			new SimulationConfig("examples/scenarios/Odakyu5/configSAVTAXIbase.xml", new UrbanIndexDMCExtensionSAVTAXI())
-//			new SimulationConfig("examples/scenarios/Odakyu5/configSAVTAXI(50pc).xml", new UrbanIndexDMCExtensionSAVTAXI()),
+//			new SimulationConfig("examples/scenarios/Odakyu5/configSAVTAXITEST.xml", new UrbanIndexDMCExtensionTAXI())
+//			new SimulationConfig("examples/scenarios/Odakyu5/configSAVTAXIbaseKantoWide.xml", new UrbanIndexDMCExtensionSAVTAXI())
+//			new SimulationConfig("examples/scenarios/Odakyu5/configSAVTAXI(30pc).xml", new UrbanIndexDMCExtensionSAVTAXI())
+
+			new SimulationConfig("examples/scenarios/Odakyu6/configGEOfenceMULTIPT.xml", new UrbanIndexDMCExtensionSAVTAXI_075())
 
 //			new SimulationConfig("examples/scenarios/Odakyu5/configSAVTAXIbase.xml", new UrbanIndexDMCExtensionSAVTAXI_075())
 //			new SimulationConfig("examples/scenarios/Odakyu5/configSAVTAXIbase.xml", new UrbanIndexDMCExtensionSAVTAXI_P()),
-//			new SimulationConfig("examples/scenarios/Odakyu5/configSAVTAXI(50pc).xml", new UrbanIndexDMCExtensionSAVTAXI_075()),
+//			new SimulationConfig("examples/scenarios/Odakyu5/configSAVTAXI(30pc).xml", new UrbanIndexDMCExtensionSAVTAXI_075())
 
-			new SimulationConfig("examples/scenarios/Odakyu5/configSAVTAXI(50pc).xml", new UrbanIndexDMCExtensionSAVTAXI_P())
+//			new SimulationConfig("examples/scenarios/Odakyu5/configSAVTAXI(50pc).xml", new UrbanIndexDMCExtensionSAVTAXI_P())
 			// Add more configurations as needed
 		);
 

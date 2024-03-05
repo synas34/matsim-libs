@@ -45,6 +45,10 @@ public final class TransportMode {
 	public static final String airplane = "airplane";
 	public static final String drtA = "drtA";
 	public static final String drtB = "drtB";
+	public static final String drtC = "drtC";
+	public static final String drtD = "drtD";
+	public static final String drtE = "drtE";
+	public static final String drtF = "drtF";
 
 	@Deprecated // use non_network_walk
 	public static final String access_walk = "non_network_walk" ;
