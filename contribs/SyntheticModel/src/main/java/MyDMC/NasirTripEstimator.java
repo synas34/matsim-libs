@@ -16,7 +16,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
-public class NasirTripEstimator extends AbstractTripRouterEstimator {
+public class 	NasirTripEstimator extends AbstractTripRouterEstimator {
 	@Inject
 	public NasirTripEstimator(TripRouter tripRouter, ActivityFacilities facilities,
                               TimeInterpretation timeInterpretation) {
