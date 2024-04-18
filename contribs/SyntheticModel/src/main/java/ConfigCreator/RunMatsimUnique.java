@@ -101,7 +101,7 @@ public class RunMatsimUnique {
 //			new SimulationConfig("examples/scenarios/Odakyu5/configSAVTAXIbaseKantoWide.xml", new UrbanIndexDMCExtensionSAVTAXI())
 //			new SimulationConfig("examples/scenarios/Odakyu5/configSAVTAXI(30pc).xml", new UrbanIndexDMCExtensionSAVTAXI())
 
-			new SimulationConfig("examples/scenarios/Odakyu6/configGEOfenceMULTIPT.xml", new UrbanIndexDMCExtensionSAVTAXI_075())
+			new SimulationConfig("examples/scenarios/Odakyu5/configSAVbase.xml", new UrbanIndexDMCExtensionTAXI_LONGDIST())
 
 //			new SimulationConfig("examples/scenarios/Odakyu5/configSAVTAXIbase.xml", new UrbanIndexDMCExtensionSAVTAXI_075())
 //			new SimulationConfig("examples/scenarios/Odakyu5/configSAVTAXIbase.xml", new UrbanIndexDMCExtensionSAVTAXI_P()),
@@ -114,13 +114,13 @@ public class RunMatsimUnique {
 		for (SimulationConfig simConfig : simulationConfigs) {
 			try {
 				runSAVSimulation(simConfig);
+				System.gc(); // This is a suggestion, not a guarantee.
 			} catch (Exception e) {
 				System.err.println("Simulation failed for config file: " + simConfig.configFilePath + " with DMC Extension: " + simConfig.getClass().getSimpleName());
 				e.printStackTrace();
 			}
 
 			// Suggest garbage collection
-			System.gc(); // This is a suggestion, not a guarantee.
 			System.gc(); // This is a suggestion, not a guarantee.
 			System.gc(); // This is a suggestion, not a guarantee.
 
