@@ -21,7 +21,7 @@ import java.io.IOException;
 public class CsvToMatsimPlan {
 
 	public static void main(String[] args) throws IOException {
-		String csvFile = "contribs/SyntheticModel/test/Jan03Trips(col_null).csv"; // Replace with your CSV file path
+		String csvFile = "contribs/SyntheticModel/test/Apr03Trips(col_null).csv"; // Replace with your CSV file path
 		String line;
 		String cvsSplitBy = ","; // CSV delimiter
 
@@ -36,7 +36,7 @@ public class CsvToMatsimPlan {
 				// Use comma as separator
 				String[] trip = line.split(cvsSplitBy);
 
-				String personId = trip[1].replace("\"", "");
+				String personId = trip[0].replace("\"", "");
 				String originActType = trip[2].replace("\"", "");
 				String destActType = trip[3].replace("\"", "");
 				double departureTime = convertTimeToSeconds(trip[4]);
@@ -56,6 +56,7 @@ public class CsvToMatsimPlan {
 				String InScope = trip[14].replace("\"", "");
 				String EndScope = trip[15].replace("\"", "");
 				String UrbanContext = trip[18].replace("\"", "");
+				String DestUrbanContext = trip[19].replace("\"", "");
 
 				// Create a person and plan
 				Person person = populationFactory.createPerson(Id.createPersonId(personId));
@@ -69,6 +70,7 @@ public class CsvToMatsimPlan {
 				person.getAttributes().putAttribute("InScope",InScope);
 				person.getAttributes().putAttribute("EndScope",EndScope);
 				person.getAttributes().putAttribute("UrbanContext",UrbanContext);
+				person.getAttributes().putAttribute("DestUrbanContext",DestUrbanContext);
 
 				// Create and add origin activity
 				Activity originActivity = populationFactory.createActivityFromCoord(originActType, origcoord);
