@@ -77,7 +77,7 @@ public class UrbanIndexTripEstimatorSIMPLE extends AbstractTripRouterEstimator {
 				utility = SuburbanWorkUtil(mode, totalTravelTime, totalTravelDistance, totalRidingTime, totalTransferTime, totalRidingDistance, totalTransferDistance, carAlwaysAvailable, trip, DestUrbanContext);
 			} else {
 				// Standard utility calculations
-				utility = SuburbanOtherUtil(mode, totalTravelTime, totalTravelDistance, totalRidingTime, totalTransferTime, totalRidingDistance, totalTransferDistance, carAlwaysAvailable, trip, DestUrbanContext);
+				utility = SuburbanWorkUtil(mode, totalTravelTime, totalTravelDistance, totalRidingTime, totalTransferTime, totalRidingDistance, totalTransferDistance, carAlwaysAvailable, trip, DestUrbanContext);
 			}
 		}
 		if (UrbanContext.equals("CBD")) {
@@ -278,11 +278,11 @@ public class UrbanIndexTripEstimatorSIMPLE extends AbstractTripRouterEstimator {
 		double carFactor = 0;
 
 		if (totalTravelDistance <= 3) {
-			walkFactor = -8.86 * totalTravelTime;
-			bikeFactor = -0.95 - 6.17 * totalTravelTime;
+			walkFactor = -9.20 * totalTravelTime;
+			bikeFactor = -1.81 - 5.84 * totalTravelTime;
 		} else if (totalTravelDistance > 3 && totalTravelDistance <=  7) {
 			walkFactor = dummyvalue + dummyvalue * totalTravelTime;
-			bikeFactor = -0.95 - 6.17 * totalTravelTime;
+			bikeFactor = -1.81 - 5.84 * totalTravelTime;
 		} else {
 			walkFactor = dummyvalue + dummyvalue * totalTravelTime;
 			bikeFactor = dummyvalue + dummyvalue * totalTravelTime;		}
@@ -295,10 +295,10 @@ public class UrbanIndexTripEstimatorSIMPLE extends AbstractTripRouterEstimator {
 		switch (mode) {
 			case TransportMode.walk: utility = walkFactor    ;break;
 			case TransportMode.bike: utility = bikeFactor ;break;
-			case TransportMode.car: utility = carFactor - 1.86 - 5.11 * totalTravelTime - 0.0011 * (totalTravelDistance * 7); break;
+			case TransportMode.car: utility = carFactor - 2.17 - 5.63 * totalTravelTime - 0.00088 * (totalTravelDistance * 7); break;
 			case TransportMode.ride: utility = rideFactor - 4.264 - 5.45 * totalTravelTime;break;
-			case TransportMode.pt: utility = -1.79 - 1.13 * totalRidingTime - 3.13 * totalTransferTime - 0.0011 * (totalRidingDistance * 16) ;break;
-			case TransportMode.drt: utility = -14.43 + 5.05 * totalTravelTime - 0.0011 * ((totalTravelDistance * 430)+ 200);break;    }
+			case TransportMode.pt: utility = -2.939 - 1.142 * totalRidingTime - 2.582 * totalTransferTime - 0.00088 * (totalRidingDistance * 16) ;break;
+			case TransportMode.drt: utility = -14.43 + 5.05 * totalTravelTime - 0.00088 * ((totalTravelDistance * 430)+ 200);break;    }
 
 
 		return utility;
