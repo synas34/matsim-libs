@@ -344,7 +344,7 @@
 				<param name="zonesGeneration" value="ShapeFile"/>
 				<!-- The cell size of the grid in meters. This defines the size of each zone in the zonal system. -->
 				<param name="cellSize" value="100"/>
-				<param name="zonesShapeFile" value="Shapefiles/Apr25Geofences/Tokyo23UTM54N.shp"/>
+				<param name="zonesShapeFile" value="Shapefiles/ZonesTokyo23WardsUTM54N.shp"/>
 			</parameterset>
 
 			<parameterset type="rebalancing">
@@ -392,7 +392,7 @@
 				<param name="zonesGeneration" value="ShapeFile"/>
 				<!-- The cell size of the grid in meters. This defines the size of each zone in the zonal system. -->
 				<param name="cellSize" value="100"/>
-				<param name="zonesShapeFile" value="Shapefiles/Apr25Geofences/NKanagawaUTM54N.shp"/>
+				<param name="zonesShapeFile" value="Shapefiles/ZonesNorthKanagawaUTM54N.shp"/>
 			</parameterset>
 
 			<parameterset type="rebalancing">
@@ -440,7 +440,7 @@
 				<param name="zonesGeneration" value="ShapeFile"/>
 				<!-- The cell size of the grid in meters. This defines the size of each zone in the zonal system. -->
 				<param name="cellSize" value="100"/>
-				<param name="zonesShapeFile" value="Shapefiles/Apr25Geofences/SKanagawaUTM54N.shp"/>
+				<param name="zonesShapeFile" value="Shapefiles/ZonesSouthKanagawaUTM54N.shp"/>
 			</parameterset>
 
 			<parameterset type="rebalancing">
@@ -488,7 +488,7 @@
 				<param name="zonesGeneration" value="ShapeFile"/>
 				<!-- The cell size of the grid in meters. This defines the size of each zone in the zonal system. -->
 				<param name="cellSize" value="100"/>
-				<param name="zonesShapeFile" value="Shapefiles/Apr25Geofences/IseharaUTM54N.shp"/>
+				<param name="zonesShapeFile" value="Shapefiles/ZonesIsehara_MatsudaUTM54N.shp"/>
 			</parameterset>
 
 			<parameterset type="rebalancing">
@@ -536,7 +536,7 @@
 				<param name="zonesGeneration" value="ShapeFile"/>
 				<!-- The cell size of the grid in meters. This defines the size of each zone in the zonal system. -->
 				<param name="cellSize" value="100"/>
-				<param name="zonesShapeFile" value="Shapefiles/Apr25Geofences/OdawaraUTM54N.shp"/>
+				<param name="zonesShapeFile" value="Shapefiles/ZonesOdawaraUTM54N.shp"/>
 			</parameterset>
 
 			<parameterset type="rebalancing">
