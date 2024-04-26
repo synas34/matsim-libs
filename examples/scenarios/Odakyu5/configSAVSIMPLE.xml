@@ -13,7 +13,7 @@
 	</module>
 
 	<module name="plans">
-		<param name="inputPlansFile" value="plansv7.xml" />
+		<param name="inputPlansFile" value="plansv8.xml" />
 	</module>
 
 	<module name="controler">
@@ -32,6 +32,11 @@
 		<param name="flowCapacityFactor" value="0.03" />
 		<param name="storageCapacityFactor" value="0.05" />
 		<param name = "snapshotperiod"	value = "00:00:00"/> <!-- 00:00:00 means NO snapshot writing -->
+	</module>
+
+	<module name="linkStats">
+		<param name="writeLinkStatsInterval" value="10" />
+		<param name="averageLinkStatsOverIterations" value="5" />
 	</module>
 
 	<module name="planCalcScore">
@@ -104,46 +109,6 @@
 			<param name="dailyUtilityConstant" value="-0.0" />
 		</parameterset>
 		<parameterset type="modeParams">
-			<param name="mode" value="drtA"/>
-			<param name="constant" value="-30.3" />
-			<param name="marginalUtilityOfTraveling_util_hr" value="-60.14" />
-			<param name="monetaryDistanceRate" value="-0.05" />
-			<!-- [utils] daily utility constant. default=0 to be backwards compatible -->
-			<param name="dailyUtilityConstant" value="-0.0" />
-		</parameterset>
-		<parameterset type="modeParams">
-			<param name="mode" value="drtB"/>
-			<param name="constant" value="-30.3" />
-			<param name="marginalUtilityOfTraveling_util_hr" value="-60.14" />
-			<param name="monetaryDistanceRate" value="-0.05" />
-			<!-- [utils] daily utility constant. default=0 to be backwards compatible -->
-			<param name="dailyUtilityConstant" value="-0.0" />
-		</parameterset>
-		<parameterset type="modeParams">
-			<param name="mode" value="drtC"/>
-			<param name="constant" value="-30.3" />
-			<param name="marginalUtilityOfTraveling_util_hr" value="-60.14" />
-			<param name="monetaryDistanceRate" value="-0.05" />
-			<!-- [utils] daily utility constant. default=0 to be backwards compatible -->
-			<param name="dailyUtilityConstant" value="-0.0" />
-		</parameterset>
-		<parameterset type="modeParams">
-			<param name="mode" value="drtD"/>
-			<param name="constant" value="-30.3" />
-			<param name="marginalUtilityOfTraveling_util_hr" value="-60.14" />
-			<param name="monetaryDistanceRate" value="-0.05" />
-			<!-- [utils] daily utility constant. default=0 to be backwards compatible -->
-			<param name="dailyUtilityConstant" value="-0.0" />
-		</parameterset>
-		<parameterset type="modeParams">
-			<param name="mode" value="drtE"/>
-			<param name="constant" value="-30.3" />
-			<param name="marginalUtilityOfTraveling_util_hr" value="-60.14" />
-			<param name="monetaryDistanceRate" value="-0.05" />
-			<!-- [utils] daily utility constant. default=0 to be backwards compatible -->
-			<param name="dailyUtilityConstant" value="-0.0" />
-		</parameterset>
-		<parameterset type="modeParams">
 			<param name="mode" value="pt"/>
 			<param name="constant" value="1000.7" />
 			<param name="marginalUtilityOfTraveling_util_hr" value="-0.03" />
@@ -172,6 +137,8 @@
 			<param name="mode" value="transit_walk" />
 			<param name="monetaryDistanceRate" value="0.0" />
 		</parameterset>
+
+
 
 		<parameterset type="activityParams">
 			<param name="activityType"    value="h" /> <!-- home -->
@@ -254,7 +221,7 @@
 		<parameterset type="teleportedModeParameters" >
 			<param name="beelineDistanceFactor" value="1.3" />
 			<param name="mode" value="ride" />
-			<param name="teleportedModeFreespeedFactor" value="1.75" />
+			<param name="teleportedModeFreespeedFactor" value="1.6" />
 			<param name="teleportedModeSpeed" value="null" />
 		</parameterset>
 		<parameterset type="teleportedModeParameters" >
@@ -303,7 +270,7 @@
 
 	<module name="changeMode">
 		<!-- provide a comma-separated list of leg modes -->
-		<param name="modes" value="car,walk,pt,bike,drtA,drtB,drtC,drtD,drtE" />
+		<param name="modes" value="car,walk,pt,bike, drt" />
 		<!-- Defines whether car availability is considered be considered or not. An agent has no car only if it has no license, or never access to a car. Default: true -->
 		<param name="ignoreCarAvailability" value="false" />
 	</module>
@@ -323,7 +290,6 @@
 	<!-- This module is dedicated to configuring the multi-modal DRT (Demand Responsive Transport). -->
 	<module name="multiModeDrt">
 		<parameterset type="drt">
-			<param name="mode" value="drtA"/>
 			<!-- The search strategy for finding a vehicle for a DRT request. -->
 			<parameterset type="ExtensiveInsertionSearch"/>
 			<!-- The duration of a stop in seconds. This is the time a vehicle waits at a stop. -->
@@ -336,207 +302,15 @@
 			<param name="maxTravelTimeAlpha" value="3.0"/>
 			<!-- Beta parameter for max travel time estimation. This value in seconds will be added to the estimated travel time. -->
 			<param name="maxTravelTimeBeta" value="1200"/>
-			<param name="drtServiceAreaShapeFile" value="Shapefiles/Apr25Geofences/Tokyo23UTM54.shp"/>
-			<param name="vehiclesFile" value="SAVFiles/Odakyu5drts0S4Tokyo23.xml"/>
+			<param name="drtServiceAreaShapeFile" value="Shapefiles/Odakyu Corridor.shp"/>
+			<param name="vehiclesFile" value="Odakyu5drts0S4(40pc).xml"/>
 
 			<parameterset type="zonalSystem">
 				<!-- Specifies how the zones are generated. Here, it's based on a grid derived from the network. -->
 				<param name="zonesGeneration" value="ShapeFile"/>
-				<!-- The cell size of the grid in meters. This defines the size of each zone in the zonal system. -->
+				<!-- The cell si	ze of the grid in meters. This defines the size of each zone in the zonal system. -->
 				<param name="cellSize" value="100"/>
-				<param name="zonesShapeFile" value="Shapefiles/Apr25Geofences/Tokyo23UTM54.shp"/>
-			</parameterset>
-
-			<parameterset type="rebalancing">
-				<!-- Uses the min-cost flow rebalancing strategy. -->
-				<parameterset type="minCostFlowRebalancingStrategy">
-					<!-- Target alpha value for the rebalancing strategy. -->
-					<param name="targetAlpha" value="0.5"/>
-					<!-- Target beta value for the rebalancing strategy. -->
-					<param name="targetBeta" value="0.5"/>
-				</parameterset>
-			</parameterset>
-
-			<parameterset type="drtfare">
-				<!-- Base fare for a DRT trip. -->
-				<param name="basefare" value="2.0"/>
-				<!-- Daily subscription fee for using the DRT service. -->
-				<param name="dailySubscriptionFee" value="0.0"/>
-				<!-- Fare per meter of travel. -->
-				<param name="distanceFare_m" value="0.0007"/>
-				<!-- Fare per hour of travel. -->
-				<param name="timeFare_h" value="0"/>
-				<!-- Minimum fare charged per DRT trip. -->
-				<param name="minFarePerTrip" value="2.35"/>
-			</parameterset>
-		</parameterset>
-		<parameterset type="drt">
-			<param name="mode" value="drtB"/>
-			<!-- The search strategy for finding a vehicle for a DRT request. -->
-			<parameterset type="ExtensiveInsertionSearch"/>
-			<!-- The duration of a stop in seconds. This is the time a vehicle waits at a stop. -->
-			<param name="stopDuration" value="60"/>
-			<!-- Operational Scheme, either of door2door, stopbased or serviceAreaBased. door2door by default -->
-			<param name="operationalScheme" value="serviceAreaBased"/>
-			<!-- Maximum wait time in seconds before being picked up by a DRT vehicle. -->
-			<param name="maxWaitTime" value="600"/>
-			<!-- Alpha parameter for max travel time estimation. Used to increase the travel time estimation based on direct travel time. -->
-			<param name="maxTravelTimeAlpha" value="3.0"/>
-			<!-- Beta parameter for max travel time estimation. This value in seconds will be added to the estimated travel time. -->
-			<param name="maxTravelTimeBeta" value="1200"/>
-			<param name="drtServiceAreaShapeFile" value="Shapefiles/Apr25Geofences/NKanagawaUTM54.shp"/>
-			<param name="vehiclesFile" value="SAVFiles/Odakyu5drts0S4NorthKanagawa.xml"/>
-
-			<parameterset type="zonalSystem">
-				<!-- Specifies how the zones are generated. Here, it's based on a grid derived from the network. -->
-				<param name="zonesGeneration" value="ShapeFile"/>
-				<!-- The cell size of the grid in meters. This defines the size of each zone in the zonal system. -->
-				<param name="cellSize" value="100"/>
-				<param name="zonesShapeFile" value="Shapefiles/Apr25Geofences/NKanagawaUTM54.shp"/>
-			</parameterset>
-
-			<parameterset type="rebalancing">
-				<!-- Uses the min-cost flow rebalancing strategy. -->
-				<parameterset type="minCostFlowRebalancingStrategy">
-					<!-- Target alpha value for the rebalancing strategy. -->
-					<param name="targetAlpha" value="0.5"/>
-					<!-- Target beta value for the rebalancing strategy. -->
-					<param name="targetBeta" value="0.5"/>
-				</parameterset>
-			</parameterset>
-
-			<parameterset type="drtfare">
-				<!-- Base fare for a DRT trip. -->
-				<param name="basefare" value="2.0"/>
-				<!-- Daily subscription fee for using the DRT service. -->
-				<param name="dailySubscriptionFee" value="0.0"/>
-				<!-- Fare per meter of travel. -->
-				<param name="distanceFare_m" value="0.0007"/>
-				<!-- Fare per hour of travel. -->
-				<param name="timeFare_h" value="0"/>
-				<!-- Minimum fare charged per DRT trip. -->
-				<param name="minFarePerTrip" value="2.35"/>
-			</parameterset>
-		</parameterset>
-		<parameterset type="drt">
-			<param name="mode" value="drtC"/>
-			<!-- The search strategy for finding a vehicle for a DRT request. -->
-			<parameterset type="ExtensiveInsertionSearch"/>
-			<!-- The duration of a stop in seconds. This is the time a vehicle waits at a stop. -->
-			<param name="stopDuration" value="60"/>
-			<!-- Operational Scheme, either of door2door, stopbased or serviceAreaBased. door2door by default -->
-			<param name="operationalScheme" value="serviceAreaBased"/>
-			<!-- Maximum wait time in seconds before being picked up by a DRT vehicle. -->
-			<param name="maxWaitTime" value="600"/>
-			<!-- Alpha parameter for max travel time estimation. Used to increase the travel time estimation based on direct travel time. -->
-			<param name="maxTravelTimeAlpha" value="3.0"/>
-			<!-- Beta parameter for max travel time estimation. This value in seconds will be added to the estimated travel time. -->
-			<param name="maxTravelTimeBeta" value="1200"/>
-			<param name="drtServiceAreaShapeFile" value="Shapefiles/Apr25Geofences/SKanagawaUTM54.shp"/>
-			<param name="vehiclesFile" value="SAVFiles/Odakyu5drts0S4SouthKanagawa.xml"/>
-
-			<parameterset type="zonalSystem">
-				<!-- Specifies how the zones are generated. Here, it's based on a grid derived from the network. -->
-				<param name="zonesGeneration" value="ShapeFile"/>
-				<!-- The cell size of the grid in meters. This defines the size of each zone in the zonal system. -->
-				<param name="cellSize" value="100"/>
-				<param name="zonesShapeFile" value="Shapefiles/Apr25Geofences/SKanagawaUTM54.shp"/>
-			</parameterset>
-
-			<parameterset type="rebalancing">
-				<!-- Uses the min-cost flow rebalancing strategy. -->
-				<parameterset type="minCostFlowRebalancingStrategy">
-					<!-- Target alpha value for the rebalancing strategy. -->
-					<param name="targetAlpha" value="0.5"/>
-					<!-- Target beta value for the rebalancing strategy. -->
-					<param name="targetBeta" value="0.5"/>
-				</parameterset>
-			</parameterset>
-
-			<parameterset type="drtfare">
-				<!-- Base fare for a DRT trip. -->
-				<param name="basefare" value="2.0"/>
-				<!-- Daily subscription fee for using the DRT service. -->
-				<param name="dailySubscriptionFee" value="0.0"/>
-				<!-- Fare per meter of travel. -->
-				<param name="distanceFare_m" value="0.0007"/>
-				<!-- Fare per hour of travel. -->
-				<param name="timeFare_h" value="0"/>
-				<!-- Minimum fare charged per DRT trip. -->
-				<param name="minFarePerTrip" value="2.35"/>
-			</parameterset>
-		</parameterset>
-		<parameterset type="drt">
-			<param name="mode" value="drtD"/>
-			<!-- The search strategy for finding a vehicle for a DRT request. -->
-			<parameterset type="ExtensiveInsertionSearch"/>
-			<!-- The duration of a stop in seconds. This is the time a vehicle waits at a stop. -->
-			<param name="stopDuration" value="60"/>
-			<!-- Operational Scheme, either of door2door, stopbased or serviceAreaBased. door2door by default -->
-			<param name="operationalScheme" value="serviceAreaBased"/>
-			<!-- Maximum wait time in seconds before being picked up by a DRT vehicle. -->
-			<param name="maxWaitTime" value="600"/>
-			<!-- Alpha parameter for max travel time estimation. Used to increase the travel time estimation based on direct travel time. -->
-			<param name="maxTravelTimeAlpha" value="3.0"/>
-			<!-- Beta parameter for max travel time estimation. This value in seconds will be added to the estimated travel time. -->
-			<param name="maxTravelTimeBeta" value="1200"/>
-			<param name="drtServiceAreaShapeFile" value="Shapefiles/Apr25Geofences/IseharaUTM54.shp"/>
-			<param name="vehiclesFile" value="SAVFiles/Odakyu5drts0S4Isehara_Matsuda.xml"/>
-
-			<parameterset type="zonalSystem">
-				<!-- Specifies how the zones are generated. Here, it's based on a grid derived from the network. -->
-				<param name="zonesGeneration" value="ShapeFile"/>
-				<!-- The cell size of the grid in meters. This defines the size of each zone in the zonal system. -->
-				<param name="cellSize" value="100"/>
-				<param name="zonesShapeFile" value="Shapefiles/Apr25Geofences/IseharaUTM54.shp"/>
-			</parameterset>
-
-			<parameterset type="rebalancing">
-				<!-- Uses the min-cost flow rebalancing strategy. -->
-				<parameterset type="minCostFlowRebalancingStrategy">
-					<!-- Target alpha value for the rebalancing strategy. -->
-					<param name="targetAlpha" value="0.5"/>
-					<!-- Target beta value for the rebalancing strategy. -->
-					<param name="targetBeta" value="0.5"/>
-				</parameterset>
-			</parameterset>
-
-			<parameterset type="drtfare">
-				<!-- Base fare for a DRT trip. -->
-				<param name="basefare" value="2.0"/>
-				<!-- Daily subscription fee for using the DRT service. -->
-				<param name="dailySubscriptionFee" value="0.0"/>
-				<!-- Fare per meter of travel. -->
-				<param name="distanceFare_m" value="0.0007"/>
-				<!-- Fare per hour of travel. -->
-				<param name="timeFare_h" value="0"/>
-				<!-- Minimum fare charged per DRT trip. -->
-				<param name="minFarePerTrip" value="2.35"/>
-			</parameterset>
-		</parameterset>
-		<parameterset type="drt">
-			<param name="mode" value="drtE"/>
-			<!-- The search strategy for finding a vehicle for a DRT request. -->
-			<parameterset type="ExtensiveInsertionSearch"/>
-			<!-- The duration of a stop in seconds. This is the time a vehicle waits at a stop. -->
-			<param name="stopDuration" value="60"/>
-			<!-- Operational Scheme, either of door2door, stopbased or serviceAreaBased. door2door by default -->
-			<param name="operationalScheme" value="serviceAreaBased"/>
-			<!-- Maximum wait time in seconds before being picked up by a DRT vehicle. -->
-			<param name="maxWaitTime" value="600"/>
-			<!-- Alpha parameter for max travel time estimation. Used to increase the travel time estimation based on direct travel time. -->
-			<param name="maxTravelTimeAlpha" value="3.0"/>
-			<!-- Beta parameter for max travel time estimation. This value in seconds will be added to the estimated travel time. -->
-			<param name="maxTravelTimeBeta" value="1200"/>
-			<param name="drtServiceAreaShapeFile" value="Shapefiles/Apr25Geofences/OdawaraUTM54.shp"/>
-			<param name="vehiclesFile" value="SAVFiles/Odakyu5drts0S4Odawara.xml"/>
-
-			<parameterset type="zonalSystem">
-				<!-- Specifies how the zones are generated. Here, it's based on a grid derived from the network. -->
-				<param name="zonesGeneration" value="ShapeFile"/>
-				<!-- The cell size of the grid in meters. This defines the size of each zone in the zonal system. -->
-				<param name="cellSize" value="100"/>
-				<param name="zonesShapeFile" value="Shapefiles/Apr25Geofences/OdawaraUTM54.shp"/>
+				<param name="zonesShapeFile" value="Shapefiles/Odakyu Corridor.shp"/>
 			</parameterset>
 
 			<parameterset type="rebalancing">
@@ -666,7 +440,7 @@
 		<param name="tourEstimator" value="Cumulative" />
 
 		<parameterset type="modeAvailability:Car">
-			<param name="availableModes" value="pt,car,walk,bike,drtA,drtB,drtC,drtD,drtE" />
+			<param name="availableModes" value="pt, car, walk, bike, drt" />
 		</parameterset>
 	</module>
 

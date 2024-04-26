@@ -101,7 +101,7 @@ public class RunMatsimUnique {
 //			new SimulationConfig("examples/scenarios/Odakyu5/configSAVTAXIbaseKantoWide.xml", new UrbanIndexDMCExtensionSAVTAXI())
 //			new SimulationConfig("examples/scenarios/Odakyu5/configSAVTAXI(30pc).xml", new UrbanIndexDMCExtensionSAVTAXI())
 
-			new SimulationConfig("examples/scenarios/Odakyu5/configTAXIbase.xml", new UrbanIndexDMCExtensionTAXI_LONGDIST())
+			new SimulationConfig("examples/scenarios/Odakyu6/configGEOSIMPLE.xml", new UrbanIndexDMCExtensionSIMPLE())
 
 //			new SimulationConfig("examples/scenarios/Odakyu5/configSAVTAXIbase.xml", new UrbanIndexDMCExtensionSAVTAXI_075())
 //			new SimulationConfig("examples/scenarios/Odakyu5/configSAVTAXIbase.xml", new UrbanIndexDMCExtensionSAVTAXI_P()),

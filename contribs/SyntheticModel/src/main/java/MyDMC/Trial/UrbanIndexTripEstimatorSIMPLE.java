@@ -140,7 +140,8 @@ public class UrbanIndexTripEstimatorSIMPLE extends AbstractTripRouterEstimator {
 			case TransportMode.car: utility = carFactor -2.74 - 5.51 * totalTravelTime - 0.0011 * (totalTravelDistance * 7); break;
 			case TransportMode.ride: utility = rideFactor - 3.59 - 6.91	 * totalTravelTime;		break;
 			case TransportMode.pt: utility = -2.19 - 0.38 * totalRidingTime - 4.13 * totalTransferTime - 0.0015 * (totalRidingDistance * 16) ;break;
-			case TransportMode.drt: utility = -6.46 - 4.50 * totalTravelTime - 0.00013 * ((totalTravelDistance * 300) + 500); break; }
+			case TransportMode.drt, TransportMode.drtA, TransportMode.drtC, TransportMode.drtD, TransportMode.drtB, TransportMode.drtE:
+				utility = -6.46 - 4.50 * totalTravelTime - 0.00013 * ((totalTravelDistance * 300) + 500); break; }
 
 			return utility;
 	}
@@ -170,7 +171,8 @@ public class UrbanIndexTripEstimatorSIMPLE extends AbstractTripRouterEstimator {
 			case TransportMode.car: utility = carFactor -2.17 - 11.11 * totalTravelTime + 0.011 * (totalTravelDistance * 7); break;
 			case TransportMode.ride: utility = rideFactor - 3.44 - 10.27	 * totalTravelTime;		break;
 			case TransportMode.pt: utility = -2.37 - 0.815 * totalRidingTime - 5.81 * totalTransferTime - 0.0011 * (totalRidingDistance * 16) ;break;
-			case TransportMode.drt: utility = -6.46 - 3.46 * totalTravelTime - 0.00062 * ((totalTravelDistance * 430)+ 200); break; }
+			case TransportMode.drt, TransportMode.drtA, TransportMode.drtC, TransportMode.drtD, TransportMode.drtB, TransportMode.drtE:
+				utility = -6.46 - 3.46 * totalTravelTime - 0.00062 * ((totalTravelDistance * 300) + 500); break; }
 
 		return utility;
 	}
@@ -189,7 +191,8 @@ public class UrbanIndexTripEstimatorSIMPLE extends AbstractTripRouterEstimator {
 			case TransportMode.car: utility = carFactor -0 - 2.014 * totalTravelTime - 0.0004 * (totalTravelDistance * 7); break;
 			case TransportMode.ride: utility = rideFactor - 1.69 - 3.027	 * totalTravelTime;		break;
 			case TransportMode.pt: utility = 2.056 - 0.417 * totalRidingTime - 3.37 * totalTransferTime - 0.0004 * (totalRidingDistance * 16) ;break;
-			case TransportMode.drt: utility = -1.66 - 4.96 * totalTravelTime - 0.0004 * ((totalTravelDistance * 300) + 500); break; }
+			case TransportMode.drt, TransportMode.drtA, TransportMode.drtC, TransportMode.drtD, TransportMode.drtB, TransportMode.drtE:
+				utility = -1.66 - 4.96 * totalTravelTime - 0.0004 * ((totalTravelDistance * 300) + 500); break; }
 
 		return utility;
 	}
@@ -229,7 +232,8 @@ public class UrbanIndexTripEstimatorSIMPLE extends AbstractTripRouterEstimator {
 			case TransportMode.car: utility = carFactor - 3.63 - 2.05 * totalTravelTime - 0.0013 * (totalTravelDistance * 7); break;
 			case TransportMode.ride: utility = rideFactor - 4.42 - 4.60 * totalTravelTime;break;
 			case TransportMode.pt: utility = -1.111 - 0.46 * totalRidingTime - 3.50 * totalTransferTime - 0.0013 * (totalRidingDistance * 16) + railFactor;break;
-			case TransportMode.drt: utility = -5.14 - 5.41 * totalTravelTime - 0.0004 * ((totalTravelDistance * 300) + 500) + drtFactor;break;    }
+			case TransportMode.drt, TransportMode.drtA, TransportMode.drtC, TransportMode.drtD, TransportMode.drtB, TransportMode.drtE:
+				utility = -3.63 - 2.05 * totalTravelTime - 0.0013 * ((totalTravelDistance * 300) + 500) + drtFactor;break;    }
 
 
 		return utility;
@@ -264,7 +268,8 @@ public class UrbanIndexTripEstimatorSIMPLE extends AbstractTripRouterEstimator {
 			case TransportMode.car: utility = carFactor - 3.88 - 5.51 * totalTravelTime - 0.00213 * (totalTravelDistance * 7); break;
 			case TransportMode.ride: utility = rideFactor - 4.06 - 8.03 * totalTravelTime;break;
 			case TransportMode.pt: utility = -2.96 - 0.145 * totalRidingTime - 3.69 * totalTransferTime - 0.00213 * (totalRidingDistance * 16) ;break;
-			case TransportMode.drt: utility = -6.55 - 5.14 * totalTravelTime - 0.00213 * ((totalTravelDistance * 430)+ 200);break;    }
+			case TransportMode.drt, TransportMode.drtA, TransportMode.drtC, TransportMode.drtD, TransportMode.drtB, TransportMode.drtE:
+				utility = -3.88 - 5.51 * totalTravelTime - 0.00213 * ((totalTravelDistance * 300) + 500);break;    }
 
 		return utility;
 	}
@@ -298,7 +303,8 @@ public class UrbanIndexTripEstimatorSIMPLE extends AbstractTripRouterEstimator {
 			case TransportMode.car: utility = carFactor - 2.17 - 5.63 * totalTravelTime - 0.00088 * (totalTravelDistance * 7); break;
 			case TransportMode.ride: utility = rideFactor - 4.264 - 5.45 * totalTravelTime;break;
 			case TransportMode.pt: utility = -2.939 - 1.142 * totalRidingTime - 2.582 * totalTransferTime - 0.00088 * (totalRidingDistance * 16) ;break;
-			case TransportMode.drt: utility = -14.43 + 5.05 * totalTravelTime - 0.00088 * ((totalTravelDistance * 430)+ 200);break;    }
+			case TransportMode.drt, TransportMode.drtA, TransportMode.drtC, TransportMode.drtD, TransportMode.drtB, TransportMode.drtE:
+				utility = -2.17 - 5.63 * totalTravelTime - 0.00088 * ((totalTravelDistance * 300) + 500);break;    }
 
 
 		return utility;
@@ -331,7 +337,8 @@ public class UrbanIndexTripEstimatorSIMPLE extends AbstractTripRouterEstimator {
 			case TransportMode.car: utility = carFactor - 2.17 - 5.74 * totalTravelTime - 0.00064 * (totalTravelDistance * 7); break;
 			case TransportMode.ride: utility = rideFactor - 3.16 - 6.51 * totalTravelTime;break;
 			case TransportMode.pt: utility = -1.22 - 0.81 * totalRidingTime - 2.26 * totalTransferTime - 0.00064 * (totalRidingDistance * 16) ;break;
-			case TransportMode.drt: utility = -6.45 - 5.06 * totalTravelTime - 0.00064 * ((totalTravelDistance * 430)+ 200);break;    }
+			case TransportMode.drt, TransportMode.drtA, TransportMode.drtC, TransportMode.drtD, TransportMode.drtB, TransportMode.drtE:
+				utility = -2.17 - 5.74 * totalTravelTime - 0.00064 * ((totalTravelDistance * 300) + 500);break;    }
 
 		return utility;
 	}
@@ -364,7 +371,8 @@ public class UrbanIndexTripEstimatorSIMPLE extends AbstractTripRouterEstimator {
 			case TransportMode.car: utility = carFactor - 4.39 - 5.49 * totalTravelTime - 0.00017 * (totalTravelDistance * 7); break;
 			case TransportMode.ride: utility = rideFactor - 4.34 - 3.79 * totalTravelTime;break;
 			case TransportMode.pt: utility = -2.20 + 0.221 * totalRidingTime - 4.00 * totalTransferTime - 0.00017 * (totalRidingDistance * 16) ;break;
-			case TransportMode.drt: utility = -4.97 - 2.05 * totalTravelTime - -0.00017 * ((totalTravelDistance * 430)+ 200);break;    }
+			case TransportMode.drt, TransportMode.drtA, TransportMode.drtC, TransportMode.drtD, TransportMode.drtB, TransportMode.drtE:
+				utility = -4.39 - 5.49 * totalTravelTime - 0.00017 * ((totalTravelDistance * 300) + 500);break;    }
 
 		return utility;
 	}
@@ -398,7 +406,8 @@ public class UrbanIndexTripEstimatorSIMPLE extends AbstractTripRouterEstimator {
 			case TransportMode.car: utility = -6.30 - 3.17 * totalTravelTime + 0.00063 * (totalTravelDistance * 7); break;
 			case TransportMode.ride: utility = rideFactor - 6.908 - 2.65 * totalTravelTime;break;
 			case TransportMode.pt: utility =-4.14 - 0.29 * totalRidingTime - 2.39 * totalTransferTime + 0.00063 * (totalRidingDistance * 16) ;break;
-			case TransportMode.drt: utility = -5.93 - 8.86 * totalTravelTime + 0.00063 * ((totalTravelDistance * 430)+ 200);break;    }
+			case TransportMode.drt, TransportMode.drtA, TransportMode.drtC, TransportMode.drtD, TransportMode.drtB, TransportMode.drtE:
+				utility = -6.30 - 3.17 * totalTravelTime + 0.00063 * ((totalTravelDistance * 300) + 500);break;    }
 
 		return utility;
 	}
@@ -433,7 +442,8 @@ public class UrbanIndexTripEstimatorSIMPLE extends AbstractTripRouterEstimator {
 			case TransportMode.car: utility = carFactor - 2.09 - 3.00 * totalTravelTime + 0.0013 * (totalTravelDistance * 7); break;
 			case TransportMode.ride: utility = rideFactor - 3.49 - 7.50 * totalTravelTime;break;
 			case TransportMode.pt: utility =-3.35 + 1.09 * totalRidingTime - 3.16 * totalTransferTime + 0.0013 * (totalRidingDistance * 16) ;break;
-			case TransportMode.drt: utility = -6.29 - 5.81 * totalTravelTime + 0.00013 * ((totalTravelDistance * 430)+ 200);break;    }
+			case TransportMode.drt, TransportMode.drtA, TransportMode.drtC, TransportMode.drtD, TransportMode.drtB, TransportMode.drtE:
+				utility = -2.09 - 3.00 * totalTravelTime + 0.00013 * ((totalTravelDistance * 300) + 500);break;    }
 
 		return utility;
 	}
