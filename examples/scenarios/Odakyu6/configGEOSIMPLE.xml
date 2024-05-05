@@ -337,7 +337,7 @@
 			<!-- Beta parameter for max travel time estimation. This value in seconds will be added to the estimated travel time. -->
 			<param name="maxTravelTimeBeta" value="1200"/>
 			<param name="drtServiceAreaShapeFile" value="Shapefiles/Apr25Geofences/Tokyo23UTM54.shp"/>
-			<param name="vehiclesFile" value="SAVFiles/Odakyu5drts0S4Tokyo23.xml"/>
+			<param name="vehiclesFile" value="SAVFiles/drts0S4Tokyo(4).xml"/>
 
 			<parameterset type="zonalSystem">
 				<!-- Specifies how the zones are generated. Here, it's based on a grid derived from the network. -->
@@ -385,7 +385,7 @@
 			<!-- Beta parameter for max travel time estimation. This value in seconds will be added to the estimated travel time. -->
 			<param name="maxTravelTimeBeta" value="1200"/>
 			<param name="drtServiceAreaShapeFile" value="Shapefiles/Apr25Geofences/NKanagawaUTM54.shp"/>
-			<param name="vehiclesFile" value="SAVFiles/Odakyu5drts0S4NorthKanagawa.xml"/>
+			<param name="vehiclesFile" value="SAVFiles/drts0S4NKanagawa(4).xml"/>
 
 			<parameterset type="zonalSystem">
 				<!-- Specifies how the zones are generated. Here, it's based on a grid derived from the network. -->
@@ -433,7 +433,7 @@
 			<!-- Beta parameter for max travel time estimation. This value in seconds will be added to the estimated travel time. -->
 			<param name="maxTravelTimeBeta" value="1200"/>
 			<param name="drtServiceAreaShapeFile" value="Shapefiles/Apr25Geofences/SKanagawaUTM54.shp"/>
-			<param name="vehiclesFile" value="SAVFiles/Odakyu5drts0S4SouthKanagawa.xml"/>
+			<param name="vehiclesFile" value="SAVFiles/drts0S4SKanagawa(4).xml"/>
 
 			<parameterset type="zonalSystem">
 				<!-- Specifies how the zones are generated. Here, it's based on a grid derived from the network. -->
@@ -481,7 +481,7 @@
 			<!-- Beta parameter for max travel time estimation. This value in seconds will be added to the estimated travel time. -->
 			<param name="maxTravelTimeBeta" value="1200"/>
 			<param name="drtServiceAreaShapeFile" value="Shapefiles/Apr25Geofences/IseharaUTM54.shp"/>
-			<param name="vehiclesFile" value="SAVFiles/Odakyu5drts0S4Isehara_Matsuda.xml"/>
+			<param name="vehiclesFile" value="SAVFiles/drts0S4Isehara(4).xml"/>
 
 			<parameterset type="zonalSystem">
 				<!-- Specifies how the zones are generated. Here, it's based on a grid derived from the network. -->
@@ -529,7 +529,7 @@
 			<!-- Beta parameter for max travel time estimation. This value in seconds will be added to the estimated travel time. -->
 			<param name="maxTravelTimeBeta" value="1200"/>
 			<param name="drtServiceAreaShapeFile" value="Shapefiles/Apr25Geofences/OdawaraUTM54.shp"/>
-			<param name="vehiclesFile" value="SAVFiles/Odakyu5drts0S4Odawara.xml"/>
+			<param name="vehiclesFile" value="SAVFiles/drts0S4Odawara(4).xml"/>
 
 			<parameterset type="zonalSystem">
 				<!-- Specifies how the zones are generated. Here, it's based on a grid derived from the network. -->

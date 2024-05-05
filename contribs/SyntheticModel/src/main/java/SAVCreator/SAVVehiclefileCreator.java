@@ -26,7 +26,7 @@ public class SAVVehiclefileCreator {
 	public static void addVehicles(List<DvrpVehicleSpecification> vehicles, int count, Id<Link> linkId, int size, int seats, double operationStartTime, double operationEndTime, Network network) {
 		for (int i = 0; i < size; i++) {
 			vehicles.add(ImmutableDvrpVehicleSpecification.newBuilder()
-				.id(Id.create("drtE" + count, DvrpVehicle.class))
+				.id(Id.create("drtD" + count, DvrpVehicle.class))
 				.startLinkId(linkId)
 				.capacity(seats)
 				.serviceBeginTime(operationStartTime)
@@ -63,10 +63,10 @@ public class SAVVehiclefileCreator {
 		int seats = 4;
 		int count = 0;
 		String xmlFilePath = "examples/scenarios/Odakyu5/network.xml";  // adjust path accordingly
-		String outputDirectory = "examples/scenarios/Odakyu5";
-		String drtsFile = outputDirectory + "drts" + count + "S" + seats + "Odawara.xml";
+		String outputDirectory = "examples/scenarios/Odakyu5/";
+		String drtsFile = outputDirectory + "drts" + count + "S" + seats + "Isehara(4).xml";
 
-		String csvFilePath = "examples/scenarios/Odakyu5/line_base(4).csv"; // Replace with your CSV file path
+		String csvFilePath = "examples/scenarios/Odakyu6/LineFIles/line_Isehara(4).csv"; // Replace with your CSV file path
 		Set<String> uniqueLinkIds = new HashSet<>();
 		try (BufferedReader br = new BufferedReader(new FileReader(csvFilePath))) {
 			String line;

@@ -303,7 +303,7 @@
 			<!-- Beta parameter for max travel time estimation. This value in seconds will be added to the estimated travel time. -->
 			<param name="maxTravelTimeBeta" value="1200"/>
 			<param name="drtServiceAreaShapeFile" value="Shapefiles/Odakyu Corridor.shp"/>
-			<param name="vehiclesFile" value="Odakyu5drts0S4(40pc).xml"/>
+			<param name="vehiclesFile" value="drts0S4base(4).xml"/>
 
 			<parameterset type="zonalSystem">
 				<!-- Specifies how the zones are generated. Here, it's based on a grid derived from the network. -->
