@@ -132,6 +132,9 @@ public class RunMatsimUnique {
 
 		// Place necessary simConfigs into runAllSimulations, then press play
 		runAllSimulations();
+		String gzipFilePath = "examples/scenarios/Odakyu5/configGEOSIMPLE_UrbanIndexDMCExtensionSIMPLE_7/output_trips.csv.gz";
+		String outputFilePath = "C:/Users/MATSIM/Downloads/trips(Apr30).csv";
+		extractGzipToFile(gzipFilePath, outputFilePath);
 
 
 	}
