@@ -3,4 +3,5 @@
 <vehicles>
 	<vehicle id="drtE1" start_link="1147509504_0" t_0="0.0" t_1="115200.0" capacity="4"/>
 	<vehicle id="drtE2" start_link="1171473109_0" t_0="0.0" t_1="115200.0" capacity="4"/>
+	<vehicle id="drtE3" start_link="1039254452_0_r" t_0="0.0" t_1="115200.0" capacity="4"/>
 </vehicles>

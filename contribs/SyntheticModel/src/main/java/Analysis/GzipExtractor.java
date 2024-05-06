@@ -30,7 +30,7 @@ public class GzipExtractor {
 	}
 
 	public static void main(String[] args) {
-		String gzipFilePath = "examples/scenarios/Odakyu5/configGEOSIMPLE_UrbanIndexDMCExtensionSIMPLE_7/output_trips.csv.gz";
+		String gzipFilePath = "examples/scenarios/Odakyu6/configSAVSIMPLE_UrbanIndexDMCExtensionSIMPLE/output_trips.csv.gz";
 		String outputFilePath = "C:/Users/MATSIM/Downloads/trips(May01).csv";
 		extractGzipToFile(gzipFilePath, outputFilePath);
 //		String gzipFilePath2 = "examples/scenarios/Odakyu5/outputJan13_2dmc2/output_trips.csv.gz";

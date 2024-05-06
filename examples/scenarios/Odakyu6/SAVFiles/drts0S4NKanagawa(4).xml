@@ -2,15 +2,20 @@
 
 <vehicles>
 	<vehicle id="drtB0" start_link="101346745_1_r" t_0="0.0" t_1="115200.0" capacity="4"/>
+	<vehicle id="drtB1" start_link="108016445_0_r" t_0="0.0" t_1="115200.0" capacity="4"/>
 	<vehicle id="drtB2" start_link="1025871527_0" t_0="0.0" t_1="115200.0" capacity="4"/>
 	<vehicle id="drtB3" start_link="1137814255_0" t_0="0.0" t_1="115200.0" capacity="4"/>
+	<vehicle id="drtB4" start_link="105871793_0_r" t_0="0.0" t_1="115200.0" capacity="4"/>
 	<vehicle id="drtB5" start_link="107060845_0_r" t_0="0.0" t_1="115200.0" capacity="4"/>
 	<vehicle id="drtB6" start_link="118483637_1" t_0="0.0" t_1="115200.0" capacity="4"/>
+	<vehicle id="drtB7" start_link="1064243952_0_r" t_0="0.0" t_1="115200.0" capacity="4"/>
 	<vehicle id="drtB8" start_link="1096890370_0" t_0="0.0" t_1="115200.0" capacity="4"/>
 	<vehicle id="drtB9" start_link="1070723739_0" t_0="0.0" t_1="115200.0" capacity="4"/>
 	<vehicle id="drtB10" start_link="108016446_0_r" t_0="0.0" t_1="115200.0" capacity="4"/>
 	<vehicle id="drtB11" start_link="152465073_0_r" t_0="0.0" t_1="115200.0" capacity="4"/>
+	<vehicle id="drtB12" start_link="107971353_3" t_0="0.0" t_1="115200.0" capacity="4"/>
 	<vehicle id="drtB13" start_link="108019717_3_r" t_0="0.0" t_1="115200.0" capacity="4"/>
 	<vehicle id="drtB14" start_link="107048250_5_r" t_0="0.0" t_1="115200.0" capacity="4"/>
+	<vehicle id="drtB15" start_link="1051249855_0_r" t_0="0.0" t_1="115200.0" capacity="4"/>
 	<vehicle id="drtB16" start_link="1020283639_0_r" t_0="0.0" t_1="115200.0" capacity="4"/>
 </vehicles>

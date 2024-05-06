@@ -3,6 +3,7 @@ package ConfigCreator;
 import MyDMC.*;
 import MyDMC.Sensitivity.*;
 import MyDMC.Sensitivity.UrbanIndexDMCExtension;
+import MyDMC.Sensitivity.UrbanIndexDMCExtensionSIMPLE;
 import MyDMC.Trial.*;
 import org.matsim.api.core.v01.Scenario;
 import org.matsim.contrib.drt.run.*;
@@ -42,7 +43,7 @@ public class RunMatsimUnique {
 	}
 
 	private static String getUniqueOutputFilePath(String configFilePath, AbstractDiscreteModeChoiceExtension DMCExtension) {
-		String baseOutputPath = "examples/scenarios/Odakyu5/";
+		String baseOutputPath = "examples/scenarios/Odakyu6/";
 		String configFileName = new File(configFilePath).getName().replace(".xml", "");
 		String DMCExtensionName = DMCExtension.getClass().getSimpleName();
 		String outputPath = baseOutputPath + configFileName + "_" + DMCExtensionName;
@@ -101,6 +102,7 @@ public class RunMatsimUnique {
 //			new SimulationConfig("examples/scenarios/Odakyu5/configSAVTAXIbaseKantoWide.xml", new UrbanIndexDMCExtensionSAVTAXI())
 //			new SimulationConfig("examples/scenarios/Odakyu5/configSAVTAXI(30pc).xml", new UrbanIndexDMCExtensionSAVTAXI())
 
+			new SimulationConfig("examples/scenarios/Odakyu6/configSAVSIMPLE.xml", new UrbanIndexDMCExtensionSIMPLE()),
 			new SimulationConfig("examples/scenarios/Odakyu6/configGEOSIMPLE.xml", new UrbanIndexDMCExtensionSIMPLE())
 
 //			new SimulationConfig("examples/scenarios/Odakyu5/configSAVTAXIbase.xml", new UrbanIndexDMCExtensionSAVTAXI_075())
@@ -108,6 +110,14 @@ public class RunMatsimUnique {
 //			new SimulationConfig("examples/scenarios/Odakyu5/configSAVTAXI(30pc).xml", new UrbanIndexDMCExtensionSAVTAXI_075())
 
 //			new SimulationConfig("examples/scenarios/Odakyu5/configSAVTAXI(50pc).xml", new UrbanIndexDMCExtensionSAVTAXI_P())
+
+
+//			new SimulationConfig("examples/scenarios/Odakyu6/configGEOSIMPLE.xml", new UrbanIndexDMCExtensionSIMPLE_15()),
+//			new SimulationConfig("examples/scenarios/Odakyu6/configGEOSIMPLE.xml", new UrbanIndexDMCExtensionSIMPLE_x2()),
+//			new SimulationConfig("examples/scenarios/Odakyu6/configSAVSIMPLE.xml", new UrbanIndexDMCExtensionSIMPLE()),
+//			new SimulationConfig("examples/scenarios/Odakyu6/configGEOSIMPLE.xml", new UrbanIndexDMCExtensionSIMPLE())
+
+
 			// Add more configurations as needed
 		);
 
@@ -132,9 +142,7 @@ public class RunMatsimUnique {
 
 		// Place necessary simConfigs into runAllSimulations, then press play
 		runAllSimulations();
-		String gzipFilePath = "examples/scenarios/Odakyu5/configGEOSIMPLE_UrbanIndexDMCExtensionSIMPLE_7/output_trips.csv.gz";
-		String outputFilePath = "C:/Users/MATSIM/Downloads/trips(Apr30).csv";
-		extractGzipToFile(gzipFilePath, outputFilePath);
+
 
 
 	}
