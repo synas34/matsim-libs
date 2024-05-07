@@ -325,15 +325,15 @@
 
 			<parameterset type="drtfare">
 				<!-- Base fare for a DRT trip. -->
-				<param name="basefare" value="0.00"/>
+				<param name="basefare" value="200.00"/>
 				<!-- Daily subscription fee for using the DRT service. -->
 				<param name="dailySubscriptionFee" value="0.0"/>
 				<!-- Fare per meter of travel. -->
-				<param name="distanceFare_m" value="0.0007"/>
+				<param name="distanceFare_m" value="0.07"/>
 				<!-- Fare per hour of travel. -->
 				<param name="timeFare_h" value="0"/>
 				<!-- Minimum fare charged per DRT trip. -->
-				<param name="minFarePerTrip" value="0.00"/>
+				<param name="minFarePerTrip" value="270"/>
 			</parameterset>
 		</parameterset>
 	</module>
