@@ -62,38 +62,38 @@ public class UrbanIndexTripEstimatorSIMPLE extends AbstractTripRouterEstimator {
 		String UrbanContext = (String) person.getAttributes().getAttribute("UrbanContext");
 		String DestUrbanContext = (String) person.getAttributes().getAttribute("DestUrbanContext");
 		// Compute mode-specific utility based on car availability
-		if (UrbanContext.equals("Urban")) {
-			if (nextActivityIsWork) {
-				// Utility calculations when the next activity is work
-				utility = UrbanWorkUtil(mode, totalTravelTime, totalTravelDistance, totalRidingTime, totalTransferTime, totalRidingDistance, totalTransferDistance, carAlwaysAvailable, trip, DestUrbanContext);
-			} else {
-				// Standard utility calculations
-				utility = UrbanOtherUtil(mode, totalTravelTime, totalTravelDistance, totalRidingTime, totalTransferTime, totalRidingDistance, totalTransferDistance, carAlwaysAvailable, trip, DestUrbanContext);
-			}
-		}
-		if (UrbanContext.equals("Suburban")) {
-			if (nextActivityIsWork) {
-				// Utility calculations when the next activity is work
-				utility = SuburbanWorkUtil(mode, totalTravelTime, totalTravelDistance, totalRidingTime, totalTransferTime, totalRidingDistance, totalTransferDistance, carAlwaysAvailable, trip, DestUrbanContext);
-			} else {
-				// Standard utility calculations
-				utility = SuburbanWorkUtil(mode, totalTravelTime, totalTravelDistance, totalRidingTime, totalTransferTime, totalRidingDistance, totalTransferDistance, carAlwaysAvailable, trip, DestUrbanContext);
-			}
-		}
-		if (UrbanContext.equals("CBD")) {
-			if (nextActivityIsWork) {
-				// Utility calculations when the next activity is work
-				utility = CBDWorkUtil(mode, totalTravelTime, totalTravelDistance, totalRidingTime, totalTransferTime, totalRidingDistance, totalTransferDistance, carAlwaysAvailable, trip, DestUrbanContext);
-			} else {
-				// Standard utility calculations
-				utility = CBDOtherUtil(mode, totalTravelTime, totalTravelDistance, totalRidingTime, totalTransferTime, totalRidingDistance, totalTransferDistance, carAlwaysAvailable, trip, DestUrbanContext);
-			}
-		}
-		if (UrbanContext.equals("Rural")) {
-			utility = RuralUtil(mode, totalTravelTime, totalTravelDistance, totalRidingTime, totalTransferTime, totalRidingDistance, totalTransferDistance, carAlwaysAvailable, trip, DestUrbanContext);
-		}
+//		if (UrbanContext.equals("Urban")) {
+//			if (nextActivityIsWork) {
+//				// Utility calculations when the next activity is work
+//				utility = UrbanWorkUtil(mode, totalTravelTime, totalTravelDistance, totalRidingTime, totalTransferTime, totalRidingDistance, totalTransferDistance, carAlwaysAvailable, trip, DestUrbanContext);
+//			} else {
+//				// Standard utility calculations
+//				utility = UrbanOtherUtil(mode, totalTravelTime, totalTravelDistance, totalRidingTime, totalTransferTime, totalRidingDistance, totalTransferDistance, carAlwaysAvailable, trip, DestUrbanContext);
+//			}
+//		}
+//		if (UrbanContext.equals("Suburban")) {
+//			if (nextActivityIsWork) {
+//				// Utility calculations when the next activity is work
+//				utility = SuburbanWorkUtil(mode, totalTravelTime, totalTravelDistance, totalRidingTime, totalTransferTime, totalRidingDistance, totalTransferDistance, carAlwaysAvailable, trip, DestUrbanContext);
+//			} else {
+//				// Standard utility calculations
+//				utility = SuburbanWorkUtil(mode, totalTravelTime, totalTravelDistance, totalRidingTime, totalTransferTime, totalRidingDistance, totalTransferDistance, carAlwaysAvailable, trip, DestUrbanContext);
+//			}
+//		}
+//		if (UrbanContext.equals("CBD")) {
+//			if (nextActivityIsWork) {
+//				// Utility calculations when the next activity is work
+//				utility = CBDWorkUtil(mode, totalTravelTime, totalTravelDistance, totalRidingTime, totalTransferTime, totalRidingDistance, totalTransferDistance, carAlwaysAvailable, trip, DestUrbanContext);
+//			} else {
+//				// Standard utility calculations
+//				utility = CBDOtherUtil(mode, totalTravelTime, totalTravelDistance, totalRidingTime, totalTransferTime, totalRidingDistance, totalTransferDistance, carAlwaysAvailable, trip, DestUrbanContext);
+//			}
+//		}
+//		if (UrbanContext.equals("Rural")) {
+//			utility = RuralUtil(mode, totalTravelTime, totalTravelDistance, totalRidingTime, totalTransferTime, totalRidingDistance, totalTransferDistance, carAlwaysAvailable, trip, DestUrbanContext);
+//		}
 
-//		utility = calcModeUtil(mode, totalTravelTime, totalTravelDistance, totalRidingTime, totalTransferTime, totalRidingDistance, totalTransferDistance, carAlwaysAvailable, trip);
+		utility = calcModeUtil(mode, totalTravelTime, totalTravelDistance, totalRidingTime, totalTransferTime, totalRidingDistance, totalTransferDistance, carAlwaysAvailable, trip);
 
 //		if (totalTravelDistance <= 10) {
 //			if (nextActivityIsWork) {
@@ -124,11 +124,11 @@ public class UrbanIndexTripEstimatorSIMPLE extends AbstractTripRouterEstimator {
 		double carFactor = 0;
 
 		if (totalTravelDistance <= 3) {
-			walkFactor =  -9.83 * totalTravelTime;
-			bikeFactor = -1.88 - 6.35 * totalTravelTime ;
+			walkFactor =  -9.81 * totalTravelTime;
+			bikeFactor = -1.87 - 6.36 * totalTravelTime ;
 		} else if (totalTravelDistance > 3 && totalTravelDistance <= 7) {
 			walkFactor = dummyvalue + dummyvalue * totalTravelTime;
-			bikeFactor = -1.88 - 6.35 * totalTravelTime;
+			bikeFactor = -1.87 - 6.36 * totalTravelTime;
 		} else {
 			walkFactor = dummyvalue + dummyvalue * totalTravelTime;
 			bikeFactor = dummyvalue + dummyvalue * totalTravelTime;		}
@@ -137,11 +137,11 @@ public class UrbanIndexTripEstimatorSIMPLE extends AbstractTripRouterEstimator {
 		switch (mode) {
 			case TransportMode.walk: utility = walkFactor    ;break;
 			case TransportMode.bike: utility = bikeFactor 	;break;
-			case TransportMode.car: utility = carFactor -2.74 - 5.51 * totalTravelTime - 0.0011 * (totalTravelDistance * 7); break;
+			case TransportMode.car: utility = carFactor -2.76 - 5.47 * totalTravelTime - 0.00126 * (totalTravelDistance * 7); break;
 			case TransportMode.ride: utility = rideFactor - 3.59 - 6.91	 * totalTravelTime;		break;
-			case TransportMode.pt: utility = -2.19 - 0.38 * totalRidingTime - 4.13 * totalTransferTime - 0.0015 * (totalRidingDistance * 16) ;break;
+			case TransportMode.pt: utility = -2.19 - 0.38 * totalRidingTime - 4.12 * totalTransferTime - -0.00159 * (totalRidingDistance * 16) ;break;
 			case TransportMode.drt, TransportMode.drtA, TransportMode.drtC, TransportMode.drtD, TransportMode.drtB, TransportMode.drtE:
-				utility = -6.46 - 4.50 * totalTravelTime - 0.00013 * ((totalTravelDistance * 70) + 150); break; }
+				utility = (-2.76 * 1.7) - (5.47 * 1.7 * totalTravelTime) - 0.00126 * ((totalTravelDistance * 70) + 150); break; }
 
 			return utility;
 	}
