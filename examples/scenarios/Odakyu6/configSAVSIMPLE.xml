@@ -302,7 +302,7 @@
 			<param name="maxTravelTimeAlpha" value="3.0"/>
 			<!-- Beta parameter for max travel time estimation. This value in seconds will be added to the estimated travel time. -->
 			<param name="maxTravelTimeBeta" value="1200"/>
-			<param name="drtServiceAreaShapeFile" value="Shapefiles/EntireOdakyuCorridorUTM54N.shp"/>
+			<param name="drtServiceAreaShapeFile" value="Shapefiles/Apr25Geofences/AllAreasUTM54.shp"/>
 			<param name="vehiclesFile" value="SAVFiles/drts0S4base(4).xml"/>
 
 			<parameterset type="zonalSystem">
@@ -310,7 +310,7 @@
 				<param name="zonesGeneration" value="ShapeFile"/>
 				<!-- The cell si	ze of the grid in meters. This defines the size of each zone in the zonal system. -->
 				<param name="cellSize" value="100"/>
-				<param name="zonesShapeFile" value="Shapefiles/EntireOdakyuCorridorUTM54N.shp"/>
+				<param name="zonesShapeFile" value="Shapefiles/Apr25Geofences/AllAreasUTM54.shp"/>
 			</parameterset>
 
 			<parameterset type="rebalancing">
