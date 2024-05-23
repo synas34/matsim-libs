@@ -21,7 +21,7 @@ import java.io.IOException;
 public class CsvToMatsimPlan {
 
 	public static void main(String[] args) throws IOException {
-		String csvFile = "C:/Users/Public/Documents/RStudio/noSAVNLv1/Apr03.csv/"; // Replace with your CSV file path
+		String csvFile = "contribs/SyntheticModel/test/May24Trips(col_null).csv"; // Replace with your CSV file path
 		String line;
 		String cvsSplitBy = ","; // CSV delimiter
 
@@ -32,7 +32,12 @@ public class CsvToMatsimPlan {
 		PopulationFactory populationFactory = population.getFactory();
 
 		try (BufferedReader br = new BufferedReader(new FileReader(csvFile))) {
+			boolean firstLineSkipped = false; // Flag to track if the first line is skipped
 			while ((line = br.readLine()) != null) {
+				if (!firstLineSkipped) {
+					firstLineSkipped = true;
+					continue; // Skip the first line and move to the next iteration
+				}
 				// Use comma as separator
 				String[] trip = line.split(cvsSplitBy);
 

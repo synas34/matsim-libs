@@ -43,7 +43,7 @@ public class RunMatsimUnique {
 	}
 
 	private static String getUniqueOutputFilePath(String configFilePath, AbstractDiscreteModeChoiceExtension DMCExtension) {
-		String baseOutputPath = "examples/scenarios/Odakyu6/";
+		String baseOutputPath = "examples/scenarios/Odakyu7/Results";
 		String configFileName = new File(configFilePath).getName().replace(".xml", "");
 		String DMCExtensionName = DMCExtension.getClass().getSimpleName();
 		String outputPath = baseOutputPath + configFileName + "_" + DMCExtensionName;
@@ -105,7 +105,7 @@ public class RunMatsimUnique {
 //			new SimulationConfig("examples/scenarios/Odakyu6/configSAVSIMPLE.xml", new UrbanIndexDMCExtensionSIMPLE()),
 //			new SimulationConfig("examples/scenarios/Odakyu6/configGEOSIMPLE.xml", new UrbanIndexDMCExtensionSIMPLE_COST()),
 // 			new SimulationConfig("examples/scenarios/Odakyu6/configGEOSIMPLE.xml", new UrbanIndexDMCExtensionSIMPLE())
-			new SimulationConfig("examples/scenarios/Odakyu6/configSAVSIMPLE.xml", new UrbanIndexDMCExtensionSIMPLE())
+			new SimulationConfig("examples/scenarios/Odakyu7/configSAVSIMPLE.xml", new UrbanIndexDMCExtensionSIMPLE())
 
 
 //			new SimulationConfig("examples/scenarios/Odakyu5/configSAVTAXIbase.xml", new UrbanIndexDMCExtensionSAVTAXI_075())
