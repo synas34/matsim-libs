@@ -21,7 +21,7 @@ import java.io.IOException;
 public class CsvToMatsimPlan {
 
 	public static void main(String[] args) throws IOException {
-		String csvFile = "contribs/SyntheticModel/test/Apr03Trips(col_null).csv"; // Replace with your CSV file path
+		String csvFile = "C:/Users/Public/Documents/RStudio/noSAVNLv1/Apr03.csv/"; // Replace with your CSV file path
 		String line;
 		String cvsSplitBy = ","; // CSV delimiter
 
@@ -55,8 +55,13 @@ public class CsvToMatsimPlan {
 				String access = trip[13].replace("\"", "");
 				String InScope = trip[14].replace("\"", "");
 				String EndScope = trip[15].replace("\"", "");
+				String PC1 = trip[17].replace("\"", "");
 				String UrbanContext = trip[18].replace("\"", "");
 				String DestUrbanContext = trip[19].replace("\"", "");
+				String PC2 = trip[20].replace("\"", "");
+				String Teikiken = trip[21].replace("\"", "");
+				String Student = trip[22].replace("\"", "");
+				String Companions = trip[23].replace("\"", "");
 
 				// Create a person and plan
 				Person person = populationFactory.createPerson(Id.createPersonId(personId));
@@ -71,6 +76,11 @@ public class CsvToMatsimPlan {
 				person.getAttributes().putAttribute("EndScope",EndScope);
 				person.getAttributes().putAttribute("UrbanContext",UrbanContext);
 				person.getAttributes().putAttribute("DestUrbanContext",DestUrbanContext);
+				person.getAttributes().putAttribute("PC1",PC1);
+				person.getAttributes().putAttribute("PC2",PC2);
+				person.getAttributes().putAttribute("Teikiken",Teikiken);
+				person.getAttributes().putAttribute("Student",Student);
+				person.getAttributes().putAttribute("Companions",Companions);
 
 				// Create and add origin activity
 				Activity originActivity = populationFactory.createActivityFromCoord(originActType, origcoord);
