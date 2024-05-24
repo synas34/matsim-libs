@@ -150,9 +150,9 @@ public class UrbanIndexTripEstimatorSIMPLE extends AbstractTripRouterEstimator {
 			case TransportMode.bike: utility = bikeFactor 	;break;
 			case TransportMode.car: utility = carFactor -2.02 - 4.74 * totalTravelTime - 0.0015 * (totalTravelDistance * 7) - 1.77 * student_dummy - 0.45 * PC1 ; break;
 			case TransportMode.ride: utility = rideFactor - 3.59 - 6.91	 * totalTravelTime;		break;
-			case TransportMode.pt: utility = -2.86 - 0.45 * totalRidingTime - 2.50 * totalTransferTime - 0.0015 * (totalRidingDistance * 16) ;break;
+			case TransportMode.pt: utility = -2.86 - 0.45 * totalRidingTime - 2.50 * totalTransferTime - 0.0015 * (totalRidingDistance * 16) + 0.37 * teikiken_dummy + 0.06 * PC1 ;break;
 			case TransportMode.drt, TransportMode.drtA, TransportMode.drtC, TransportMode.drtD, TransportMode.drtB, TransportMode.drtE:
-				utility = (-2.76 * 1.7) - (5.47 * 1.7 * totalTravelTime) - 0.00126 * ((totalTravelDistance * 70) + 150) + 0.37 * teikiken_dummy + 0.06 * PC1; break; }
+				utility = (-2.02 * 1.7) - (4.74 * 1.7 * totalTravelTime) - 0.0015 * ((totalTravelDistance * 70) + 150) ; break; }
 
 			return utility;
 	}
