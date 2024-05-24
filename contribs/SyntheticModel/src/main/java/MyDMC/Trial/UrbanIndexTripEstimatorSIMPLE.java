@@ -135,7 +135,7 @@ public class UrbanIndexTripEstimatorSIMPLE extends AbstractTripRouterEstimator {
 		if (Teikiken.equals("TEIKIKEN")) { teikiken_dummy = 1; }
 
 		if (totalTravelDistance <= 3) {
-			walkFactor =  -9.25 * totalTravelTime;
+			walkFactor =  -9.26 * totalTravelTime;
 			bikeFactor = -1.81 - 5.97 * totalTravelTime ;
 		} else if (totalTravelDistance > 3 && totalTravelDistance <= 7) {
 			walkFactor = dummyvalue + dummyvalue * totalTravelTime;
@@ -148,9 +148,9 @@ public class UrbanIndexTripEstimatorSIMPLE extends AbstractTripRouterEstimator {
 		switch (mode) {
 			case TransportMode.walk: utility = walkFactor    ;break;
 			case TransportMode.bike: utility = bikeFactor 	;break;
-			case TransportMode.car: utility = carFactor -2.02 - 4.74 * totalTravelTime - 0.0015 * (totalTravelDistance * 7) - 1.77 * student_dummy - 0.45 * PC1 ; break;
+			case TransportMode.car: utility = carFactor -1.61 - 4.74 * totalTravelTime - 0.0015 * (totalTravelDistance * 7) - 1.75 * student_dummy - 0.32 * PC1 ; break;
 			case TransportMode.ride: utility = rideFactor - 3.59 - 6.91	 * totalTravelTime;		break;
-			case TransportMode.pt: utility = -2.86 - 0.45 * totalRidingTime - 2.50 * totalTransferTime - 0.0015 * (totalRidingDistance * 16) + 0.37 * teikiken_dummy + 0.06 * PC1 ;break;
+			case TransportMode.pt: utility = -2.86 - 0.45 * totalRidingTime - 2.66 * totalTransferTime - 0.0015 * (totalRidingDistance * 16) + 0.42 * teikiken_dummy + 0.04 * PC1 ;break;
 			case TransportMode.drt, TransportMode.drtA, TransportMode.drtC, TransportMode.drtD, TransportMode.drtB, TransportMode.drtE:
 				utility = (-2.02 * 1.7) - (4.74 * 1.7 * totalTravelTime) - 0.0015 * ((totalTravelDistance * 70) + 150) ; break; }
 
