@@ -13,7 +13,7 @@
 	</module>
 
 	<module name="plans">
-		<param name="inputPlansFile" value="plansv7.xml" />
+		<param name="inputPlansFile" value="plansv8.xml" />
 	</module>
 
 	<module name="controler">

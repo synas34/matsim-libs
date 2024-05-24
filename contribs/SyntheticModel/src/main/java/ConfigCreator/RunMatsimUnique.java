@@ -3,8 +3,8 @@ package ConfigCreator;
 import MyDMC.*;
 import MyDMC.Sensitivity.*;
 import MyDMC.Sensitivity.UrbanIndexDMCExtension;
-import MyDMC.Sensitivity.UrbanIndexDMCExtensionSIMPLE;
 import MyDMC.Trial.*;
+import MyDMC.Trial.UrbanIndexDMCExtensionSIMPLE;
 import org.matsim.api.core.v01.Scenario;
 import org.matsim.contrib.drt.run.*;
 import org.matsim.contrib.dvrp.run.DvrpConfigGroup;
@@ -43,7 +43,7 @@ public class RunMatsimUnique {
 	}
 
 	private static String getUniqueOutputFilePath(String configFilePath, AbstractDiscreteModeChoiceExtension DMCExtension) {
-		String baseOutputPath = "examples/scenarios/Odakyu7/Results";
+		String baseOutputPath = "examples/scenarios/Odakyu7/Results/";
 		String configFileName = new File(configFilePath).getName().replace(".xml", "");
 		String DMCExtensionName = DMCExtension.getClass().getSimpleName();
 		String outputPath = baseOutputPath + configFileName + "_" + DMCExtensionName;
