@@ -16,10 +16,10 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
-public class UrbanIndexTripEstimatorSIMPLE extends AbstractTripRouterEstimator {
+public class UrbanIndexTripEstimatorMAY extends AbstractTripRouterEstimator {
 	@Inject
-	public UrbanIndexTripEstimatorSIMPLE(TripRouter tripRouter, ActivityFacilities facilities,
-                                         TimeInterpretation timeInterpretation) {
+	public UrbanIndexTripEstimatorMAY(TripRouter tripRouter, ActivityFacilities facilities,
+                                      TimeInterpretation timeInterpretation) {
 		super(tripRouter, facilities, timeInterpretation, createPreroutedModes());
 	}
 
@@ -100,7 +100,7 @@ public class UrbanIndexTripEstimatorSIMPLE extends AbstractTripRouterEstimator {
 //			utility = RuralUtil(mode, totalTravelTime, totalTravelDistance, totalRidingTime, totalTransferTime, totalRidingDistance, totalTransferDistance, carAlwaysAvailable, trip, DestUrbanContext);
 //		}
 
-		utility = calcModeUtil(mode, totalTravelTime, totalTravelDistance, totalRidingTime, totalTransferTime, totalRidingDistance, Student, Teikiken, PC1, trip);
+		utility = calcModeUtil(mode, totalTravelTime, totalTravelDistance, totalRidingTime, totalTransferTime, totalRidingDistance, Student, Teikiken, PC1, PC2, trip);
 
 //		if (totalTravelDistance <= 10) {
 //			if (nextActivityIsWork) {
@@ -122,7 +122,7 @@ public class UrbanIndexTripEstimatorSIMPLE extends AbstractTripRouterEstimator {
 	private boolean isNextActivityWork (DiscreteModeChoiceTrip trip){
 		return "w".equals(trip.getDestinationActivity().getType());
 	}
-	private double calcModeUtil(String mode, double totalTravelTime, double totalTravelDistance, double totalRidingTime, double totalTransferTime, double totalRidingDistance, String Student,String Teikiken, double PC1, DiscreteModeChoiceTrip trip) {
+	private double calcModeUtil(String mode, double totalTravelTime, double totalTravelDistance, double totalRidingTime, double totalTransferTime, double totalRidingDistance, String Student,String Teikiken, double PC1, double PC2, DiscreteModeChoiceTrip trip) {
 		double utility = 0;
 		double dummyvalue = -10000000;
 		double walkFactor = 0;
@@ -135,11 +135,11 @@ public class UrbanIndexTripEstimatorSIMPLE extends AbstractTripRouterEstimator {
 		if (Teikiken.equals("TEIKIKEN")) { teikiken_dummy = 1; }
 
 		if (totalTravelDistance <= 3) {
-			walkFactor =  -9.43 * totalTravelTime;
-			bikeFactor = -1.82 - 6.08 * totalTravelTime ;
+			walkFactor =  -9.37 * totalTravelTime;
+			bikeFactor = -1.84 - 5.84 * totalTravelTime ;
 		} else if (totalTravelDistance > 3 && totalTravelDistance <= 7) {
 			walkFactor = dummyvalue + dummyvalue * totalTravelTime;
-			bikeFactor = -1.82 - 6.08 * totalTravelTime;
+			bikeFactor = -1.84 - 5.84 * totalTravelTime;
 		} else {
 			walkFactor = dummyvalue + dummyvalue * totalTravelTime;
 			bikeFactor = dummyvalue + dummyvalue * totalTravelTime;		}
@@ -148,12 +148,11 @@ public class UrbanIndexTripEstimatorSIMPLE extends AbstractTripRouterEstimator {
 		switch (mode) {
 			case TransportMode.walk: utility = walkFactor    ;break;
 			case TransportMode.bike: utility = bikeFactor 	;break;
-			case TransportMode.car: utility = carFactor -1.95 - 4.77 * totalTravelTime - 0.0015 * (totalTravelDistance * 7) - 0.32 * PC1 ; break;
-			case TransportMode.ride: utility = rideFactor - 3.59 - 6.91	 * totalTravelTime;		break;
-			case TransportMode.pt: utility = -3.06 - 0.45 * totalRidingTime - 2.52 * totalTransferTime - 0.0015 * (totalRidingDistance * 16) + 0.42 * teikiken_dummy + 0.05 * PC1 ;break;
+			case TransportMode.car: utility = carFactor -1.26 - 4.0 * totalTravelTime - 0.0036 * (totalTravelDistance * 8) - 0.24 * PC1 - 0.23 * PC2; break;
+			case TransportMode.ride: utility = rideFactor - 3.06 - 6.20	 * totalTravelTime - 0.1 * PC1 - 0.09 * PC2;		break;
+			case TransportMode.pt: utility = -3.30 - 0.35 * totalRidingTime - 2.10 * totalTransferTime - 0.0014 * (totalRidingDistance * 16) + 0.34 * teikiken_dummy + 0.08 * PC1 + 0.0015 * PC2 ;break;
 			case TransportMode.drt, TransportMode.drtA, TransportMode.drtC, TransportMode.drtD, TransportMode.drtB, TransportMode.drtE:
-				if (totalTravelDistance > 2) {utility = -1.95 - (4.77 * 1.7 * totalTravelTime) - 0.0015 * ((totalTravelDistance * 320 )+ 730);
-				} else {  utility = -1.95 - (4.77 * 1.7 * totalTravelTime) - 0.0015 * 730; } ; break; }
+				utility = -6.97  - (5.00 * totalTravelTime) - 0.0001 * ((totalTravelDistance * 70) + 150) + 0.11 * PC1 + 0.047 * PC2 ; break; }
 
 			return utility;
 	}
