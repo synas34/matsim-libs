@@ -303,7 +303,7 @@
 
 	<module name="changeMode">
 		<!-- provide a comma-separated list of leg modes -->
-		<param name="modes" value="car,walk,pt,bike,drtA,drtB,drtC,drtD,drtE" />
+		<param name="modes" value="car,walk,pt,bike,drtA,drtB,drtC,drtD,drtE, ride" />
 		<!-- Defines whether car availability is considered be considered or not. An agent has no car only if it has no license, or never access to a car. Default: true -->
 		<param name="ignoreCarAvailability" value="false" />
 	</module>
@@ -331,7 +331,7 @@
 			<!-- Operational Scheme, either of door2door, stopbased or serviceAreaBased. door2door by default -->
 			<param name="operationalScheme" value="serviceAreaBased"/>
 			<!-- Maximum wait time in seconds before being picked up by a DRT vehicle. -->
-			<param name="maxWaitTime" value="900"/>
+			<param name="maxWaitTime" value="1200"/>
 			<!-- Alpha parameter for max travel time estimation. Used to increase the travel time estimation based on direct travel time. -->
 			<param name="maxTravelTimeAlpha" value="3.0"/>
 			<!-- Beta parameter for max travel time estimation. This value in seconds will be added to the estimated travel time. -->
@@ -379,7 +379,7 @@
 			<!-- Operational Scheme, either of door2door, stopbased or serviceAreaBased. door2door by default -->
 			<param name="operationalScheme" value="serviceAreaBased"/>
 			<!-- Maximum wait time in seconds before being picked up by a DRT vehicle. -->
-			<param name="maxWaitTime" value="900"/>
+			<param name="maxWaitTime" value="1200"/>
 			<!-- Alpha parameter for max travel time estimation. Used to increase the travel time estimation based on direct travel time. -->
 			<param name="maxTravelTimeAlpha" value="3.0"/>
 			<!-- Beta parameter for max travel time estimation. This value in seconds will be added to the estimated travel time. -->
@@ -427,7 +427,7 @@
 			<!-- Operational Scheme, either of door2door, stopbased or serviceAreaBased. door2door by default -->
 			<param name="operationalScheme" value="serviceAreaBased"/>
 			<!-- Maximum wait time in seconds before being picked up by a DRT vehicle. -->
-			<param name="maxWaitTime" value="900"/>
+			<param name="maxWaitTime" value="1200"/>
 			<!-- Alpha parameter for max travel time estimation. Used to increase the travel time estimation based on direct travel time. -->
 			<param name="maxTravelTimeAlpha" value="3.0"/>
 			<!-- Beta parameter for max travel time estimation. This value in seconds will be added to the estimated travel time. -->
@@ -475,7 +475,7 @@
 			<!-- Operational Scheme, either of door2door, stopbased or serviceAreaBased. door2door by default -->
 			<param name="operationalScheme" value="serviceAreaBased"/>
 			<!-- Maximum wait time in seconds before being picked up by a DRT vehicle. -->
-			<param name="maxWaitTime" value="900"/>
+			<param name="maxWaitTime" value="1200"/>
 			<!-- Alpha parameter for max travel time estimation. Used to increase the travel time estimation based on direct travel time. -->
 			<param name="maxTravelTimeAlpha" value="3.0"/>
 			<!-- Beta parameter for max travel time estimation. This value in seconds will be added to the estimated travel time. -->
@@ -523,7 +523,7 @@
 			<!-- Operational Scheme, either of door2door, stopbased or serviceAreaBased. door2door by default -->
 			<param name="operationalScheme" value="serviceAreaBased"/>
 			<!-- Maximum wait time in seconds before being picked up by a DRT vehicle. -->
-			<param name="maxWaitTime" value="900"/>
+			<param name="maxWaitTime" value="1200"/>
 			<!-- Alpha parameter for max travel time estimation. Used to increase the travel time estimation based on direct travel time. -->
 			<param name="maxTravelTimeAlpha" value="3.0"/>
 			<!-- Beta parameter for max travel time estimation. This value in seconds will be added to the estimated travel time. -->
@@ -666,7 +666,7 @@
 		<param name="tourEstimator" value="Cumulative" />
 
 		<parameterset type="modeAvailability:Car">
-			<param name="availableModes" value="pt,car,walk,bike,drtA,drtB,drtC,drtD,drtE" />
+			<param name="availableModes" value="pt,car,walk,bike,drtA,drtB,drtC,drtD,drtE, ride" />
 		</parameterset>
 	</module>
 
