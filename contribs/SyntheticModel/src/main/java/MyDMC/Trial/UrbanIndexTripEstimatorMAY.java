@@ -135,11 +135,11 @@ public class UrbanIndexTripEstimatorMAY extends AbstractTripRouterEstimator {
 		if (Teikiken.equals("TEIKIKEN")) { teikiken_dummy = 1; }
 
 		if (totalTravelDistance <= 3) {
-			walkFactor =  -9.37 * totalTravelTime;
-			bikeFactor = -1.84 - 5.84 * totalTravelTime ;
+			walkFactor =  -9.45 * totalTravelTime;
+			bikeFactor = -1.84 - 5.98 * totalTravelTime ;
 		} else if (totalTravelDistance > 3 && totalTravelDistance <= 7) {
 			walkFactor = dummyvalue + dummyvalue * totalTravelTime;
-			bikeFactor = -1.84 - 5.84 * totalTravelTime;
+			bikeFactor = -1.84 - 5.98 * totalTravelTime;
 		} else {
 			walkFactor = dummyvalue + dummyvalue * totalTravelTime;
 			bikeFactor = dummyvalue + dummyvalue * totalTravelTime;		}
@@ -148,11 +148,13 @@ public class UrbanIndexTripEstimatorMAY extends AbstractTripRouterEstimator {
 		switch (mode) {
 			case TransportMode.walk: utility = walkFactor    ;break;
 			case TransportMode.bike: utility = bikeFactor 	;break;
-			case TransportMode.car: utility = carFactor -1.26 - 4.0 * totalTravelTime - 0.0036 * (totalTravelDistance * 8) - 0.24 * PC1 - 0.23 * PC2; break;
-			case TransportMode.ride: utility = rideFactor - 3.06 - 6.20	 * totalTravelTime - 0.1 * PC1 - 0.09 * PC2;		break;
-			case TransportMode.pt: utility = -3.30 - 0.35 * totalRidingTime - 2.10 * totalTransferTime - 0.0014 * (totalRidingDistance * 16) + 0.34 * teikiken_dummy + 0.08 * PC1 + 0.0015 * PC2 ;break;
+			case TransportMode.car: utility = carFactor -1.47 - 4.62 * totalTravelTime - 0.0024 * (totalTravelDistance * 8) - 0.36 * PC1; break;
+			case TransportMode.ride: utility = rideFactor - 3.17 - 6.41	 * totalTravelTime - 0.15 * PC1 ;		break;
+			case TransportMode.pt: utility = -3.01 - 0.40 * totalRidingTime - 2.65 * totalTransferTime - 0.0014 * (totalRidingDistance * 16) + 0.50 * teikiken_dummy + 0.053 * PC1  ;break;
 			case TransportMode.drt, TransportMode.drtA, TransportMode.drtC, TransportMode.drtD, TransportMode.drtB, TransportMode.drtE:
-				utility = -6.97  - (5.00 * totalTravelTime) - 0.0001 * ((totalTravelDistance * 70) + 150) + 0.11 * PC1 + 0.047 * PC2 ; break; }
+				if (totalTravelDistance > 2) {utility = -6.88  - (4.84 * totalTravelTime) - 0.0002 * ((totalTravelDistance * 320) + 730) + 0.13 * PC1  + 0.46 * teikiken_dummy;
+				} else {  utility = -6.88  - (4.84 * totalTravelTime) - 0.0002 * 730 + 0.13 * PC1 + 0.46 * teikiken_dummy; } }
+
 
 			return utility;
 	}

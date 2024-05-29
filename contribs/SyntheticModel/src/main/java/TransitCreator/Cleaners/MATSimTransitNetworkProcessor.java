@@ -56,10 +56,10 @@ public class MATSimTransitNetworkProcessor {
 	}
 
 	private double determineNewSpeed(double currentSpeed) {
-		if (currentSpeed == 6.333333333333334 ) return 4.1111111111111;
+		if (currentSpeed == 8.333333333333334 ) return 5.333333333333334;
 //		if (currentSpeed == 11.11111111111111) return 8.333333333333334;
 //		if (currentSpeed == 12.5) return 11.11111111111111;
-//		if (currentSpeed == 13.88888888888889) return 12.5;
+//		if (currentSpeed == 16.666666666666668) return 12.5;
 //		if (currentSpeed == 22.22222222222222) return 13.88888888888889;
 //		if (currentSpeed == 25) return 20.0;
 
