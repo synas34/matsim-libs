@@ -252,15 +252,15 @@
 			<param name="teleportedModeSpeed" value="1.3888888888888888" />
 		</parameterset>
 		<parameterset type="teleportedModeParameters" >
-			<param name="beelineDistanceFactor" value="1.3" />
+			<param name="beelineDistanceFactor" value="1.7" />
 			<param name="mode" value="ride" />
-			<param name="teleportedModeFreespeedFactor" value="1.75" />
+			<param name="teleportedModeFreespeedFactor" value="2.5" />
 			<param name="teleportedModeSpeed" value="null" />
 		</parameterset>
 		<parameterset type="teleportedModeParameters" >
 			<param name="beelineDistanceFactor" value="1.3" />
 			<param name="mode" value="pt" />
-			<param name="teleportedModeFreespeedFactor" value="2.0" />
+			<param name="teleportedModeFreespeedFactor" value="2.2" />
 			<param name="teleportedModeSpeed" value="null" />
 		</parameterset>
 	</module>
@@ -359,7 +359,7 @@
 
 			<parameterset type="drtfare">
 				<!-- Base fare for a DRT trip. -->
-				<param name="basefare" value="2.0"/>
+				<param name="basefare" value="0.0"/>
 				<!-- Daily subscription fee for using the DRT service. -->
 				<param name="dailySubscriptionFee" value="0.0"/>
 				<!-- Fare per meter of travel. -->
@@ -367,7 +367,7 @@
 				<!-- Fare per hour of travel. -->
 				<param name="timeFare_h" value="0"/>
 				<!-- Minimum fare charged per DRT trip. -->
-				<param name="minFarePerTrip" value="2.35"/>
+				<param name="minFarePerTrip" value="0"/>
 			</parameterset>
 		</parameterset>
 		<parameterset type="drt">
@@ -407,7 +407,7 @@
 
 			<parameterset type="drtfare">
 				<!-- Base fare for a DRT trip. -->
-				<param name="basefare" value="2.0"/>
+				<param name="basefare" value="0.0"/>
 				<!-- Daily subscription fee for using the DRT service. -->
 				<param name="dailySubscriptionFee" value="0.0"/>
 				<!-- Fare per meter of travel. -->
@@ -415,7 +415,7 @@
 				<!-- Fare per hour of travel. -->
 				<param name="timeFare_h" value="0"/>
 				<!-- Minimum fare charged per DRT trip. -->
-				<param name="minFarePerTrip" value="2.35"/>
+				<param name="minFarePerTrip" value="0"/>
 			</parameterset>
 		</parameterset>
 		<parameterset type="drt">
@@ -455,7 +455,7 @@
 
 			<parameterset type="drtfare">
 				<!-- Base fare for a DRT trip. -->
-				<param name="basefare" value="2.0"/>
+				<param name="basefare" value="0.0"/>
 				<!-- Daily subscription fee for using the DRT service. -->
 				<param name="dailySubscriptionFee" value="0.0"/>
 				<!-- Fare per meter of travel. -->
@@ -463,7 +463,7 @@
 				<!-- Fare per hour of travel. -->
 				<param name="timeFare_h" value="0"/>
 				<!-- Minimum fare charged per DRT trip. -->
-				<param name="minFarePerTrip" value="2.35"/>
+				<param name="minFarePerTrip" value="0"/>
 			</parameterset>
 		</parameterset>
 		<parameterset type="drt">
@@ -503,7 +503,7 @@
 
 			<parameterset type="drtfare">
 				<!-- Base fare for a DRT trip. -->
-				<param name="basefare" value="2.0"/>
+				<param name="basefare" value="0.0"/>
 				<!-- Daily subscription fee for using the DRT service. -->
 				<param name="dailySubscriptionFee" value="0.0"/>
 				<!-- Fare per meter of travel. -->
@@ -511,7 +511,7 @@
 				<!-- Fare per hour of travel. -->
 				<param name="timeFare_h" value="0"/>
 				<!-- Minimum fare charged per DRT trip. -->
-				<param name="minFarePerTrip" value="2.35"/>
+				<param name="minFarePerTrip" value="0"/>
 			</parameterset>
 		</parameterset>
 		<parameterset type="drt">
@@ -551,7 +551,7 @@
 
 			<parameterset type="drtfare">
 				<!-- Base fare for a DRT trip. -->
-				<param name="basefare" value="2.0"/>
+				<param name="basefare" value="0.0"/>
 				<!-- Daily subscription fee for using the DRT service. -->
 				<param name="dailySubscriptionFee" value="0.0"/>
 				<!-- Fare per meter of travel. -->
@@ -559,7 +559,7 @@
 				<!-- Fare per hour of travel. -->
 				<param name="timeFare_h" value="0"/>
 				<!-- Minimum fare charged per DRT trip. -->
-				<param name="minFarePerTrip" value="2.35"/>
+				<param name="minFarePerTrip" value="0"/>
 			</parameterset>
 		</parameterset>
 	</module>

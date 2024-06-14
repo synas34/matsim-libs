@@ -16,10 +16,10 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
-public class UrbanIndexTripEstimatorSIMPLE extends AbstractTripRouterEstimator {
+public class UrbanIndexTripEstimatorSIMPLE1 extends AbstractTripRouterEstimator {
 	@Inject
-	public UrbanIndexTripEstimatorSIMPLE(TripRouter tripRouter, ActivityFacilities facilities,
-                                         TimeInterpretation timeInterpretation) {
+	public UrbanIndexTripEstimatorSIMPLE1(TripRouter tripRouter, ActivityFacilities facilities,
+										  TimeInterpretation timeInterpretation) {
 		super(tripRouter, facilities, timeInterpretation, createPreroutedModes());
 	}
 
