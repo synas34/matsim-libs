@@ -34,11 +34,6 @@
 		<param name = "snapshotperiod"	value = "00:00:00"/> <!-- 00:00:00 means NO snapshot writing -->
 	</module>
 
-	<module name="linkStats">
-		<param name="writeLinkStatsInterval" value="10" />
-		<param name="averageLinkStatsOverIterations" value="5" />
-	</module>
-
 	<module name="planCalcScore">
 		<param name="learningRate" value="1.0" />
 		<param name="BrainExpBeta" value="2.0" />
@@ -221,7 +216,7 @@
 		<parameterset type="teleportedModeParameters" >
 			<param name="beelineDistanceFactor" value="1.3" />
 			<param name="mode" value="ride" />
-			<param name="teleportedModeFreespeedFactor" value="1.6" />
+			<param name="teleportedModeFreespeedFactor" value="1.75" />
 			<param name="teleportedModeSpeed" value="null" />
 		</parameterset>
 		<parameterset type="teleportedModeParameters" >
