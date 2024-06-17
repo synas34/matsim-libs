@@ -1,0 +1,2 @@
+departureTime;personId;vehicleId;fromLinkId;fromX;fromY;toLinkId;toX;toY;waitTime;arrivalTime;inVehicleTravelTime;travelDistance_m;directTravelDistance_m;fareForLeg;latestDepartureTime;latestArrivalTime
+34218.0;42174002432-1;drtE4;319768382_0_r;330046.39;3906948.9;332627428_0;332576.51;3903363.76;425.0;35099.0;456.0;5356.42;5356.42;-3.75;35118;36816.76
