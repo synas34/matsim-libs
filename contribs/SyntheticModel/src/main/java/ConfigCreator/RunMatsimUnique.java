@@ -97,31 +97,13 @@ public class RunMatsimUnique {
 
 	public static void runAllSimulations() {
 		List<SimulationConfig> simulationConfigs = Arrays.asList(
-//			new SimulationConfig("examples/scenarios/Odakyu5/configTAXIbase.xml", new UrbanIndexDMCExtensionTAXI()),
-//			new SimulationConfig("examples/scenarios/Odakyu5/configSAVTAXITEST.xml", new UrbanIndexDMCExtensionTAXI())
-//			new SimulationConfig("examples/scenarios/Odakyu5/configSAVTAXIbaseKantoWide.xml", new UrbanIndexDMCExtensionSAVTAXI())
-//			new SimulationConfig("examples/scenarios/Odakyu5/configSAVTAXI(30pc).xml", new UrbanIndexDMCExtensionSAVTAXI())
 
-//			new SimulationConfig("examples/scenarios/Odakyu6/configSAVSIMPLE.xml", new UrbanIndexDMCExtensionSIMPLE()),
-//			new SimulationConfig("examples/scenarios/Odakyu6/configGEOSIMPLE.xml", new UrbanIndexDMCExtensionSIMPLE_COST()),
-			new SimulationConfig("examples/scenarios/Odakyu7/configGEO.xml", new UrbanIndexDMCExtensionMAY70yenOPMST()),
-		new SimulationConfig("examples/scenarios/Odakyu7/configGEO.xml", new UrbanIndexDMCExtensionMAY70yenPASS())
-//			new SimulationConfig("examples/scenarios/Odakyu7/configGEOSIMPLE.xml", new DMCExtensionSIMPLE())
+			new SimulationConfig("examples/scenarios/Odakyu7/configGEOx07.xml", new UrbanIndexDMCExtensionMAY70yen()),
+			new SimulationConfig("examples/scenarios/Odakyu7/configGEOx15.xml", new UrbanIndexDMCExtensionMAY70yen())
 
-
-//			new SimulationConfig("examples/scenarios/Odakyu5/configSAVTAXIbase.xml", new UrbanIndexDMCExtensionSAVTAXI_075())
-//			new SimulationConfig("examples/scenarios/Odakyu5/configSAVTAXIbase.xml", new UrbanIndexDMCExtensionSAVTAXI_P()),
-//			new SimulationConfig("examples/scenarios/Odakyu5/configSAVTAXI(30pc).xml", new UrbanIndexDMCExtensionSAVTAXI_075())
-
-//			new SimulationConfig("examples/scenarios/Odakyu5/configSAVTAXI(50pc).xml", new UrbanIndexDMCExtensionSAVTAXI_P())
-
-
-//			new SimulationConfig("examples/scenarios/Odakyu6/configGEOSIMPLE.xml", new UrbanIndexDMCExtensionSIMPLE_15()),
-//			new SimulationConfig("examples/scenarios/Odakyu6/configGEOSIMPLE.xml", new UrbanIndexDMCExtensionSIMPLE_x2())
-//			new SimulationConfig("examples/scenarios/Odakyu6/configSAVSIMPLE.xml", new UrbanIndexDMCExtensionSIMPLE_COST()),
-//			new SimulationConfig("examples/scenarios/Odakyu6/configGEOSIMPLE.xml", new UrbanIndexDMCExtensionSIMPLE_TAXI())
-
-//			new SimulationConfig("examples/scenarios/Odakyu6/configGEOSIMPLE.xml", new UrbanIndexDMCExtensionSIMPLE())
+		// TO DO: SIMULATE MIDDLE VALUE MNL WITH PASSENGER CONSTANTS
+//		new SimulationConfig("examples/scenarios/Odakyu7/configGEO.xml", new UrbanIndexDMCExtensionMAY70yenPASS()),
+//		new SimulationConfig("examples/scenarios/Odakyu7/configGEO.xml", new UrbanIndexDMCExtensionMAY70yenOPMST())
 
 
 			// Add more configurations as needed
