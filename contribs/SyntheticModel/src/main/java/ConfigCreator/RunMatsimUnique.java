@@ -104,8 +104,8 @@ public class RunMatsimUnique {
 
 //			new SimulationConfig("examples/scenarios/Odakyu6/configSAVSIMPLE.xml", new UrbanIndexDMCExtensionSIMPLE()),
 //			new SimulationConfig("examples/scenarios/Odakyu6/configGEOSIMPLE.xml", new UrbanIndexDMCExtensionSIMPLE_COST()),
-			new SimulationConfig("examples/scenarios/Odakyu7/configGEO.xml", new UrbanIndexDMCExtensionMAY40yen()),
-		new SimulationConfig("examples/scenarios/Odakyu7/configGEO.xml", new UrbanIndexDMCExtensionMAY120yen())
+			new SimulationConfig("examples/scenarios/Odakyu7/configGEO.xml", new UrbanIndexDMCExtensionMAY70yenOPMST()),
+		new SimulationConfig("examples/scenarios/Odakyu7/configGEO.xml", new UrbanIndexDMCExtensionMAY70yenPASS())
 //			new SimulationConfig("examples/scenarios/Odakyu7/configGEOSIMPLE.xml", new DMCExtensionSIMPLE())
 
 
