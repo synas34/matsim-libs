@@ -16,10 +16,10 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
-public class UrbanIndexTripEstimatorMAY70yen extends AbstractTripRouterEstimator {
+public class UrbanIndexTripEstimatorMAY70yenPASS extends AbstractTripRouterEstimator {
 	@Inject
-	public UrbanIndexTripEstimatorMAY70yen(TripRouter tripRouter, ActivityFacilities facilities,
-                                           TimeInterpretation timeInterpretation) {
+	public UrbanIndexTripEstimatorMAY70yenPASS(TripRouter tripRouter, ActivityFacilities facilities,
+                                               TimeInterpretation timeInterpretation) {
 		super(tripRouter, facilities, timeInterpretation, createPreroutedModes());
 	}
 
@@ -152,8 +152,8 @@ public class UrbanIndexTripEstimatorMAY70yen extends AbstractTripRouterEstimator
 			case TransportMode.ride: utility = rideFactor - 3.18 - 7.65	 * totalTravelTime - 0.16 * PC1 ;		break;
 			case TransportMode.pt: utility = -2.94 - 0.53 * totalRidingTime - 2.81 * totalTransferTime - 0.0014 * (totalRidingDistance * 16)  + 0.053 * PC1  ;break;
 			case TransportMode.drt, TransportMode.drtA, TransportMode.drtC, TransportMode.drtD, TransportMode.drtB, TransportMode.drtE:
-				if (totalTravelDistance > 2) {utility = -6.61 * 0.75  - (5.32 * totalTravelTime) - 0.0002 * ((totalTravelDistance * 70) + 150) + 0.14 * PC1;
-				} else {  utility = -6.61 * 0.75  - (5.32 * totalTravelTime) - (0.0002 * 150) + 0.14 * PC1  ; } }
+				if (totalTravelDistance > 2) {utility = -3.18 - (5.32 * totalTravelTime) - 0.0002 * ((totalTravelDistance * 70) + 150) + 0.14 * PC1;
+				} else {  utility = -3.18  - (5.32 * totalTravelTime) - (0.0002 * 150) + 0.14 * PC1  ; } }
 
 
 			return utility;
