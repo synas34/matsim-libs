@@ -98,12 +98,12 @@ public class RunMatsimUnique {
 	public static void runAllSimulations() {
 		List<SimulationConfig> simulationConfigs = Arrays.asList(
 
-//			new SimulationConfig("examples/scenarios/Odakyu7/configGEO07x2.xml", new UrbanIndexDMCExtensionMAY70yen()),
-//			new SimulationConfig("examples/scenarios/Odakyu7/configGEOx15.xml", new UrbanIndexDMCExtensionMAY70yen())
+			new SimulationConfig("examples/scenarios/Odakyu7/configGEOx07.xml", new UrbanIndexDMCExtensionMAY40yen()),
+			new SimulationConfig("examples/scenarios/Odakyu7/configGEO.xml", new UrbanIndexDMCExtensionMAY5yen())
 
 		// TO DO: SIMULATE MIDDLE VALUE MNL WITH PASSENGER CONSTANTS
-		new SimulationConfig("examples/scenarios/Odakyu7/configGEO.xml", new UrbanIndexDMCExtensionMAY70yenPASS()),
-		new SimulationConfig("examples/scenarios/Odakyu7/configGEO.xml", new UrbanIndexDMCExtensionMAY70yenOPMST())
+//		new SimulationConfig("examples/scenarios/Odakyu7/configGEO.xml", new UrbanIndexDMCExtensionMAY70yenPASS()),
+//		new SimulationConfig("examples/scenarios/Odakyu7/configGEO.xml", new UrbanIndexDMCExtensionMAY70yenOPMST())
 
 
 			// Add more configurations as needed

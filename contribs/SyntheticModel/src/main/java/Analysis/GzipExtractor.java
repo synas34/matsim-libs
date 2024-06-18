@@ -33,9 +33,9 @@ public class GzipExtractor {
 		String gzipFilePath = "examples/scenarios/Odakyu7/Results2/configGEO_UrbanIndexDMCExtensionMAY70yenOPMST_1/output_trips.csv.gz";
 		String outputFilePath = "C:/Users/MATSIM/Downloads/trips(Jun16)O.csv";
 		extractGzipToFile(gzipFilePath, outputFilePath);
-//		String gzipFilePath2 = "examples/scenarios/Odakyu5/outputJan13_2dmc2/output_trips.csv.gz";
-//		String outputFilePath2 = "C:/Users/Public/Documents/RStudio/SAVMNLv1/trips(Req%30%75).csv";
-//		extractGzipToFile(gzipFilePath2, outputFilePath2);
+		String gzipFilePath2 = "examples/scenarios/Odakyu7/Results2/configGEO_UrbanIndexDMCExtensionMAY70yenPASS/output_trips.csv.gz";
+		String outputFilePath2 = "C:/Users/MATSIM/Downloads/trips(Jun16)P.csv";
+		extractGzipToFile(gzipFilePath2, outputFilePath2);
 //		String gzipFilePath3 = "examples/scenarios/Odakyu5/outputJan13_1dmc1/output_vehicles.xml.gz";
 //		String outputFilePath3 = "C:/Users/MATSIM/Downloads/output_vehicles.csv";
 //		extractGzipToFile(gzipFilePath3, outputFilePath3);
