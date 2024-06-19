@@ -16,10 +16,10 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
-public class UrbanIndexTripEstimatorMAY70yenOPMST extends AbstractTripRouterEstimator {
+public class UrbanIndexTripEstimatorMAY20yenPASS extends AbstractTripRouterEstimator {
 	@Inject
-	public UrbanIndexTripEstimatorMAY70yenOPMST(TripRouter tripRouter, ActivityFacilities facilities,
-                                                TimeInterpretation timeInterpretation) {
+	public UrbanIndexTripEstimatorMAY20yenPASS(TripRouter tripRouter, ActivityFacilities facilities,
+                                               TimeInterpretation timeInterpretation) {
 		super(tripRouter, facilities, timeInterpretation, createPreroutedModes());
 	}
 
@@ -68,49 +68,8 @@ public class UrbanIndexTripEstimatorMAY70yenOPMST extends AbstractTripRouterEsti
 		String Teikiken = (String) person.getAttributes().getAttribute("Teikiken");
 
 
-		// Compute mode-specific utility based on car availability
-//		if (UrbanContext.equals("Urban")) {
-//			if (nextActivityIsWork) {
-//				// Utility calculations when the next activity is work
-//				utility = UrbanWorkUtil(mode, totalTravelTime, totalTravelDistance, totalRidingTime, totalTransferTime, totalRidingDistance, totalTransferDistance, carAlwaysAvailable, trip, DestUrbanContext);
-//			} else {
-//				// Standard utility calculations
-//				utility = UrbanOtherUtil(mode, totalTravelTime, totalTravelDistance, totalRidingTime, totalTransferTime, totalRidingDistance, totalTransferDistance, carAlwaysAvailable, trip, DestUrbanContext);
-//			}
-//		}
-//		if (UrbanContext.equals("Suburban")) {
-//			if (nextActivityIsWork) {
-//				// Utility calculations when the next activity is work
-//				utility = SuburbanWorkUtil(mode, totalTravelTime, totalTravelDistance, totalRidingTime, totalTransferTime, totalRidingDistance, totalTransferDistance, carAlwaysAvailable, trip, DestUrbanContext);
-//			} else {
-//				// Standard utility calculations
-//				utility = SuburbanWorkUtil(mode, totalTravelTime, totalTravelDistance, totalRidingTime, totalTransferTime, totalRidingDistance, totalTransferDistance, carAlwaysAvailable, trip, DestUrbanContext);
-//			}
-//		}
-//		if (UrbanContext.equals("CBD")) {
-//			if (nextActivityIsWork) {
-//				// Utility calculations when the next activity is work
-//				utility = CBDWorkUtil(mode, totalTravelTime, totalTravelDistance, totalRidingTime, totalTransferTime, totalRidingDistance, totalTransferDistance, carAlwaysAvailable, trip, DestUrbanContext);
-//			} else {
-//				// Standard utility calculations
-//				utility = CBDOtherUtil(mode, totalTravelTime, totalTravelDistance, totalRidingTime, totalTransferTime, totalRidingDistance, totalTransferDistance, carAlwaysAvailable, trip, DestUrbanContext);
-//			}
-//		}
-//		if (UrbanContext.equals("Rural")) {
-//			utility = RuralUtil(mode, totalTravelTime, totalTravelDistance, totalRidingTime, totalTransferTime, totalRidingDistance, totalTransferDistance, carAlwaysAvailable, trip, DestUrbanContext);
-//		}
-
 		utility = calcModeUtil(mode, totalTravelTime, totalTravelDistance, totalRidingTime, totalTransferTime, totalRidingDistance, Student, Teikiken, PC1, PC2, trip);
 
-//		if (totalTravelDistance <= 10) {
-//			if (nextActivityIsWork) {
-//				// Utility calculations when the next activity is work
-//				utility = calcSHORTUtil(mode, totalTravelTime, totalTravelDistance, totalRidingTime, totalTransferTime, totalRidingDistance, totalTransferDistance, carAlwaysAvailable, trip, DestUrbanContext);
-//			} else {
-//				// Standard utility calculations
-//				utility = calcLONGUtil(mode, totalTravelTime, totalTravelDistance, totalRidingTime, totalTransferTime, totalRidingDistance, totalTransferDistance, carAlwaysAvailable, trip, DestUrbanContext);
-//			}
-//		}
 
 		return utility;
 	}
@@ -152,8 +111,8 @@ public class UrbanIndexTripEstimatorMAY70yenOPMST extends AbstractTripRouterEsti
 			case TransportMode.ride: utility = rideFactor - 3.18 - 7.65	 * totalTravelTime - 0.16 * PC1 ;		break;
 			case TransportMode.pt: utility = -2.94 - 0.53 * totalRidingTime - 2.81 * totalTransferTime - 0.0014 * (totalRidingDistance * 16)  + 0.053 * PC1  ;break;
 			case TransportMode.drt, TransportMode.drtA, TransportMode.drtC, TransportMode.drtD, TransportMode.drtB, TransportMode.drtE:
-				if (totalTravelDistance > 2) {utility = -1.47 - (5.32 * totalTravelTime) - 0.0014 * ((totalTravelDistance * 70) + 150) + 0.14 * PC1;
-				} else {  utility = -1.47  - (5.32 * totalTravelTime) - (0.0014 * 150) + 0.14 * PC1  ; } }
+				if (totalTravelDistance > 2) {utility = -3.18 - (5.32 * totalTravelTime) - 0.0014 * ((totalTravelDistance * 20) + 50) + 0.14 * PC1;
+				} else {  utility = -3.18  - (5.32 * totalTravelTime) - (0.0014 * 50) + 0.14 * PC1  ; } }
 
 
 			return utility;
