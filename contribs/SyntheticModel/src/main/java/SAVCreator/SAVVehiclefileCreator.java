@@ -64,9 +64,9 @@ public class SAVVehiclefileCreator {
 		int count = 0;
 		String xmlFilePath = "examples/scenarios/Odakyu7/network.xml";  // adjust path accordingly
 		String outputDirectory = "examples/scenarios/Odakyu7/";
-		String drtsFile = outputDirectory + "drts" + count + "S" + seats + "Tokyo(07x2).xml";
+		String drtsFile = outputDirectory + "drts" + count + "S" + seats + "base(3).xml";
 
-		String csvFilePath = "examples/scenarios/Odakyu7/LineFIles/line_baseTokyo(2x07).csv"; // Replace with your CSV file path
+		String csvFilePath = "examples/scenarios/Odakyu7/LineFIles/line_base(33).csv"; // Replace with your CSV file path
 		Set<String> uniqueLinkIds = new HashSet<>();
 		try (BufferedReader br = new BufferedReader(new FileReader(csvFilePath))) {
 			String line;
