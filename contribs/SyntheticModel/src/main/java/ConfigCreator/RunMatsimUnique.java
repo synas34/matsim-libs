@@ -98,8 +98,8 @@ public class RunMatsimUnique {
 	public static void runAllSimulations() {
 		List<SimulationConfig> simulationConfigs = Arrays.asList(
 
-			new SimulationConfig("examples/scenarios/Odakyu7/configSAV.xml", new UrbanIndexDMCExtensionMAY20yenOPMST()),
-			new SimulationConfig("examples/scenarios/Odakyu7/configSAV.xml", new UrbanIndexDMCExtensionMAY120yenOPMST())
+			new SimulationConfig("examples/scenarios/Odakyu7/configSAV07x2.xml", new UrbanIndexDMCExtensionMAY70yenOPMST())
+//			new SimulationConfig("examples/scenarios/Odakyu7/configSAV07x2.xml", new UrbanIndexDMCExtensionMAY70yenPASS())
 //			new SimulationConfig("examples/scenarios/Odakyu7/configGEO07x2.xml", new UrbanIndexDMCExtensionMAY120yen())
 
 
