@@ -30,11 +30,11 @@ public class GzipExtractor {
 	}
 
 	public static void main(String[] args) {
-		String gzipFilePath = "C:/Users/Public/Documents/RStudio/Analysis/SensitivityAnalysis/configSAVx15_UrbanIndexDMCExtensionMAY70yenOPMST/output_trips.csv.gz";
-		String outputFilePath = "C:/Users/Public/Documents/RStudio/Analysis/Trips/trips(OPMSTx15)70yen.csv";
+		String gzipFilePath = "C:/Users/Public/Documents/RStudio/Analysis/SensitivityAnalysis/configSAV_UrbanIndexDMCExtensionMAY70yen_1/output_trips.csv.gz";
+		String outputFilePath = "C:/Users/Public/Documents/RStudio/Analysis/Trips/trips(SAV)70yen.csv";
 		extractGzipToFile(gzipFilePath, outputFilePath);
-		String gzipFilePath2 = "C:/Users/Public/Documents/RStudio/Analysis/SensitivityAnalysis/configSAVx15_UrbanIndexDMCExtensionMAY120yenOPMST/output_trips.csv.gz";
-		String outputFilePath2 = "C:/Users/Public/Documents/RStudio/Analysis/Trips/trips(OPMSTx15)120yen.csv";
+		String gzipFilePath2 = "C:/Users/Public/Documents/RStudio/Analysis/SensitivityAnalysis/configSAV_UrbanIndexDMCExtensionMAY70yenPASS_2/output_trips.csv.gz";
+		String outputFilePath2 = "C:/Users/Public/Documents/RStudio/Analysis/Trips/trips(PASS)70yen.csv";
 		extractGzipToFile(gzipFilePath2, outputFilePath2);
 //		String gzipFilePath3 = "examples/scenarios/Odakyu5/outputJan13_1dmc1/output_vehicles.xml.gz";
 //		String outputFilePath3 = "C:/Users/MATSIM/Downloads/output_vehicles.csv";
